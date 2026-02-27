@@ -844,9 +844,12 @@ window.addEventListener('DOMContentLoaded',()=>{
 .mj-pop-input input:focus { border-color: rgba(124,58,237,0.6); }
 .mj-pop-input input::placeholder { color: rgba(255,255,255,0.2); }
 .mj-send { padding: 9px 14px; background: linear-gradient(135deg,#7c3aed,#4f46e5); border: none; border-radius: 10px; color: white; cursor: pointer; font-size: 15px; flex-shrink: 0; }
-.mj-chips { display: flex; flex-wrap: wrap; gap: 5px; padding: 4px 0; }
-.mj-chip { padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(124,58,237,0.35); background: rgba(124,58,237,0.1); color: #c4b5fd; font-size: 11px; cursor: pointer; font-family: 'DM Sans',sans-serif; }
-.mj-chip:hover { background: rgba(124,58,237,0.25); }
+.mj-chips { display: flex; flex-wrap: wrap; gap: 5px; padding: 2px 0 6px; }
+.mj-chip { padding: 5px 11px; border-radius: 999px; border: 1px solid rgba(124,58,237,0.35); background: rgba(124,58,237,0.1); color: #c4b5fd; font-size: 11px; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: all .15s; }
+.mj-chip:hover { background: rgba(124,58,237,0.3); transform: scale(1.04); }
+.mj-chip-hi { border-color: rgba(249,115,22,0.4) !important; background: rgba(249,115,22,0.08) !important; color: #fed7aa !important; font-family: 'Noto Sans Devanagari', 'DM Sans', sans-serif !important; }
+.mj-chip-hi:hover { background: rgba(249,115,22,0.2) !important; }
+.mj-chip-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: .8px; text-transform: uppercase; padding: 4px 0 2px; font-family: 'DM Sans', sans-serif; }
 #tools-fab {
   position: fixed !important; bottom: 20px !important; left: 20px !important;
   z-index: 99999 !important; width: 64px; height: 64px; border-radius: 50%;
@@ -966,24 +969,34 @@ window.addEventListener('DOMContentLoaded',()=>{
     <div class="mj-pop-orb">🦉</div>
     <div>
       <div class="mj-pop-name">Madam JI</div>
-      <div class="mj-pop-sub">AI STUDY ASSISTANT · EAGLE ACADEMY</div>
+      <div class="mj-pop-sub">AI TUTOR · ENGLISH & हिंदी · EAGLE ACADEMY</div>
     </div>
     <button class="mj-pop-close" onclick="mjToggle()" type="button">✕</button>
   </div>
   <div class="mj-pop-msgs" id="mj-msgs">
-    <div class="mj-msg bot">नमस्ते! 🙏 Hi! I'm Madam JI — your Eagle Academy AI tutor. Ask me anything about UK or USA freight dispatch!</div>
+    <div class="mj-msg bot">नमस्ते! 🙏 Hi! I'm Madam JI — your Eagle Academy AI tutor.<br><span style="font-size:11px;opacity:0.7">Ask in English या हिंदी में पूछें 🇮🇳</span></div>
+    <div class="mj-chip-label">🇬🇧 English</div>
     <div class="mj-chips">
       <button class="mj-chip" onclick="mjChip('What is an O-Licence?')" type="button">O-Licence?</button>
       <button class="mj-chip" onclick="mjChip('How do UK drivers hours work?')" type="button">UK Hours?</button>
-      <button class="mj-chip" onclick="mjChip('What is the ICAR method?')" type="button">ICAR method?</button>
+      <button class="mj-chip" onclick="mjChip('What is the ICAR method?')" type="button">ICAR?</button>
       <button class="mj-chip" onclick="mjChip('What is a tachograph?')" type="button">Tachograph?</button>
+    </div>
+    <div class="mj-chip-label">🇮🇳 हिंदी में पूछें</div>
+    <div class="mj-chips">
+      <button class="mj-chip mj-chip-hi" onclick="mjChip('O-Licence क्या होता है?')" type="button">O-Licence क्या है?</button>
+      <button class="mj-chip mj-chip-hi" onclick="mjChip('UK में ड्राइवर के काम के घंटे कितने होते हैं?')" type="button">UK ड्राइवर घंटे?</button>
+      <button class="mj-chip mj-chip-hi" onclick="mjChip('ICAR method क्या है? हिंदी में समझाएं')" type="button">ICAR क्या है?</button>
+      <button class="mj-chip mj-chip-hi" onclick="mjChip('Tachograph क्या होता है और यह क्यों जरूरी है?')" type="button">Tachograph?</button>
+      <button class="mj-chip mj-chip-hi" onclick="mjChip('Freight dispatcher का काम क्या होता है?')" type="button">Dispatcher काम?</button>
+      <button class="mj-chip mj-chip-hi" onclick="mjChip('BOL यानी Bill of Lading क्या है?')" type="button">BOL क्या है?</button>
     </div>
   </div>
   <div class="mj-pop-key" id="mj-key-row" style="display:none">
     <input id="mj-api-input" type="password" placeholder="Paste Anthropic API key to activate AI…" oninput="mjSaveKey(this.value)"/>
   </div>
   <div class="mj-pop-input">
-    <input id="mj-q" type="text" placeholder="Ask a question…" onkeydown="if(event.key==='Enter')mjSend()"/>
+    <input id="mj-q" type="text" placeholder="Ask in English या हिंदी में पूछें…" onkeydown="if(event.key==='Enter')mjSend()"/>
     <button class="mj-send" onclick="mjSend()" type="button">➤</button>
   </div>
 </div>
