@@ -211,6 +211,19 @@ body { background: var(--navy-deep); }
 .a-hi:hover, .a-hi.on { background: var(--gold); color: var(--navy-deep); }
 .a-stop { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
 .a-stop:hover { background: var(--red); color: white; }
+.a-btn.on { animation: pulse-glow 1.2s ease-in-out infinite; }
+@keyframes pulse-glow {
+  0%,100% { box-shadow: 0 0 0 0 rgba(249,115,22,0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(249,115,22,0); }
+}
+.dot-pulse {
+  display:inline-block; width:6px; height:6px; border-radius:50%;
+  background:var(--orange); animation: dotBounce 0.8s ease-in-out infinite;
+}
+@keyframes dotBounce {
+  0%,80%,100% { transform:scale(0.6); opacity:0.4; }
+  40% { transform:scale(1); opacity:1; }
+}
 
 /* Content blocks */
 .content-en-block {
@@ -2087,7 +2100,7 @@ body { background: var(--navy-deep); }
 <footer style="border-top:1px solid rgba(249,115,22,0.15);padding:20px 24px;text-align:center;margin-top:40px;">
   <div style="max-width:1200px;margin:0 auto;">
     <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px;">
-      <img src="logo.png" style="height:32px;background:white;padding:2px;border-radius:6px;" onerror="this.style.display='none'"/>
+      <img src="assets/logo.png" style="height:32px;background:white;padding:2px;border-radius:6px;" onerror="this.style.display='none'"/>
       <span style="font-weight:900;font-size:15px;letter-spacing:1px;">EAGLE ACADEMY</span>
     </div>
     <div style="font-size:12px;color:var(--grey);">International Freight Dispatcher Certification — Week 1 of 4</div>
@@ -2168,30 +2181,120 @@ function toggleHindi(hiBlockId) {
 
 // ── Audio / TTS ──────────────────────────────────
 let currentUtterance = null;
+let currentBtnId = null;
+let currentLang = null;
+let currentTextId = null;
+
+// Load voices (needed on some browsers)
+window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
 
 function speakTopic(lang, textId, btnId) {
+  const isAlreadyPlaying = currentBtnId === btnId && window.speechSynthesis.speaking;
+
+  // Stop anything currently playing
   stopAllAudio();
+
+  // If we clicked the same button that was already playing — it's a STOP action, done
+  if (isAlreadyPlaying) return;
+
   const textEl = document.getElementById(textId);
   if (!textEl || !window.speechSynthesis) return;
+
+  // Auto-show Hindi text when Hindi audio starts
+  if (lang === 'hi') {
+    const hiBlock = textEl.closest('.topic-card')?.querySelector('.content-hi-block');
+    if (hiBlock) hiBlock.classList.add('show');
+  }
+
   const text = textEl.innerText || textEl.textContent;
   const utt = new SpeechSynthesisUtterance(text.replace(/\s+/g, ' ').trim());
   utt.lang = lang === 'hi' ? 'hi-IN' : 'en-US';
   utt.rate = 0.88;
   utt.pitch = 1;
+
+  // Pick best available voice
   const voices = window.speechSynthesis.getVoices();
-  const match = voices.find(v => v.lang.startsWith(lang === 'hi' ? 'hi' : 'en'));
+  const match = lang === 'hi'
+    ? voices.find(v => v.lang.startsWith('hi'))
+    : voices.find(v => v.lang.startsWith('en') && v.name.includes('Google')) || voices.find(v => v.lang.startsWith('en'));
   if (match) utt.voice = match;
+
+  // Update button to STOP state
   const btn = document.getElementById(btnId);
-  if (btn) btn.classList.add('on');
-  utt.onend = () => { if (btn) btn.classList.remove('on'); };
-  utt.onerror = () => { if (btn) btn.classList.remove('on'); };
+  if (btn) {
+    btn.classList.add('on');
+    btn.innerHTML = lang === 'hi' ? '■ रोकें' : '■ Stop';
+  }
+
+  // Show now-playing bar
+  showNowPlaying(lang, textId);
+
+  utt.onend = () => resetBtn(btnId, lang);
+  utt.onerror = () => resetBtn(btnId, lang);
+
   currentUtterance = utt;
+  currentBtnId = btnId;
+  currentLang = lang;
+  currentTextId = textId;
   window.speechSynthesis.speak(utt);
+}
+
+function resetBtn(btnId, lang) {
+  const btn = document.getElementById(btnId);
+  if (btn) {
+    btn.classList.remove('on');
+    btn.innerHTML = lang === 'hi' ? '▶ हिंदी' : '▶ English';
+  }
+  hideNowPlaying();
+  currentBtnId = null;
 }
 
 function stopAllAudio() {
   if (window.speechSynthesis) window.speechSynthesis.cancel();
-  document.querySelectorAll('.a-btn.on').forEach(b => b.classList.remove('on'));
+  // Reset all buttons
+  document.querySelectorAll('.a-btn.on').forEach(b => {
+    b.classList.remove('on');
+    if (b.classList.contains('a-hi')) b.innerHTML = '▶ हिंदी';
+    else b.innerHTML = '▶ English';
+  });
+  hideNowPlaying();
+  currentBtnId = null;
+}
+
+function showNowPlaying(lang, textId) {
+  let bar = document.getElementById('now-playing-bar');
+  if (!bar) {
+    bar = document.createElement('div');
+    bar.id = 'now-playing-bar';
+    bar.style.cssText = `
+      position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
+      background:rgba(15,12,61,0.97); border:1px solid rgba(249,115,22,0.5);
+      border-radius:999px; padding:8px 20px; z-index:9999;
+      display:flex; align-items:center; gap:10px;
+      font-size:12px; font-weight:600; color:white;
+      box-shadow:0 4px 24px rgba(249,115,22,0.25);
+      backdrop-filter:blur(12px);
+    `;
+    document.body.appendChild(bar);
+  }
+  const label = lang === 'hi' ? '🔊 हिंदी में सुन रहे हैं...' : '🔊 Listening in English...';
+  bar.innerHTML = `
+    <span style="display:inline-flex;gap:3px;align-items:center;">
+      <span class="dot-pulse"></span><span class="dot-pulse" style="animation-delay:.15s"></span><span class="dot-pulse" style="animation-delay:.3s"></span>
+    </span>
+    <span>${label}</span>
+    <button onclick="stopAllAudio()" style="
+      background:rgba(239,68,68,0.2); border:1px solid rgba(239,68,68,0.4);
+      color:#f87171; border-radius:999px; padding:3px 12px; cursor:pointer;
+      font-size:11px; font-weight:700; font-family:inherit;
+    ">■ Stop</button>
+  `;
+  bar.style.display = 'flex';
+}
+
+function hideNowPlaying() {
+  const bar = document.getElementById('now-playing-bar');
+  if (bar) bar.style.display = 'none';
 }
 
 function stopAudio(btn1Id, btn2Id) {
