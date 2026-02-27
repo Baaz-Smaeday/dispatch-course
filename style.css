@@ -33,15 +33,19 @@
   --radius-lg:   20px;
 }
 
-html,body {
+html {
+  background: var(--navy);
+  /* overflow-x must NOT be set on html — it breaks position:fixed in all browsers */
+  scrollbar-width: thin;
+  scrollbar-color: var(--orange) var(--navy2);
+}
+body {
   background: var(--navy);
   color: var(--white);
   font-family: 'DM Sans', sans-serif;
   font-size: 15px;
   line-height: 1.6;
-  overflow-x: hidden;
-  scrollbar-width: thin;
-  scrollbar-color: var(--orange) var(--navy2);
+  overflow-x: hidden; /* body only = safe, does not break position:fixed */
   min-height: 100vh;
 }
 ::-webkit-scrollbar{width:6px}

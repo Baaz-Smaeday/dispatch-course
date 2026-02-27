@@ -541,7 +541,12 @@ document.addEventListener('DOMContentLoaded', () => {
 // Injected on ALL pages via app.js
 // Bouncy + colour-cycling + tooltip + popup
 // ══════════════════════════════════════════════
-(function() {
+// Guard: only inject once even if app.js loads multiple times
+if (!window.__eagleFabsInjected) {
+window.__eagleFabsInjected = true;
+
+function __injectEagleFabs() {
+  if (document.getElementById('mj-fab')) return; // already in DOM
 
   // ── Shared CSS ──────────────────────────────
   const FAB_CSS = `
@@ -890,7 +895,16 @@ document.addEventListener('DOMContentLoaded', () => {
     if (tfP && tfP.classList.contains('open') && !tfP.contains(e.target) && e.target !== tf) tfP.classList.remove('open');
   });
 
-})();
+} // end __injectEagleFabs
+
+// Run when DOM is ready (safe for <head>, end-of-body, or defer)
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', __injectEagleFabs);
+} else {
+  __injectEagleFabs(); // DOM already ready
+}
+
+} // end window.__eagleFabsInjected guard
 
 // ══════════════════════════════════════════════
 // 14. GLOBAL CARD HOVER GLOW ENHANCEMENT
