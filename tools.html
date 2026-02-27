@@ -96,7 +96,7 @@ select.tf option{background:#0d0c2e;color:white}
 </header>
 
 <div class="ticker-wrap"><div class="ticker-inner" style="color:var(--cyan);font-family:var(--font-mono);font-size:12px">
-  <span>🧮 7 Live Tools</span><span>💷 UK Rate Calculator — £/mile</span><span>⏱ UK Hours Checker — Tachograph</span><span>🇬🇧↔🇮🇳 Time Zone Converter</span><span>💰 Dispatcher Commission</span><span>🚛 Detention Pay</span><span>📊 Load Profitability</span><span>🔁 Empty Running %</span><span>🧮 7 Live Tools</span><span>💷 UK Rate Calculator — £/mile</span><span>⏱ UK Hours Checker — Tachograph</span>
+  <span>🧮 7 Live Tools</span><span>💷 UK Rate Calculator — £/mile</span><span>⏱ UK Drivers' Hours Checker</span><span>🇬🇧↔🇮🇳 Time Zone Converter</span><span>📋 Tachograph & WTD Checker</span><span>🚛 Detention Pay</span><span>📊 Load Profitability</span><span>🔁 Empty Running %</span><span>✅ UK Compliance First</span><span>🧮 7 Live Tools</span><span>💷 UK Rate Calculator — £/mile</span><span>⏱ UK Drivers' Hours — Tachograph</span>
 </div></div>
 
 <section class="tools-hero">
@@ -248,43 +248,51 @@ select.tf option{background:#0d0c2e;color:white}
     </div>
   </div>
 
-  <!-- ═══ TOOL 4: Dispatcher Commission ═══ -->
+  <!-- ═══ TOOL 4: UK Tachograph & WTD Checker ═══ -->
   <div class="tool-card">
     <div class="tool-head">
-      <div class="tool-icon" style="background:rgba(139,92,246,0.15)">💰</div>
+      <div class="tool-icon" style="background:rgba(139,92,246,0.15)">📋</div>
       <div>
-        <div style="font-family:var(--font-head);font-size:15px;font-weight:800">Dispatcher Commission</div>
-        <div style="font-size:11px;color:var(--grey)">Earnings per load · Monthly · Annual · INR</div>
+        <div style="font-family:var(--font-head);font-size:15px;font-weight:800">Tachograph & WTD Checker</div>
+        <div style="font-size:11px;color:var(--grey)">UK compliance · Infringement type · WTD 48hr check</div>
       </div>
     </div>
     <div class="tool-body">
-      <div class="seg" id="seg_comm">
-        <button class="seg-btn act" onclick="segSwitch('seg_comm',this,'cm_uk');calcComm()">🇬🇧 UK (£)</button>
-        <button class="seg-btn" onclick="segSwitch('seg_comm',this,'cm_us');calcComm()">🇺🇸 USA ($)</button>
+      <div class="seg" id="seg_tacho">
+        <button class="seg-btn act" onclick="segSwitch('seg_tacho',this,'tc_daily')">Daily Hours</button>
+        <button class="seg-btn" onclick="segSwitch('seg_tacho',this,'tc_wtd')">WTD Weekly</button>
       </div>
 
-      <div id="cm_uk">
+      <!-- Daily check -->
+      <div id="tc_daily">
         <div class="tf-row">
-          <div><label class="tl">Load Rate (£)</label><input type="number" class="tf" id="cm_uk_rate" placeholder="e.g. 1200" oninput="calcComm()"/></div>
-          <div><label class="tl">Commission %</label><input type="number" class="tf" id="cm_uk_pct" placeholder="8" value="8" min="1" max="15" step="0.5" oninput="calcComm()"/></div>
+          <div><label class="tl">Driving Time (hrs)</label><input type="number" class="tf" id="tc_drive" placeholder="e.g. 9.5" step="0.5" oninput="calcTacho()"/></div>
+          <div><label class="tl">On-Duty Time (hrs)</label><input type="number" class="tf" id="tc_duty" placeholder="e.g. 11" step="0.5" oninput="calcTacho()"/></div>
+        </div>
+        <div class="tf-row">
+          <div><label class="tl">Rest Period (hrs)</label><input type="number" class="tf" id="tc_rest" placeholder="e.g. 11" step="0.5" oninput="calcTacho()"/></div>
+          <div><label class="tl">Extensions used this week</label><input type="number" class="tf" id="tc_ext" placeholder="0" min="0" max="2" oninput="calcTacho()"/></div>
         </div>
       </div>
-      <div id="cm_us" style="display:none">
-        <div class="tf-row">
-          <div><label class="tl">Load Rate ($)</label><input type="number" class="tf" id="cm_us_rate" placeholder="e.g. 2800" oninput="calcComm()"/></div>
-          <div><label class="tl">Commission %</label><input type="number" class="tf" id="cm_us_pct" placeholder="8" value="8" min="1" max="15" step="0.5" oninput="calcComm()"/></div>
+
+      <!-- WTD check -->
+      <div id="tc_wtd" style="display:none">
+        <label class="tl">Total Working Hours This Week</label>
+        <input type="number" class="tf" id="tc_wtd_hrs" placeholder="e.g. 52" step="0.5" oninput="calcWTD()"/>
+        <label class="tl" style="margin-top:8px">Opt-Out Agreement Signed?</label>
+        <div class="seg" id="seg_optout" style="margin-top:4px">
+          <button class="seg-btn act" id="optout_no" onclick="segSwitch('seg_optout',this,'dummy1');calcWTD()">No</button>
+          <button class="seg-btn" id="optout_yes" onclick="segSwitch('seg_optout',this,'dummy2');calcWTD()">Yes (signed)</button>
         </div>
+        <div id="dummy1" style="display:none"></div>
+        <div id="dummy2" style="display:none"></div>
       </div>
 
-      <div class="tf-row">
-        <div><label class="tl">Loads / Week</label><input type="number" class="tf" id="cm_loads" placeholder="4" value="4" oninput="calcComm()"/></div>
-        <div><label class="tl">No. of Vehicles</label><input type="number" class="tf" id="cm_vehicles" placeholder="1" value="1" oninput="calcComm()"/></div>
+      <div id="tc_result" class="result-box" style="display:none">
+        <div class="result-main" id="tc_verdict">—</div>
+        <div class="result-sub" id="tc_detail">—</div>
       </div>
-
-      <div id="cm_result" style="display:none">
-        <div class="mini-grid" id="cm_grid"></div>
-      </div>
-      <div class="hi-note chi">8% कमीशन पर: 1 UK वाहन (£1,200/लोड, 4 लोड/सप्ताह) = £1,536/माह। 10 वाहन = £15,360/माह।</div>
+      <div class="hi-note chi">UK में ड्राइवर अधिकतम 9 घंटे (सप्ताह में दो बार 10 घंटे) गाड़ी चला सकता है। WTD नियम: औसतन 48 घंटे प्रति सप्ताह।</div>
     </div>
   </div>
 
@@ -546,31 +554,56 @@ function convertTZ(useNow){
 }
 function setNow(){convertTZ(true);}
 
-/* ─── TOOL 4: Commission ─── */
-function calcComm(){
-  const isUK=document.getElementById('cm_uk').style.display!=='none';
-  const sym=isUK?'£':'$';
-  const rate=parseFloat(document.getElementById(isUK?'cm_uk_rate':'cm_us_rate').value)||0;
-  const pct=parseFloat(document.getElementById(isUK?'cm_uk_pct':'cm_us_pct').value)||8;
-  const loads=parseFloat(document.getElementById('cm_loads').value)||4;
-  const vehicles=parseFloat(document.getElementById('cm_vehicles').value)||1;
-  if(!rate)return;
-  const perLoad=rate*(pct/100);
-  const weekly=perLoad*loads*vehicles;
-  const monthly=weekly*4;
-  const annual=monthly*12;
-  const inr=isUK?monthly*107:monthly*84; // approx conversion
-  document.getElementById('cm_result').style.display='block';
-  document.getElementById('cm_grid').innerHTML=`
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-      <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:900;color:#a78bfa;font-family:var(--font-head)">${sym}${perLoad.toFixed(0)}</div><div style="font-size:10px;color:var(--grey);margin-top:3px">Per Load</div></div>
-      <div style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);border-radius:10px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:900;color:var(--cyan);font-family:var(--font-head)">${sym}${weekly.toFixed(0)}</div><div style="font-size:10px;color:var(--grey);margin-top:3px">Per Week</div></div>
-      <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:900;color:var(--green);font-family:var(--font-head)">${sym}${monthly.toFixed(0)}</div><div style="font-size:10px;color:var(--grey);margin-top:3px">Monthly (${vehicles} vehicles)</div></div>
-      <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);border-radius:10px;padding:12px;text-align:center"><div style="font-size:18px;font-weight:900;color:var(--gold);font-family:var(--font-head)">₹${(inr/100000).toFixed(1)}L</div><div style="font-size:10px;color:var(--grey);margin-top:3px">Monthly (INR approx)</div></div>
-    </div>
-    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--grey);line-height:1.7;margin-top:2px">
-      ${sym}${annual.toFixed(0)}/year · ${pct}% of ${sym}${rate} · ${loads} loads/wk · ${vehicles} vehicle${vehicles>1?'s':''} · ₹${Math.round(inr).toLocaleString('en-IN')}/month (approx)
-    </div>`;
+/* ─── TOOL 4: Tachograph & WTD ─── */
+function calcTacho(){
+  const drive=parseFloat(document.getElementById('tc_drive').value)||0;
+  const duty=parseFloat(document.getElementById('tc_duty').value)||0;
+  const rest=parseFloat(document.getElementById('tc_rest').value)||0;
+  const ext=parseInt(document.getElementById('tc_ext').value)||0;
+  if(!drive&&!duty&&!rest)return;
+  const maxDrive=ext<2?10:9; // 10hr extension allowed twice a week
+  const issues=[];
+  if(drive>9&&ext>=2) issues.push('🚨 SERIOUS: Driving over 9 hrs — extensions already used this week');
+  else if(drive>10) issues.push('🚨 SERIOUS: Driving over 10 hrs (max extension limit)');
+  else if(drive>9) issues.push(`⚠️ WARNING: 10hr extension used (${ext+1}/2 this week)`);
+  if(duty>13) issues.push('🚨 SERIOUS: On-duty time over 13 hours');
+  if(rest<9) issues.push('🚨 SERIOUS: Rest under 9 hours (reduced rest)');
+  else if(rest<11) issues.push('⚠️ WARNING: Reduced daily rest (min 9hrs, 3 times/week max)');
+  const verdict = document.getElementById('tc_verdict');
+  const detail = document.getElementById('tc_detail');
+  document.getElementById('tc_result').style.display='block';
+  if(issues.length===0){
+    verdict.style.color='var(--green)';
+    verdict.textContent='✅ COMPLIANT';
+    detail.textContent=`Drive: ${drive}h / 9h limit | Duty: ${duty}h | Rest: ${rest}h ✓`;
+  } else {
+    verdict.style.color='var(--red)';
+    verdict.textContent='❌ INFRINGEMENT DETECTED';
+    detail.innerHTML=issues.join('<br/>');
+  }
+}
+
+function calcWTD(){
+  const hrs=parseFloat(document.getElementById('tc_wtd_hrs').value)||0;
+  if(!hrs)return;
+  const optedOut=document.getElementById('optout_yes').classList.contains('act');
+  const limit=optedOut?60:48;
+  const verdict=document.getElementById('tc_verdict');
+  const detail=document.getElementById('tc_detail');
+  document.getElementById('tc_result').style.display='block';
+  if(hrs<=48){
+    verdict.style.color='var(--green)';
+    verdict.textContent='✅ WTD COMPLIANT';
+    detail.textContent=`${hrs}h worked this week — under the 48h average limit`;
+  } else if(hrs<=60&&optedOut){
+    verdict.style.color='var(--gold)';
+    verdict.textContent='⚠️ OVER 48H — OPT-OUT APPLIES';
+    detail.textContent=`${hrs}h worked. Opt-out signed, so up to 60h permitted. Ensure opt-out is documented.`;
+  } else {
+    verdict.style.color='var(--red)';
+    verdict.textContent='🚨 WTD BREACH';
+    detail.textContent=`${hrs}h exceeds the ${limit}h WTD limit. ${optedOut?'Even with opt-out, 60h is the max.':'Driver must have signed opt-out to work over 48h.'}`;
+  }
 }
 
 /* ─── TOOL 5: Detention ─── */

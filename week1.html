@@ -529,11 +529,10 @@ body { background: var(--navy-deep); }
         <p style="margin-top:12px;">As a dispatcher working from India, you manage the entire operation remotely. You make phone calls to US brokers, use load boards like <strong>DAT</strong> to find loads, and use communication tools like Google Voice and WhatsApp to stay connected with drivers. You are effectively running a part of the American trucking industry — from your desk in India.</p>
 
         <div class="example-box">
-          <strong style="color:var(--green)">🎯 Real Example:</strong><br/>
-          Load: Chicago, IL → Atlanta, GA<br/>
-          Rate: $2,800<br/>
-          Your Commission at 8%: <strong>$224 for one load</strong><br/>
-          If you manage 5 trucks doing 3 loads/week = <strong>$224 × 15 = $3,360/week</strong> from India!
+          <strong style="color:var(--green)">🎯 How Dispatcher Fees Work:</strong><br/>
+          Load example: Chicago, IL → Atlanta, GA<br/>
+          Carrier rate: $2,800 — Service fee at 8%: <strong>$224 for this load</strong><br/>
+          <em style="color:var(--grey);font-size:12px;">This course teaches you the skills to calculate and negotiate these fees professionally.</em>
         </div>
 
         <p style="margin-top:12px;">The US trucking industry moves <strong>70% of all freight</strong> in America — worth over $700 billion per year. This massive industry needs thousands of dispatchers, and thanks to technology, you can provide this service from anywhere in the world.</p>
@@ -563,7 +562,8 @@ body { background: var(--navy-deep); }
           लोड: शिकागो से अटलांटा<br/>
           रेट: $2,800<br/>
           8% कमीशन: <strong>$224 एक लोड पर</strong><br/>
-          5 ट्रक, हर हफ्ते 3 लोड = <strong>$3,360 प्रति सप्ताह भारत से!</strong>
+          5 ट्रक, हर हफ्ते 3 लोड = <strong>15 लोड प्रति सप्ताह</strong><br/>
+          <em style="font-size:12px;color:var(--grey)">यह कोर्स आपको इन गणनाओं को पेशेवर तरीके से करना सिखाता है।</em>
         </div>
       </div>
 
@@ -2340,24 +2340,62 @@ function showQuizResult(quizBodyId) {
   const total = Object.keys(answers).length;
   const correct = Object.values(answers).filter(v => v).length;
   const pct = Math.round((correct / total) * 100);
-  // Find result elements (replace qb_ with qr_, qs_, qmsg_)
+
   const resultId = quizBodyId.replace('qb_', 'qr_');
   const scoreId  = quizBodyId.replace('qb_', 'qs_');
   const msgId    = quizBodyId.replace('qb_', 'qmsg_');
   const resultEl = document.getElementById(resultId);
   const scoreEl  = document.getElementById(scoreId);
   const msgEl    = document.getElementById(msgId);
-  if (resultEl) resultEl.classList.add('show');
+
+  const color = pct >= 90 ? '#22c55e' : pct >= 70 ? '#f97316' : pct >= 50 ? '#f59e0b' : '#ef4444';
+  const label = pct >= 90 ? '🏆 Excellent!' : pct >= 70 ? '✅ Good work!' : pct >= 50 ? '📚 Review again' : '⚠️ Re-read topic';
+
+  // Build SVG ring
+  const r = 38; const circ = 2 * Math.PI * r;
+  const dash = (pct / 100) * circ;
+
   if (scoreEl) {
-    scoreEl.textContent = correct + '/' + total + ' — ' + pct + '%';
-    scoreEl.style.color = pct >= 70 ? 'var(--green)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+    scoreEl.innerHTML = `
+      <div style="display:flex;align-items:center;gap:18px;flex-wrap:wrap;">
+        <div style="position:relative;width:90px;height:90px;flex-shrink:0">
+          <svg width="90" height="90" viewBox="0 0 90 90" style="transform:rotate(-90deg)">
+            <circle cx="45" cy="45" r="${r}" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="7"/>
+            <circle cx="45" cy="45" r="${r}" fill="none" stroke="${color}" stroke-width="7"
+              stroke-linecap="round" stroke-dasharray="${circ}"
+              stroke-dashoffset="${circ}"
+              id="ring_${scoreId}"
+              style="transition:stroke-dashoffset 1s cubic-bezier(.22,1,.36,1)"/>
+          </svg>
+          <div style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+            <span style="font-size:20px;font-weight:900;color:${color};line-height:1">${pct}%</span>
+            <span style="font-size:9px;color:rgba(255,255,255,0.4);font-family:var(--font-mono);letter-spacing:.5px">SCORE</span>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:22px;font-weight:900;color:${color}">${correct}<span style="font-size:14px;color:rgba(255,255,255,0.4);font-weight:400"> / ${total} correct</span></div>
+          <div style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px">${label}</div>
+        </div>
+      </div>
+    `;
+    // Animate ring after brief delay
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        const ring = document.getElementById('ring_' + scoreId);
+        if (ring) ring.style.strokeDashoffset = circ - dash;
+      }, 80);
+    });
   }
-  if (msgEl) {
-    msgEl.textContent = pct >= 90 ? '🏆 Excellent! Perfect understanding!' :
-                        pct >= 70 ? '✅ Good work! Ready for the next topic.' :
-                        pct >= 50 ? '📚 Review the topic again before moving on.' :
-                                    '⚠️ Please re-read the topic carefully and retake.';
-  }
+
+  if (msgEl) msgEl.textContent = '';
+  if (resultEl) resultEl.classList.add('show');
+
+  // Save quiz score to progress
+  try {
+    const prog = JSON.parse(localStorage.getItem('ea_quiz_scores') || '{}');
+    prog[quizBodyId] = { correct, total, pct, date: Date.now() };
+    localStorage.setItem('ea_quiz_scores', JSON.stringify(prog));
+  } catch(e) {}
 }
 
 function retakeQuiz(quizBodyId, resultId, scoreId, msgId) {
