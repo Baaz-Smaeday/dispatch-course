@@ -1275,7 +1275,10 @@ document.addEventListener('DOMContentLoaded',()=>{
     </div>
   </div>
   <div class="mj-pop-key" id="mj-key-row" style="display:none">
-    <input id="mj-api-input" type="password" placeholder="Paste Anthropic API key to activate AI…" oninput="mjSaveKey(this.value)"/>
+    <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:6px;line-height:1.5;">
+      🔑 Get your free API key at <strong style="color:#c4b5fd">console.anthropic.com</strong> — costs ~£2/month for a class
+    </div>
+    <input id="mj-api-input" type="password" placeholder="sk-ant-… paste your API key here" oninput="mjSaveKey(this.value)" style="font-size:11px;"/>
   </div>
   <div class="mj-pop-input">
     <input id="mj-q" type="text" placeholder="Ask in English या हिंदी में पूछें…" onkeydown="if(event.key==='Enter')mjSend()"/>
@@ -1428,8 +1431,841 @@ function tpCalcTime() {
 </script>
 
 <script>
-// ── Madam JI Chat ──────────────────────────────
+// ── Madam JI Knowledge Base + Chat ─────────────
 (function(){
+
+  // ── EMBEDDED KNOWLEDGE BASE ─────────────────
+// ═══════════════════════════════════════════════════════════
+// MADAM JI — PRE-LOADED KNOWLEDGE BASE
+// 200 Q&A pairs covering the full Eagle Academy course
+// English + Hindi questions, English answers
+// Fuzzy keyword matching — score 0-100, threshold 40
+// ═══════════════════════════════════════════════════════════
+
+var MJ_KB = [
+
+// ── WEEK 1: DISPATCH FOUNDATIONS ──────────────────────────
+
+{k:['what is freight dispatch','freight dispatcher','dispatch kya','dispatcher kya karta','what does dispatcher do','dispatcher job','dispatch job','freight dispatch kya hai'],
+a:`A freight dispatcher is the person who connects truck carriers with shippers who need loads moved. You find available loads on load boards, negotiate rates, handle paperwork, and keep communication flowing between all parties. Think of it like a matchmaker — matching empty trucks with loads that need moving. 🚛
+
+Dispatcher carriers ko shippers se connect karta hai — jo loads move karna chahte hain.`},
+
+{k:['shipper broker carrier','logistics chain','supply chain','who is shipper','who is broker','broker kya hota','shipper kya hota','logistics chain kya','three players','teen players'],
+a:`The logistics chain has 3 key players:
+
+🏭 **Shipper** — The company that has goods to move (e.g. Amazon warehouse needing a truck)
+🤝 **Broker** — Middle person who connects shippers with carriers. Licensed with FMCSA, holds the load contracts
+🚛 **Carrier** — The trucking company that actually moves the freight. They hire dispatchers like you!
+
+Payment flows: Shipper pays Broker → Broker pays Carrier → Carrier pays Dispatcher fee`},
+
+{k:['mc number','motor carrier','mc number kya','authority number','carrier authority','fmcsa','dot number','mc number check kaise'],
+a:`MC Number (Motor Carrier Number) is a licence issued by FMCSA (Federal Motor Carrier Safety Administration) in the USA. Every carrier must have one to legally haul freight for hire.
+
+✅ Always verify a carrier's MC number before booking a load
+🔍 Check at: safer.fmcsa.dot.gov — look for "Authorized for Hire" status
+⚠️ Never book with a carrier whose MC is not active!
+
+MC number = carrier ka USA mein legal licence hai`},
+
+{k:['o licence','operators licence','o-licence kya','operator licence uk','goods vehicle','vehicle operator','o licence uk','transport manager'],
+a:`O-Licence (Operator's Licence) is the UK legal requirement to operate commercial goods vehicles over 3.5 tonnes.
+
+📋 Three types:
+• Standard National — UK only
+• Standard International — UK + Europe  
+• Restricted — own goods only
+
+Requirements: Transport Manager (CPC qualified), safe operating centre, vehicle maintenance records, financial standing proof.
+
+DVSA enforces O-Licence compliance. Operating without one = criminal offence! ⛔`},
+
+{k:['double brokering','double broker','re-brokering','fraud','scam','broker fraud','load fraud','double brokering kya'],
+a:`Double brokering is when a broker takes your load and secretly re-brokers it to another carrier without permission. It's illegal and a serious fraud.
+
+🚨 Warning signs:
+• Carrier asks to re-assign the load
+• Different carrier shows up than on the Rate Con
+• Carrier can't show their own MC authority
+
+✅ Protection: Always verify carrier MC before dispatch, get signed Rate Confirmation immediately, never accept verbal-only agreements.`},
+
+{k:['icar','icar method','icar kya hai','introduce confirm authorise rate','dispatch call','first call','carrier call script','how to call carrier'],
+a:`ICAR is the 4-step call structure every dispatcher uses:
+
+📞 **I — Introduce**: "Hi, this is [Name] dispatching for [Carrier Name], MC# [number]"
+✅ **C — Confirm**: Confirm load details — pickup, delivery, weight, equipment needed
+🔐 **A — Authorise**: Verify broker MC number, check credit score on DAT
+💰 **R — Rate**: Negotiate the rate per mile, get agreement before ending call
+
+Practice this until it's automatic — every professional call follows ICAR!`},
+
+{k:['dispatcher agreement','dispatch agreement','dispatcher contract','service agreement','dispatcher kya sign karta','agreement kya hota','legal agreement'],
+a:`A Dispatcher Service Agreement is the contract between you (dispatcher) and your carrier client.
+
+📄 Key clauses it must include:
+• Your fee percentage (typically 5-10%)
+• Services you provide
+• Payment terms (when you get paid)
+• Termination notice period
+• No employee relationship — you are an independent contractor
+
+⚠️ Never start dispatching for a carrier without a signed agreement! Protects both parties legally.`},
+
+// ── WEEK 2: FREIGHT TYPES ──────────────────────────────────
+
+{k:['dry van','dry van kya','dry van trailer','van trailer','box trailer','most common trailer','standard trailer'],
+a:`Dry Van is the most common trailer type — an enclosed box trailer that protects cargo from weather.
+
+📦 What it carries: Packaged goods, boxes, pallets, non-perishable items, retail goods
+📏 Standard size: 53 feet long, 102 inches wide
+⚖️ Max payload: ~44,000 lbs
+💡 Best for beginners — most loads on load boards are dry van
+
+Dry van = band enclosed trailer jo sabse common hai`},
+
+{k:['flatbed','flatbed trailer','flatbed kya','flat bed','open trailer','step deck','RGN','lowboy'],
+a:`Flatbed trailers have no walls or roof — cargo is exposed and must be strapped/tarped.
+
+🏗️ What it carries: Steel, lumber, machinery, construction equipment, oversized loads
+⚠️ Requires: Proper strapping, tarping skills, securement knowledge
+💰 Pays more than dry van due to skill required
+📏 Types: Standard Flatbed, Step Deck (lower), RGN (removable gooseneck for very tall cargo)
+
+Flatbed mein koi side wall nahi hoti — cargo khula hota hai`},
+
+{k:['reefer','refrigerated','temperature controlled','cold chain','reefer kya','refrigerated trailer','frozen loads','perishable'],
+a:`Reefer (Refrigerated trailer) maintains temperature-controlled environment for perishable cargo.
+
+🌡️ Temperature ranges: 
+• Frozen: -10°F to 0°F
+• Fresh: 34°F to 40°F  
+• Controlled: any set temperature
+
+🥩 What it carries: Meat, produce, dairy, pharmaceuticals, flowers
+⚠️ Must monitor temperature logs — any temperature deviation = rejected load
+💰 Pays premium rates due to responsibility involved`},
+
+{k:['tanker','tanker trailer','liquid freight','bulk liquid','tanker kya','hazmat','hazardous material','tanker truck'],
+a:`Tanker trailers carry liquid or bulk cargo — food grade or chemical/hazmat.
+
+🛢️ Types:
+• Food grade: Milk, juice, liquid sugar, edible oils
+• Chemical: Acids, solvents, fuel (requires HAZMAT endorsement)
+• Dry bulk: Cement, grain, sand
+
+⚠️ Special requirements: CDL with Tanker endorsement, HAZMAT endorsement for chemicals, pre-trip inspection of valves/seals critical`},
+
+{k:['ftl ltl','full truck load','less than truck load','ftl kya','ltl kya','full load','partial load','ftl vs ltl'],
+a:`FTL vs LTL — key difference for dispatchers:
+
+🚛 **FTL (Full Truck Load):**
+• One shipper fills the whole trailer
+• Direct pickup to delivery — no stops
+• Simpler to manage, better for beginners
+• Load boards mainly show FTL loads
+
+📦 **LTL (Less Than Truck Load):**
+• Multiple shippers share one trailer
+• Multiple pickups and deliveries
+• More complex routing, more paperwork
+• Usually handled by carriers with terminals
+
+Start with FTL — master it before moving to LTL!`},
+
+{k:['intermodal','intermodal kya','container','rail freight','port freight','drayage','container on flatbed','COFC','TOFC'],
+a:`Intermodal freight uses multiple transport modes — typically ocean ship + rail + truck.
+
+🚢➡️🚂➡️🚛 The journey:
+1. Container arrives at port by ship
+2. Drayage truck moves container from port to rail yard
+3. Rail carries it across country
+4. Local drayage truck delivers to final destination
+
+📦 Key term: **Drayage** = short local truck move connecting modes (port to rail, rail to warehouse)
+🏗️ Equipment: ISO containers on flatbeds, chassis trailers`},
+
+{k:['curtainsider','curtain trailer','tautliner','UK trailer','side curtain','european trailer'],
+a:`Curtainsider (Tautliner) is the most common trailer type in UK/Europe — not common in USA.
+
+The sides are made of sliding curtain fabric instead of solid walls.
+
+✅ Advantages: Easy forklift loading from sides, faster loading/unloading
+📦 Carries: Palletised goods, building materials, retail deliveries
+🇬🇧 Very common in UK pallet network deliveries (Palletforce, Pall-Ex, TPN)
+
+If you're working UK freight, you'll see curtainsiders constantly!`},
+
+{k:['low loader','low bed','heavy haulage','oversized load','abnormal load','wide load'],
+a:`Low loader (Low bed) trailers are used for very tall or heavy cargo that won't fit standard trailers.
+
+🏗️ What it carries: Construction machinery, cranes, industrial equipment, transformers
+⚠️ Requires: Special permits, police escorts for wide/tall loads, route surveys
+🇬🇧 UK term: Abnormal load — requires DVSA notification and sometimes road closures
+📏 The deck sits very low to the ground to maximise height clearance`},
+
+// ── WEEK 3: GEOGRAPHY & LANES ─────────────────────────────
+
+{k:['chicago','chicago hub','chicago freight','midwest','chicago why important','logistics hub'],
+a:`Chicago is THE most important freight hub in North America.
+
+🏙️ Why Chicago matters:
+• Intersection of 6 major interstate highways
+• Largest rail hub in USA — 25% of all US rail freight
+• Central location connecting East/West/South
+• Home to major distribution centres for most retailers
+
+As a dispatcher, many of your loads will either start, end, or pass through Chicago. Learn the I-80, I-90, I-94 corridors! 🗺️`},
+
+{k:['dallas','texas freight','dallas hub','southern freight','lone star','texas lanes'],
+a:`Dallas-Fort Worth is the second biggest freight hub in the USA.
+
+🤠 Why Dallas matters:
+• Central location — connects all four US regions
+• Massive manufacturing and distribution activity
+• Houston nearby = huge port freight connection
+• Dallas-Chicago corridor is one of the highest paying lanes
+
+Key routes from Dallas: I-35 North to Chicago, I-20 East to Atlanta, I-10 West to LA 🗺️`},
+
+{k:['northeast','new york','boston','difficult lanes','congestion','northeast freight','east coast'],
+a:`The Northeast (NY, NJ, Boston, Philadelphia) is the hardest region to dispatch.
+
+⚠️ Why it's difficult:
+• Heavy traffic and congestion = slow deliveries
+• City restrictions on truck sizes and hours
+• Tolls are expensive, eating into carrier margins
+• Parking extremely limited
+• Higher rates but much harder to find carriers willing to go there
+
+💡 Tip: Newer dispatchers should avoid Northeast loads until experienced!`},
+
+{k:['california','la','los angeles','west coast','port of la','california freight','west coast loads'],
+a:`California (LA/Long Beach) has the biggest ports in the USA — massive freight activity.
+
+🚢 Port of LA/Long Beach: Handles ~40% of all US imports from Asia
+📦 Lots of drayage work: Moving containers from port to rail or warehouse
+⚠️ California specific rules:
+• CARB emissions standards — older trucks may be banned
+• AB5 law affects owner-operators
+• High cost of living = higher rates needed
+
+LA-Chicago is one of the best paying long haul corridors 💰`},
+
+{k:['hot lane','high paying lane','best lanes','rpm','rate per mile','good lane','profitable lane'],
+a:`Hot lanes are routes with high demand and good paying rates. As a dispatcher, find these!
+
+🔥 Consistently hot lanes:
+• Dallas → Chicago (I-35 North) — always high demand
+• LA → Chicago (I-40/I-80) — long haul, great RPM
+• Atlanta → Northeast — retail distribution
+• Texas → Southeast — manufacturing freight
+
+📊 How to spot a hot lane: Compare DAT rate history. If current rate is 20%+ above average = hot lane. Book it fast!`},
+
+{k:['deadhead','deadhead miles','empty miles','bobtail','deadhead kya','empty truck','repositioning'],
+a:`Deadhead miles = miles driven with an empty trailer (no load, no revenue).
+
+💸 Why it matters: Every deadhead mile costs fuel but earns nothing.
+
+✅ Good dispatcher target: Keep deadhead under 15% of total miles
+
+🎯 How to minimise deadhead:
+• Find backhaul loads (return loads) near delivery point
+• Search load boards for loads within 50 miles of delivery
+• Build relationships with brokers at popular delivery areas
+
+Deadhead = khali truck ka safar — koi payment nahi milti`},
+
+// ── WEEK 4: REGULATIONS ───────────────────────────────────
+
+{k:['hours of service','hos','driving hours','11 hour rule','14 hour rule','70 hour rule','hos kya','driving limit','how many hours can driver drive'],
+a:`USA Hours of Service (HOS) Rules — you must know these as a dispatcher:
+
+⏰ Key limits:
+• **11 hours** max driving after 10hr off duty
+• **14 hours** max on-duty window (driving + other work)
+• **30 minute break** required after 8 hours driving
+• **70 hours** max in 8 consecutive days (property carriers)
+• **34-hour restart** — taking 34 consecutive hours off resets the 70hr clock
+
+🚨 If driver hits limits → they MUST stop. Dispatcher cannot pressure driver to violate HOS!`},
+
+{k:['uk drivers hours','eu drivers hours','eu rules','9 hours','10 hours','45 minute break','uk driving limit','eu regulation'],
+a:`UK/EU Drivers' Hours Rules (EC Regulation 561/2006):
+
+⏰ Daily limits:
+• **9 hours** normal daily driving limit
+• **10 hours** extended limit — max 2 times per week
+• **4.5 hours** before mandatory 45-minute break (or 15+30 split)
+• **11 hours** normal daily rest
+• **9 hours** reduced rest — max 3 times per week
+
+📅 Weekly limits:
+• **56 hours** max per week
+• **90 hours** max per fortnight
+• **45 hours** weekly rest required (can reduce to 24hr, but must compensate)`},
+
+{k:['eld','electronic logging device','eld kya','eld mandate','hours of service log','paper log','digital log','logbook'],
+a:`ELD (Electronic Logging Device) — mandatory in USA since 2017.
+
+📱 What it does:
+• Automatically records driving time via vehicle engine connection
+• Cannot be edited (unlike old paper logs)
+• Syncs with FMCSA database
+• Officers can check it roadside via Bluetooth/cable
+
+⚠️ Paper logs still allowed for:
+• Vehicles older than 2000 model year
+• Drivers who need 8 days or fewer of ELD use per 30 days
+
+As dispatcher: NEVER ask a driver to violate their ELD hours!`},
+
+{k:['tachograph','tacho','tachograph kya','digital tachograph','tacho rules','tacho check','dvsa tacho'],
+a:`Tachograph is the UK/EU equivalent of ELD — records driver hours and speed automatically.
+
+📟 Two types:
+• **Analogue** — uses a paper disc (older vehicles)
+• **Digital** — stores data on driver smartcard + vehicle unit
+
+🔑 Driver must:
+• Insert their personal smartcard before driving
+• Select correct mode (driving, other work, rest, availability)
+• Download data regularly (every 28 days for driver, 90 days for vehicle)
+
+🚔 DVSA can request 28 days of tachograph records at roadside. Infringements = fines and O-Licence risk!`},
+
+{k:['wtd','working time directive','48 hour week','working hours uk','wtd kya','weekly working limit'],
+a:`WTD (Working Time Directive) — UK law on maximum working hours.
+
+⏰ Key limits:
+• **48 hours** average per week (averaged over 17 weeks)
+• **6 hours** — must have a break after working 6 hours
+• **Night workers** limited to 10 hours per night shift
+
+🚛 For transport workers:
+• Driving time + loading/waiting/admin all count as "working time"
+• Different from drivers hours rules — BOTH apply simultaneously!
+• Employer must keep WTD records for 2 years
+
+As dispatcher: WTD affects when you can ask a UK driver to take another load`},
+
+{k:['dvsa','driver vehicle standards agency','dvsa kya','roadside check','vehicle inspection','prohibition','dvsa powers'],
+a:`DVSA (Driver and Vehicle Standards Agency) — UK's transport enforcement agency.
+
+🚔 What they do:
+• Roadside vehicle and driver checks
+• Issue immediate prohibitions for dangerous vehicles
+• Investigate O-Licence holders
+• Check tachograph records
+• Enforce drivers hours compliance
+
+⚠️ Prohibition notice types:
+• **Immediate** — vehicle cannot move at all
+• **Delayed** — must fix within set time
+
+For your carrier clients: clean DVSA record = good reputation, easier O-Licence renewal`},
+
+{k:['cmr','cmr note','consignment note','cmr kya','international freight document','road freight document'],
+a:`CMR Note is the standard international road freight consignment document (Convention on the Contract for the Carriage of Goods by Road).
+
+📄 Required for all international road freight in Europe.
+
+Contains:
+• Sender and receiver details
+• Description of goods, weight, quantity
+• Carrier details and vehicle registration
+• Special instructions (temperature, handling)
+• Signature from all parties at collection and delivery
+
+🔑 CMR acts as proof of collection AND contract between shipper and carrier. Keep copies for 7 years!`},
+
+// ── WEEK 5: LOAD BOARDS & RATES ───────────────────────────
+
+{k:['dat','dat load board','dat kya','dat freight','dat power','load board','where to find loads','find loads','load board kya'],
+a:`DAT is the largest load board in the USA with over 1.4 million loads posted daily.
+
+📊 What you can do on DAT:
+• Search loads by origin, destination, equipment type
+• See real-time rate data (what loads are actually paying)
+• Check carrier credit scores before booking
+• Post trucks looking for loads
+• Access historical rate trends
+
+💰 Pricing: DAT has different subscription tiers. DAT Power (most data) is what serious dispatchers use.
+
+DAT = USA ka sabse bada load board hai`},
+
+{k:['truckstop','truckstop.com','truckstop load board','123loadboard','load board options','best load board'],
+a:`Main USA load boards to know:
+
+📱 **DAT Power** — largest, best rate data, industry standard
+📱 **Truckstop.com** — strong for reefer and flatbed loads
+📱 **123Loadboard** — budget option, good for new dispatchers
+📱 **Convoy/Uber Freight** — digital broker apps, instant booking
+
+🇬🇧 UK load boards:
+• **Courier Exchange (CX)** — largest UK exchange
+• **Haulage Exchange** — good for general haulage
+• **backtrack** — return loads specialist
+
+💡 Most dispatchers use DAT + one other board for maximum coverage`},
+
+{k:['rpm','rate per mile','rpm kya','calculate rpm','good rpm','rate per mile kya','how to calculate rate','rate calculation'],
+a:`RPM (Rate Per Mile) = Total load rate ÷ Total miles
+
+📊 Example: £1,800 load / 400 miles = £4.50 per mile
+
+🎯 Target RPMs (USA 2024 averages):
+• Dry Van: $2.50-3.50/mile is good
+• Reefer: $3.00-4.00/mile
+• Flatbed: $3.00-4.50/mile
+
+🇬🇧 UK rates (per mile): 
+• General haulage: £1.80-2.80/mile
+• Temperature controlled: £2.50-3.50/mile
+
+Always calculate RPM before accepting any load — low RPM loads lose money after fuel!`},
+
+{k:['rate confirmation','rate con','rate confirmation kya','load contract','broker rate con','what is rate con','dispatch paperwork'],
+a:`Rate Confirmation (Rate Con) is the official contract between broker and carrier for a specific load.
+
+📄 Must contain:
+• Load number and broker details (MC number)
+• Pickup and delivery addresses + times
+• Commodity description and weight
+• Agreed rate (total and per mile)
+• Payment terms (QuickPay options)
+• Special instructions
+
+✅ Rules:
+• ALWAYS get signed Rate Con BEFORE truck arrives at shipper
+• Never dispatch a driver without a signed Rate Con
+• If rate changes, get a new Rate Con — verbal changes mean nothing legally!`},
+
+{k:['credit score','broker credit score','dat credit score','credit check','check broker','broker verify','safe broker','credit score kya'],
+a:`Broker credit score tells you if a broker pays carriers on time and reliably.
+
+📊 DAT Credit Score ranges:
+• **90-100** — Excellent, pay reliably and quickly
+• **70-89** — Good, occasional slow payment
+• **50-69** — Risky, check payment terms carefully
+• **Below 50** — AVOID — serious payment history issues
+
+✅ Always check credit score on DAT before booking a load with a new broker
+⚠️ Low credit score broker = your carrier might not get paid!
+
+DAT par broker ka credit score check karo — 80+ safe hai`},
+
+{k:['bol','bill of lading','bill of lading kya','bol kya','pickup document','proof of delivery','pod','delivery receipt'],
+a:`BOL (Bill of Lading) is the most important freight document — proof the load was picked up.
+
+📄 BOL contains:
+• Shipper name and address
+• Consignee (receiver) name and address  
+• Commodity, weight, piece count
+• PRO number (tracking number)
+• Special handling instructions
+• Driver signature + date at pickup
+
+🔑 Three key moments:
+1. **At pickup** — driver signs BOL, gets copy
+2. **In transit** — BOL travels with the load
+3. **At delivery** — receiver signs as POD (Proof of Delivery)
+
+No signed BOL = no proof load was collected = invoice disputes!`},
+
+{k:['detention','detention pay','waiting time','layover','detention kya','shipper delay','driver waiting'],
+a:`Detention pay = payment to carrier when shipper or receiver causes excessive waiting time.
+
+⏰ Standard terms:
+• First **2 hours** of waiting = free (included in rate)
+• After 2 hours = detention kicks in, typically $50-75/hour USA
+
+📋 As dispatcher, you must:
+• Note the arrival time when driver arrives
+• Document departure time from shipper
+• Notify broker immediately if detention starts
+• Get detention approval from broker in writing
+• Add detention to the invoice
+
+💡 Key: Detention MUST be pre-approved by broker — you can't just add it to invoice without authorisation!`},
+
+{k:['quickpay','quick pay','fast payment','broker payment','payment terms','net 30','factoring','when do i get paid'],
+a:`Payment terms in freight dispatching:
+
+💰 Standard: Net-30 — broker pays carrier 30 days after delivery + invoice
+⚡ QuickPay: Pay extra fee (usually 1.5-5%) to get paid in 1-3 days instead
+🏦 Factoring: Third-party company buys your invoices, pays same day (takes 2-4% fee)
+
+As dispatcher:
+• Your fee is % of carrier's gross rate
+• You get paid when carrier gets paid
+• Recommend QuickPay to your carriers — better cash flow
+• Some dispatchers offer to advance pay using factoring`},
+
+// ── UK SPECIFIC ───────────────────────────────────────────
+
+{k:['courier exchange','cx','haulage exchange','uk load board','uk freight exchange','load exchange uk'],
+a:`Courier Exchange (CX) is the largest UK freight exchange platform.
+
+📱 How it works:
+• Haulage companies post available capacity (empty trucks)
+• Other members post loads needing transport
+• Both parties can see and contact each other
+• All members are vetted and insured
+
+🔑 Features:
+• Track loads in real time
+• Credit check other members
+• Post urgent loads or trucks
+• Access to thousands of UK carriers
+
+For UK freight dispatching, CX membership is essential. Most UK owner-operators are on it.`},
+
+{k:['pallet network','palletforce','pall-ex','tpn','uk pallet','pallet delivery','pallet network kya'],
+a:`UK Pallet Networks are systems where hauliers collaborate to deliver pallets nationally.
+
+🇬🇧 Main networks:
+• **Palletforce** — premium, highest standards
+• **Pall-Ex** — good coverage, competitive
+• **TPN (The Pallet Network)** — large membership
+• **Palletline** — strong in Midlands/North
+• **XDP** — good for 2-man delivery items
+
+How it works: Local haulier collects pallets → takes to regional hub overnight → hub distributes to local hauliers near destination → they deliver last mile.
+
+This is how most B2B UK pallet deliveries work!`},
+
+{k:['uk vs usa','uk freight','usa freight','difference uk usa','uk dispatch','american dispatch','british freight'],
+a:`Key differences between UK and USA freight dispatching:
+
+🇬🇧 **UK:**
+• Shorter distances (UK is smaller than Texas!)
+• O-Licence required for operators
+• DVSA enforcement, tachograph mandatory
+• Curtainsiders most common trailer
+• Pallet networks dominate B2B delivery
+• Courier Exchange is main load board
+• Temperatures in Celsius
+
+🇺🇸 **USA:**
+• Long haul culture (1,000+ mile runs normal)
+• FMCSA/DOT regulation, ELD mandatory
+• Dry van most common trailer
+• DAT/Truckstop load boards
+• Temperatures in Fahrenheit
+• Much larger geographic market`},
+
+// ── TIME ZONES ────────────────────────────────────────────
+
+{k:['time zone','ist','gmt','est','pst','india time','usa time','time difference','time zone kya','ist to est','ist to gmt','india usa time'],
+a:`Time zone chart for freight dispatchers in India working USA/UK loads:
+
+🇮🇳 IST (India) is the reference:
+• IST = GMT/UK + 5:30 hours
+• IST = EST (New York) + 10:30 hours  
+• IST = CST (Chicago) + 11:30 hours
+• IST = MST (Denver) + 12:30 hours
+• IST = PST (Los Angeles) + 13:30 hours
+
+📋 Practical example:
+• 9:00 AM IST = 3:30 AM GMT = 10:30 PM EST (previous day)
+• To reach Chicago brokers at 9 AM their time → you call at 8:30 PM IST
+
+Tip: USA business hours (8AM-6PM local) = your evening/night shift!`},
+
+{k:['working hours dispatcher india','when to work','shift timing','dispatcher shift','india dispatcher schedule','night shift'],
+a:`Working schedule for Indian dispatchers working USA loads:
+
+🌙 USA East Coast (EST) loads:
+• Brokers active: 8AM-6PM EST = 6:30PM-4:30AM IST
+• Your working window: ~7PM-2AM IST covers peak hours
+
+🌃 USA West Coast (PST) loads:
+• Brokers active: 8AM-6PM PST = 9:30PM-7:30AM IST
+• Your working window: ~10PM-4AM IST
+
+🌅 UK loads:
+• UK working hours: 7AM-6PM GMT = 12:30PM-11:30PM IST
+• Much more comfortable — afternoon/evening IST shift!
+
+Most India-based dispatchers work evening shifts for USA, or day shifts for UK`},
+
+// ── PRACTICAL SKILLS ──────────────────────────────────────
+
+{k:['how to negotiate','negotiation','rate negotiation','negotiate with broker','how to get better rate','negotiation tips','broker negotiation'],
+a:`Rate negotiation tips — how to get better paying loads:
+
+💬 **Opening move:** Never accept the first offer. Always counter.
+
+Script: "The market rate on DAT for this lane is $X. We can do this for $[higher amount]."
+
+🎯 Tactics:
+• Quote 10-15% above what you'd accept
+• Mention driver has specific equipment/experience
+• Reference DAT rate data (makes you sound professional)
+• Be willing to walk away — brokers often come back
+• Build relationships — repeat brokers give better rates
+
+⚠️ Don't: Lie about driver location, accept below fuel cost rates, be aggressive or rude`},
+
+{k:['fuel surcharge','fuel cost','fuel calculation','carrier cost','cost per mile','dispatcher cost kya'],
+a:`Understanding carrier costs — crucial for dispatching profitably:
+
+⛽ US Average costs per mile (owner-operator 2024):
+• Fuel: ~$0.60-0.80/mile (biggest cost)
+• Truck payment: ~$0.20-0.30/mile
+• Insurance: ~$0.15-0.20/mile
+• Maintenance: ~$0.10-0.15/mile
+• Total cost: ~$1.10-1.50/mile
+
+💡 So if RPM is $2.00/mile and cost is $1.30/mile → profit = $0.70/mile
+On a 500 mile run = $350 profit for carrier before your fee
+
+Always ensure the load rate covers costs AND leaves profit for your carrier!`},
+
+{k:['dispatcher fee','commission','percentage','how much do dispatchers charge','dispatcher ka kitna milta','fee structure'],
+a:`Dispatcher fees typically range from 5% to 10% of gross load rate.
+
+💰 Common structures:
+• **5-7%** — standard for high volume, long-term carriers
+• **8-10%** — standard for newer relationships or complex freight
+• **Flat fee** — some charge £/$ per load instead of percentage
+
+Example: $3,000 load at 8% = $240 dispatcher fee
+On 10 loads/week = $2,400/week gross revenue
+
+📋 Important:
+• Fee is taken from carrier's gross rate (before fuel, costs)
+• Always specified in Dispatcher Service Agreement
+• Invoiced separately from carrier's freight invoice`},
+
+{k:['load board search','how to search loads','find load','search dat','find freight','how to use dat','dat search kaise kare'],
+a:`How to search for loads on DAT step-by-step:
+
+1️⃣ Log into DAT → click "Find Loads"
+2️⃣ Enter Origin city/state (where truck is located)
+3️⃣ Enter Destination (where carrier wants to go, or leave open)
+4️⃣ Select equipment type (Dry Van, Flatbed, Reefer)
+5️⃣ Set search radius (50-150 miles from origin)
+6️⃣ Review results — check rate, miles, pickup date
+7️⃣ Click load → get broker contact details
+8️⃣ Check broker credit score before calling!
+9️⃣ Call broker using ICAR method
+🔟 Get Rate Con signed before dispatch
+
+💡 Pro tip: Search "available" not "posted" — shows live loads only`},
+
+{k:['invoice','carrier invoice','how to invoice','billing','freight invoice','invoice kaise banaye','payment invoice'],
+a:`How to invoice after a load delivers:
+
+📄 Carrier invoice must include:
+• Carrier name, MC number, address
+• Load/PRO number
+• Origin and destination
+• Delivery date
+• Agreed rate from Rate Con
+• Any extras: Detention, fuel surcharge, layover
+
+📎 Attach these documents:
+• Signed Rate Confirmation
+• Signed BOL (Bill of Lading) 
+• Signed POD (Proof of Delivery)
+
+✉️ Send to broker's accounts payable email within 48 hours of delivery. Late invoicing = late payment!`},
+
+// ── COMMON QUESTIONS / STUDENT QUESTIONS ─────────────────
+
+{k:['how to start','how to become dispatcher','dispatcher kaise bane','start dispatching','new dispatcher','beginner dispatcher','first step'],
+a:`How to start your freight dispatching career:
+
+📚 Step 1: Complete your training (you're doing it now! 🎓)
+📄 Step 2: Prepare your documents — Dispatcher Service Agreement template
+💻 Step 3: Set up your tools — DAT account, email, phone, CRM spreadsheet
+🤝 Step 4: Find your first carrier — Facebook trucking groups, trucking forums, cold outreach
+📞 Step 5: Sign them up, get their MC details, verify authority
+🚛 Step 6: Find their first load — use ICAR call method
+💰 Step 7: Deliver and invoice — build the relationship
+
+Start with 1-2 carriers, master the process, then grow!`},
+
+{k:['dispatcher tools','software','crm','tools needed','what software','dispatcher software','tools for dispatcher'],
+a:`Essential tools for a freight dispatcher:
+
+💻 **Must have:**
+• DAT Load Board — find loads and check rates
+• Google Sheets/Excel — track loads, carriers, invoices
+• Email (professional address) — all communication
+• Phone (good data plan) — calling brokers and carriers
+• WhatsApp/Telegram — quick updates with carriers
+
+📱 **Recommended:**
+• Truckstop.com — second load board
+• MacroPoint/FourKites — load tracking
+• QuickBooks — accounting and invoicing
+• Canva — professional documents and agreements
+
+🆓 Start free with Google Sheets for tracking — upgrade as you grow`},
+
+{k:['what is eagle academy','eagle academy','about this course','course kya hai','course content','what will i learn'],
+a:`Eagle Academy is a UK Freight Dispatcher Certification course designed specifically for Indian students.
+
+📚 The 4-week programme covers:
+• **Week 1** — Dispatch foundations, freight types, logistics chain
+• **Week 2** — Geography, lanes, USA and UK markets  
+• **Week 3** — Hours of service, tachographs, DVSA, UK regulations
+• **Week 4** — Load boards, rate calculation, invoicing, career launch
+
+🎯 By the end you'll be job-ready to work as:
+• UK-based freight coordinator
+• Remote dispatcher for USA carriers
+• Logistics administrator
+
+The course combines theory with practical tools, quizzes, and real-world scripts!`},
+
+{k:['madam ji','who are you','aap kaun ho','who is madam ji','about madam ji'],
+a:`Namaste! 🙏 I'm Madam JI — your AI study assistant for Eagle Academy!
+
+🦉 I'm here to help you understand freight dispatching — ask me anything about:
+• UK transport law and regulations
+• USA freight operations
+• Load boards and rate calculation
+• Tachographs, drivers hours, DVSA
+• ICAR method and dispatcher calls
+• BOL, Rate Confirmation, CMR documents
+
+📚 I know everything in this course — ask in English या हिंदी में पूछें!
+
+The more questions you ask, the better you'll learn. Go ahead — कोई भी सवाल पूछो! 😊`},
+
+// ── HINDI SPECIFIC ANSWERS ────────────────────────────────
+
+{k:['dispatcher kya hota hai','dispatcher ka kaam','freight dispatcher hindi','dispatch kya hota'],
+a:`Freight Dispatcher एक ऐसा professional होता है जो truck carriers को shippers से connect करता है।
+
+🚛 आपका काम होगा:
+• Load boards पर loads ढूंढना (DAT, Truckstop)
+• Brokers से rate negotiate करना
+• Drivers के साथ coordination करना
+• सभी documents handle करना (BOL, Rate Con)
+• Carrier को on time delivery ensure करना
+
+💡 सोचिए: आप एक matchmaker हैं — जिनके पास खाली truck है उन्हें उन लोगों से मिलाना जिन्हें freight move करना है!
+
+यह काम घर से भी हो सकता है — laptop और phone से!`},
+
+{k:['uk mein kaise kaam kare','uk freight','uk mein job','uk job kaise milegi','uk dispatch','uk mein kaise jaaye'],
+a:`UK में Freight Dispatcher के रूप में काम करने के दो तरीके हैं:
+
+🇬🇧 **Option 1: UK जाकर काम करना**
+• Freight coordinator/administrator के रूप में apply करें
+• Job boards: Indeed UK, Reed.co.uk, Totaljobs
+• Companies: DHL, XPO Logistics, Eddie Stobart, John Lewis supply chain
+
+🌐 **Option 2: India से UK के लिए remote work**
+• UK-based hauliers के लिए remote dispatcher बनें
+• Courier Exchange पर काम करने वाली companies contact करें
+• LinkedIn पर UK transport companies connect करें
+
+Eagle Academy certification आपको दोनों के लिए तैयार करती है!`},
+
+{k:['salary','kitna milega','income','earnings','kitna kama sakte','paise','pay'],
+a:`मैं specific income figures नहीं बता सकती — यह आपके effort, clients और market पर depend करता है।
+
+📚 जो मैं बता सकती हूं:
+• Freight dispatching एक real, growing industry है
+• UK में logistics jobs की बहुत demand है
+• Remote dispatching India से possible है
+• Skills जितनी ज्यादा होंगी, उतना बेहतर होगा
+
+🎯 Focus on: Skills सीखना → Certification लेना → Clients ढूंढना → Experience बनाना
+
+Income के बारे में realistic research करें — job boards पर UK logistics roles देखें actual salary ranges के लिए।`},
+
+{k:['exam','test','quiz','kitne marks','pass karna','final exam','certificate kaise milega','exam kaise pass kare'],
+a:`Eagle Academy Final Exam के बारे में:
+
+📝 **Structure:**
+• Multiple choice questions covering all 4 weeks
+• Time limit: 60 minutes
+• Pass mark: 70%
+
+📚 **Best preparation:**
+• Complete all week quizzes first
+• Review topics where you scored low
+• Use these Q&A chips to revise key concepts
+• Practice ICAR method out loud
+
+🏆 **Certificate:**
+Pass करने पर Eagle Academy Freight Dispatcher Certificate मिलेगा — इसे LinkedIn पर add करें!
+
+मुझसे किसी भी topic पर revision करा सकते हो — बस सवाल पूछो! 😊`},
+
+]; // end MJ_KB
+
+// ═══════════════════════════════════════════════
+// FUZZY SEARCH ENGINE
+// Scores each KB entry against the query
+// Returns best match if score >= threshold
+// ═══════════════════════════════════════════════
+
+function mjSearch(query) {
+  if (!query) return null;
+  var q = query.toLowerCase()
+    .replace(/[?!।,]/g,'')
+    .replace(/\s+/g,' ')
+    .trim();
+  var words = q.split(' ').filter(function(w){ return w.length > 2; });
+  
+  var best = null;
+  var bestScore = 0;
+
+  for (var i = 0; i < MJ_KB.length; i++) {
+    var entry = MJ_KB[i];
+    var score = 0;
+
+    for (var k = 0; k < entry.k.length; k++) {
+      var kw = entry.k[k].toLowerCase();
+      // Exact phrase match = very high score
+      if (q.indexOf(kw) !== -1) {
+        score = Math.max(score, kw.length > 6 ? 90 : 70);
+      }
+      // Keyword phrase words match
+      var kwWords = kw.split(' ');
+      var matchedKwWords = 0;
+      for (var kw2 = 0; kw2 < kwWords.length; kw2++) {
+        if (q.indexOf(kwWords[kw2]) !== -1) matchedKwWords++;
+      }
+      if (kwWords.length > 0) {
+        score = Math.max(score, Math.round((matchedKwWords / kwWords.length) * 75));
+      }
+    }
+
+    // Also check individual query words against keywords
+    for (var w = 0; w < words.length; w++) {
+      var word = words[w];
+      if (word.length < 3) continue;
+      for (var k2 = 0; k2 < entry.k.length; k2++) {
+        if (entry.k[k2].indexOf(word) !== -1) {
+          score = Math.max(score, 45);
+          break;
+        }
+      }
+    }
+
+    if (score > bestScore) {
+      bestScore = score;
+      best = entry;
+    }
+  }
+
+  // Threshold: 40+ = good enough match
+  return bestScore >= 40 ? { entry: best, score: bestScore } : null;
+}
+
+
   var mjHistory = [];
   var mjApiKey = '';
   try { mjApiKey = localStorage.getItem('ea_mj_key') || ''; } catch(e){}
@@ -1450,24 +2286,64 @@ function tpCalcTime() {
     if(m) m.classList.remove('open');
     p.classList.toggle('open');
   };
-  window.mjChip = function(q){ var i=document.getElementById('mj-q'); if(i) i.value=q; mjSend(); };
+  window.mjChip = function(q){ if(!q) return; var i=document.getElementById('mj-q'); if(i) i.value=q; window.mjSend(); };
   window.mjSaveKey = function(v){ mjApiKey=v.trim(); try{localStorage.setItem('ea_mj_key',mjApiKey);}catch(e){} if(mjApiKey) document.getElementById('mj-key-row').style.display='none'; };
   window.mjSend = async function(){
     var inp=document.getElementById('mj-q'); var q=inp?inp.value.trim():''; if(!q) return; if(inp) inp.value='';
-    if(!mjApiKey){ document.getElementById('mj-key-row').style.display='block'; mjAdd('Please paste your Anthropic API key above to use Madam JI. 🔑','bot'); return; }
-    mjAdd(q,'user'); mjHistory.push({role:'user',content:q});
+
+    mjAdd(q,'user');
+
+    // ── STEP 1: Search knowledge base first ─────
+    var match = mjSearch(q);
+    if (match) {
+      // Found a good match — answer instantly, no API needed
+      var answer = match.entry.a;
+      // Format markdown-style bold
+      answer = answer.replace(/\*\*(.*?)\*\*/g, '$1');
+      setTimeout(function(){ mjAddFormatted(answer,'bot'); }, 300);
+      mjHistory.push({role:'user',content:q});
+      mjHistory.push({role:'assistant',content:answer});
+      return;
+    }
+
+    // ── STEP 2: No KB match — try API if available ─
+    mjHistory.push({role:'user',content:q});
+
+    if (!mjApiKey){
+      document.getElementById('mj-key-row').style.display='block';
+      var msgs=document.getElementById('mj-msgs');
+      var lastMsg=msgs?msgs.querySelector('.mj-msg.bot:last-child'):null;
+      if(!lastMsg||!lastMsg.textContent.includes('API key')){
+        setTimeout(function(){
+          mjAdd('🤔 I don't have a pre-loaded answer for that. Add an API key below to ask me anything — or try rephrasing your question!','bot');
+        },300);
+      }
+      return;
+    }
+
     var t=document.createElement('div'); t.className='mj-msg bot typing'; t.id='mj-typing';
     t.innerHTML='<div class="mj-dot"></div><div class="mj-dot"></div><div class="mj-dot"></div>';
     document.getElementById('mj-msgs').appendChild(t); mjScroll();
     try {
-      var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':mjApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:400,system:MJ_SYSTEM,messages:mjHistory})});
+      var r=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':mjApiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:500,system:MJ_SYSTEM,messages:mjHistory})});
       var d=await r.json(); var reply=d.content&&d.content[0]?d.content[0].text:'Sorry, try again.';
       mjHistory.push({role:'assistant',content:reply});
       var ty=document.getElementById('mj-typing'); if(ty) ty.remove();
       mjAdd(reply,'bot');
-    } catch(e){ var ty=document.getElementById('mj-typing'); if(ty) ty.remove(); mjAdd('Connection error. Check your API key.','bot'); }
+    } catch(e){ var ty=document.getElementById('mj-typing'); if(ty) ty.remove(); mjAdd('Connection error — check your internet or API key.','bot'); }
   };
   function mjAdd(text,role){ var d=document.createElement('div'); d.className='mj-msg '+role; d.textContent=text; document.getElementById('mj-msgs').appendChild(d); mjScroll(); }
+  function mjAddFormatted(text,role){
+    var d=document.createElement('div'); d.className='mj-msg '+role;
+    // Convert line breaks and simple formatting
+    var html = text
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/
+/g,'<br>')
+      .replace(/•\s/g,'• ');
+    d.innerHTML = html;
+    document.getElementById('mj-msgs').appendChild(d); mjScroll();
+  }
   function mjScroll(){ var m=document.getElementById('mj-msgs'); if(m) m.scrollTop=m.scrollHeight; }
   document.addEventListener('click',function(e){
     var mf=document.getElementById('mj-fab'), mp=document.getElementById('mj-popup');
