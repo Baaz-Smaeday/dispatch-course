@@ -443,3 +443,60 @@ html,body {
   .day-hero  { padding:20px; }
   .header-inner { height:58px; }
 }
+
+/* ═══════════════════════════════════════
+   EA-HEADER — Week pages navigation fix
+   Classes used by week1-4, tools, exam,
+   certificate, madam-ji pages
+═══════════════════════════════════════ */
+
+.ea-header {
+  position: sticky; top: 0; z-index: 200;
+  background: rgba(15,12,61,0.97);
+  border-bottom: 1px solid rgba(249,115,22,0.15);
+  backdrop-filter: blur(24px);
+}
+.ea-header-inner {
+  max-width: 1300px; margin: 0 auto;
+  padding: 0 20px; height: 68px;
+  display: flex; align-items: center; gap: 14px;
+}
+.ea-logo {
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; flex-shrink: 0;
+}
+.ea-logo img {
+  height: 42px; width: 42px;
+  object-fit: contain; border-radius: 8px;
+}
+.ea-logo-text .brand {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800; font-size: 16px;
+  color: var(--white); letter-spacing: 1px; line-height: 1;
+}
+.ea-logo-text .sub {
+  font-size: 9px; color: var(--orange);
+  letter-spacing: 2px; text-transform: uppercase; margin-top: 1px;
+}
+.ea-nav {
+  display: flex; align-items: center;
+  gap: 2px; flex: 1; overflow-x: auto; scrollbar-width: none;
+}
+.ea-nav::-webkit-scrollbar { display: none; }
+.ea-nav-btn {
+  padding: 6px 13px; border-radius: 8px;
+  text-decoration: none; color: var(--grey);
+  font-size: 12px; font-weight: 600;
+  font-family: 'DM Sans', sans-serif;
+  transition: all .18s; white-space: nowrap;
+  border: 1px solid transparent;
+}
+.ea-nav-btn:hover {
+  color: var(--white);
+  background: rgba(255,255,255,.06);
+}
+.ea-nav-btn.active {
+  color: var(--orange);
+  background: rgba(249,115,22,.12);
+  border-color: rgba(249,115,22,.3);
+}
