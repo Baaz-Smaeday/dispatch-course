@@ -543,11 +543,14 @@ document.addEventListener('DOMContentLoaded', () => {
 (function() {
 
   const CSS = `
-    #mj-fab{position:fixed;bottom:24px;right:24px;z-index:9000;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4f46e5);border:2px solid rgba(168,85,247,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 24px rgba(124,58,237,0.4);transition:transform .2s,box-shadow .2s;animation:mjPulse 3s ease-in-out infinite}
-    #mj-fab:hover{transform:scale(1.1);box-shadow:0 6px 32px rgba(124,58,237,0.6)}
-    @keyframes mjPulse{0%,100%{box-shadow:0 4px 24px rgba(124,58,237,0.4)}50%{box-shadow:0 4px 40px rgba(124,58,237,0.7),0 0 0 8px rgba(124,58,237,0.08)}}
+    #mj-fab{position:fixed;bottom:88px;right:20px;z-index:9000;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4f46e5);border:2px solid rgba(168,85,247,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 24px rgba(124,58,237,0.4);transition:transform .2s,box-shadow .2s;animation:mjBounce 2.5s ease-in-out infinite,mjColorCycle 4s ease-in-out infinite}
+    #mj-fab:hover{transform:scale(1.15) rotate(5deg)!important;box-shadow:0 6px 36px rgba(124,58,237,0.7)!important;animation:none!important;background:linear-gradient(135deg,#9333ea,#6366f1)!important}
+    #mj-fab::after{content:"Ask Madam JI 🦉";position:absolute;right:64px;top:50%;transform:translateY(-50%) scale(0.8);background:rgba(15,12,61,0.95);border:1px solid rgba(124,58,237,0.4);color:#e9d5ff;font-size:11px;font-weight:700;font-family:'DM Sans',sans-serif;padding:5px 12px;border-radius:999px;white-space:nowrap;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
+    #mj-fab:hover::after{opacity:1;transform:translateY(-50%) scale(1)}
+    @keyframes mjBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    @keyframes mjColorCycle{0%,100%{box-shadow:0 4px 24px rgba(124,58,237,0.5),0 0 0 0 rgba(124,58,237,0.2)}33%{box-shadow:0 4px 28px rgba(99,102,241,0.6),0 0 0 6px rgba(99,102,241,0.1)}66%{box-shadow:0 4px 28px rgba(219,39,119,0.5),0 0 0 6px rgba(219,39,119,0.1)}}
     #mj-fab .mj-badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#f97316;font-size:9px;font-weight:900;color:white;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;border:2px solid #0f0c3d}
-    #mj-popup{position:fixed;bottom:92px;right:24px;z-index:9000;width:360px;max-height:540px;background:rgba(15,12,61,0.98);border:1px solid rgba(124,58,237,0.4);border-radius:20px;box-shadow:0 16px 56px rgba(0,0,0,0.6);display:flex;flex-direction:column;transform:translateY(20px) scale(0.95);opacity:0;pointer-events:none;transition:all .25s cubic-bezier(.22,1,.36,1);backdrop-filter:blur(20px)}
+    #mj-popup{position:fixed;bottom:154px;right:20px;z-index:9000;width:360px;max-height:540px;background:rgba(15,12,61,0.98);border:1px solid rgba(124,58,237,0.4);border-radius:20px;box-shadow:0 16px 56px rgba(0,0,0,0.6);display:flex;flex-direction:column;transform:translateY(20px) scale(0.95);opacity:0;pointer-events:none;transition:all .25s cubic-bezier(.22,1,.36,1);backdrop-filter:blur(20px)}
     #mj-popup.open{transform:translateY(0) scale(1);opacity:1;pointer-events:all}
     .mj-pop-head{padding:14px 16px;border-bottom:1px solid rgba(124,58,237,0.2);display:flex;align-items:center;gap:10px;flex-shrink:0}
     .mj-pop-orb{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#f97316);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
@@ -712,9 +715,13 @@ document.addEventListener('DOMContentLoaded', () => {
 (function() {
 
   const CSS = `
-    #tools-fab{position:fixed;bottom:24px;left:24px;z-index:9000;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea6c0a);border:2px solid rgba(249,115,22,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 24px rgba(249,115,22,0.35);transition:transform .2s,box-shadow .2s}
-    #tools-fab:hover{transform:scale(1.1);box-shadow:0 6px 32px rgba(249,115,22,0.55)}
-    #tools-popup{position:fixed;bottom:92px;left:24px;z-index:9000;width:320px;background:rgba(15,12,61,0.98);border:1px solid rgba(249,115,22,0.3);border-radius:20px;box-shadow:0 16px 56px rgba(0,0,0,0.6);transform:translateY(20px) scale(0.95);opacity:0;pointer-events:none;transition:all .25s cubic-bezier(.22,1,.36,1);backdrop-filter:blur(20px);overflow:hidden}
+    #tools-fab{position:fixed;bottom:24px;left:20px;z-index:9000;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea6c0a);border:2px solid rgba(249,115,22,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:24px;transition:transform .2s,box-shadow .2s;animation:toolsBounce 2.5s ease-in-out infinite 1.2s,toolsColorCycle 4s ease-in-out infinite 0.8s}
+    #tools-fab:hover{transform:scale(1.15) rotate(-5deg)!important;box-shadow:0 6px 36px rgba(249,115,22,0.7)!important;animation:none!important;background:linear-gradient(135deg,#fb923c,#f97316)!important}
+    #tools-fab::after{content:"Quick Tools 🔧";position:absolute;left:64px;top:50%;transform:translateY(-50%) scale(0.8);background:rgba(15,12,61,0.95);border:1px solid rgba(249,115,22,0.4);color:#fed7aa;font-size:11px;font-weight:700;font-family:'DM Sans',sans-serif;padding:5px 12px;border-radius:999px;white-space:nowrap;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
+    #tools-fab:hover::after{opacity:1;transform:translateY(-50%) scale(1)}
+    @keyframes toolsBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
+    @keyframes toolsColorCycle{0%,100%{box-shadow:0 4px 24px rgba(249,115,22,0.5),0 0 0 0 rgba(249,115,22,0.2)}33%{box-shadow:0 4px 28px rgba(245,158,11,0.6),0 0 0 6px rgba(245,158,11,0.1)}66%{box-shadow:0 4px 28px rgba(239,68,68,0.5),0 0 0 6px rgba(239,68,68,0.1)}}
+    #tools-popup{position:fixed;bottom:90px;left:20px;z-index:9000;width:320px;background:rgba(15,12,61,0.98);border:1px solid rgba(249,115,22,0.3);border-radius:20px;box-shadow:0 16px 56px rgba(0,0,0,0.6);transform:translateY(20px) scale(0.95);opacity:0;pointer-events:none;transition:all .25s cubic-bezier(.22,1,.36,1);backdrop-filter:blur(20px);overflow:hidden}
     #tools-popup.open{transform:translateY(0) scale(1);opacity:1;pointer-events:all}
     .tp-head{padding:13px 16px;border-bottom:1px solid rgba(249,115,22,0.15);display:flex;align-items:center;justify-content:space-between}
     .tp-head-title{font-weight:700;font-size:13px;color:#f0f2f8;display:flex;align-items:center;gap:7px}

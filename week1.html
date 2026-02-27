@@ -356,6 +356,328 @@ body { background: var(--navy-deep); }
   .main-wrap { padding: 20px 16px; }
   .week-hero { padding: 24px 16px 20px; }
 }
+
+/* ═══ XP BAR ═══ */
+.xp-bar-wrap {
+  background: rgba(8,7,48,0.9);
+  border-bottom: 1px solid rgba(249,115,22,0.12);
+  padding: 6px 24px;
+  position: sticky; top: 116px; z-index: 99;
+  backdrop-filter: blur(12px);
+}
+.xp-bar-inner {
+  max-width: 1200px; margin: 0 auto;
+  display: flex; align-items: center; gap: 12px;
+}
+.xp-level-badge {
+  font-size: 11px; font-weight: 700; color: var(--orange);
+  font-family: var(--font-mono); white-space: nowrap;
+  display: flex; align-items: center; gap: 5px;
+}
+.xp-track {
+  flex: 1; height: 6px; background: rgba(255,255,255,0.07);
+  border-radius: 999px; overflow: hidden;
+}
+#xp-fill {
+  height: 100%; width: 0%; background: var(--orange);
+  border-radius: 999px;
+  transition: width 0.8s cubic-bezier(.22,1,.36,1), background 0.4s;
+}
+.xp-num { font-size: 11px; color: var(--grey); font-family: var(--font-mono); white-space: nowrap; }
+.streak-pill {
+  display: none; align-items: center; gap: 4px;
+  background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.3);
+  border-radius: 999px; padding: 2px 10px;
+  font-size: 11px; font-weight: 700; color: var(--orange);
+}
+
+/* ═══ DAILY STREAK BANNER ═══ */
+.streak-banner {
+  display: none;
+  background: linear-gradient(90deg, rgba(249,115,22,0.15), rgba(245,158,11,0.1));
+  border-bottom: 1px solid rgba(249,115,22,0.2);
+  padding: 8px 24px;
+  align-items: center; justify-content: center; gap: 10px;
+  font-size: 13px; font-weight: 600;
+}
+.streak-banner .streak-days { color: var(--orange); font-weight: 900; font-size: 16px; }
+
+/* ═══ DAY TAB COLOUR HOVER ═══ */
+.day-tab:nth-child(1):hover { border-bottom-color: var(--orange) !important; color: var(--orange) !important; }
+.day-tab:nth-child(2):hover { border-bottom-color: var(--cyan) !important; color: var(--cyan) !important; }
+.day-tab:nth-child(3):hover { border-bottom-color: var(--green) !important; color: var(--green) !important; }
+.day-tab:nth-child(4):hover { border-bottom-color: var(--gold) !important; color: var(--gold) !important; }
+.day-tab:nth-child(5):hover { border-bottom-color: #a855f7 !important; color: #a855f7 !important; }
+.day-tab.active { position: relative; }
+.day-tab.active::after {
+  content: ''; position: absolute; bottom: -3px; left: 0;
+  width: 100%; height: 3px; background: var(--orange);
+  animation: slideIn 0.25s ease;
+}
+@keyframes slideIn { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+
+/* ═══ TOPIC CARD HOVER ═══ */
+.topic-card {
+  transition: box-shadow 0.2s, border-color 0.2s, transform 0.18s !important;
+  cursor: pointer;
+}
+.topic-card:hover {
+  box-shadow: 0 0 0 2px rgba(249,115,22,0.45), 0 8px 32px rgba(249,115,22,0.15) !important;
+  border-color: rgba(249,115,22,0.5) !important;
+  transform: translateY(-3px) !important;
+}
+.topic-card.done:hover {
+  box-shadow: 0 0 0 2px rgba(34,197,94,0.45), 0 8px 28px rgba(34,197,94,0.12) !important;
+  border-color: rgba(34,197,94,0.5) !important;
+}
+
+/* ═══ QUIZ ANSWER ANIMATIONS ═══ */
+@keyframes correctFlash {
+  0%   { box-shadow: 0 0 0 0 rgba(34,197,94,0.8); }
+  30%  { box-shadow: 0 0 0 8px rgba(34,197,94,0.4); }
+  60%  { box-shadow: 0 0 0 14px rgba(34,197,94,0.1); }
+  100% { box-shadow: 0 0 0 0 transparent; }
+}
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  15%     { transform: translateX(-6px); }
+  30%     { transform: translateX(6px); }
+  45%     { transform: translateX(-5px); }
+  60%     { transform: translateX(5px); }
+  75%     { transform: translateX(-3px); }
+  90%     { transform: translateX(3px); }
+}
+@keyframes toastUp {
+  0%   { opacity:0; transform:translateX(-50%) translateY(20px); }
+  15%  { opacity:1; transform:translateX(-50%) translateY(0); }
+  75%  { opacity:1; transform:translateX(-50%) translateY(0); }
+  100% { opacity:0; transform:translateX(-50%) translateY(-12px); }
+}
+@keyframes starPop {
+  0%   { transform: scale(0) rotate(-20deg); opacity: 0; }
+  60%  { transform: scale(1.3) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0); opacity: 1; }
+}
+.q-opt.correct { animation: correctFlash 0.6s ease forwards !important; }
+.q-opt.wrong   { animation: shake 0.4s ease !important; }
+.q-opt:not(:disabled):hover {
+  transform: translateX(5px) !important;
+  border-color: rgba(249,115,22,0.6) !important;
+  background: rgba(249,115,22,0.1) !important;
+  box-shadow: -3px 0 0 var(--orange) !important;
+}
+
+/* ═══ SPEED ROUND ═══ */
+.speed-btn {
+  margin-left: auto; padding: 4px 12px;
+  background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.3);
+  border-radius: 999px; color: var(--orange); font-size: 11px; font-weight: 700;
+  cursor: pointer; font-family: var(--font-main); transition: all 0.15s;
+  white-space: nowrap;
+}
+.speed-btn:hover { background: rgba(249,115,22,0.2); }
+
+/* ═══ T/F BLITZ ═══ */
+.tf-blitz {
+  background: rgba(15,12,61,0.6);
+  border: 1px solid rgba(245,158,11,0.3);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin-bottom: 16px;
+}
+.tf-header {
+  display: flex; align-items: center; gap: 12px;
+  padding: 14px 18px;
+  background: rgba(245,158,11,0.08);
+  border-bottom: 1px solid rgba(245,158,11,0.15);
+}
+.tf-icon { font-size: 20px; }
+.tf-title { font-size: 14px; font-weight: 700; color: var(--gold); }
+.tf-sub { font-size: 11px; color: var(--grey); margin-top: 2px; }
+.tf-start-btn {
+  margin-left: auto; padding: 6px 16px;
+  background: rgba(245,158,11,0.2); border: 1px solid rgba(245,158,11,0.4);
+  border-radius: 999px; color: var(--gold); font-size: 12px; font-weight: 700;
+  cursor: pointer; font-family: var(--font-main); transition: all 0.15s;
+}
+.tf-start-btn:hover { background: rgba(245,158,11,0.35); }
+.tf-body { padding: 16px 18px; }
+.tf-q-wrap { display: flex; flex-direction: column; gap: 10px; }
+.tf-progress { display: flex; justify-content: space-between; align-items: center; }
+.tf-timer-bar-wrap { height: 4px; background: rgba(255,255,255,0.07); border-radius: 99px; overflow: hidden; }
+.tf-timer-bar { height: 100%; background: var(--gold); border-radius: 99px; transition: width 1s linear; }
+.tf-question { font-size: 15px; font-weight: 600; line-height: 1.5; padding: 8px 0; }
+.tf-btns { display: flex; gap: 10px; }
+.tf-btn {
+  flex: 1; padding: 12px; border-radius: var(--radius-md);
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  font-family: var(--font-main); transition: all 0.15s;
+  border: 2px solid transparent;
+}
+.tf-true  { background: rgba(34,197,94,0.12); color: var(--green); border-color: rgba(34,197,94,0.3); }
+.tf-false { background: rgba(239,68,68,0.12); color: var(--red); border-color: rgba(239,68,68,0.3); }
+.tf-true:hover:not(:disabled)  { background: rgba(34,197,94,0.25); }
+.tf-false:hover:not(:disabled) { background: rgba(239,68,68,0.25); }
+.tf-feedback { padding: 8px 12px; border-radius: var(--radius-sm); background: rgba(255,255,255,0.05); font-size: 13px; font-weight: 600; }
+
+/* ═══ MINI-GAMES ═══ */
+.mg-unlock { padding: 0 0 16px; }
+.mg-unlock-btn {
+  width: 100%; padding: 14px 18px;
+  background: linear-gradient(135deg, rgba(124,58,237,0.15), rgba(79,70,229,0.1));
+  border: 1px dashed rgba(124,58,237,0.4);
+  border-radius: var(--radius-md);
+  color: #c4b5fd; font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: var(--font-main);
+  display: flex; align-items: center; justify-content: space-between;
+  transition: all 0.18s;
+}
+.mg-unlock-btn:hover {
+  background: linear-gradient(135deg, rgba(124,58,237,0.25), rgba(79,70,229,0.2));
+  border-color: rgba(124,58,237,0.6);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 20px rgba(124,58,237,0.2);
+}
+.mg-type-badge {
+  font-size: 11px; font-weight: 600; color: #a78bfa;
+  background: rgba(124,58,237,0.2); border-radius: 999px; padding: 2px 10px;
+}
+.mg-game-area { padding: 0 0 16px; }
+.mg-card {
+  background: rgba(15,12,61,0.7);
+  border: 1px solid rgba(124,58,237,0.3);
+  border-radius: var(--radius-lg);
+  padding: 18px;
+}
+.mg-header {
+  display: flex; align-items: flex-start; gap: 10px;
+  margin-bottom: 16px;
+}
+.mg-title { font-size: 14px; font-weight: 700; color: #c4b5fd; }
+.mg-hint  { font-size: 11px; color: var(--grey); margin-top: 2px; flex: 1; }
+
+/* Scramble */
+.mg-answer-slots {
+  display: flex; gap: 6px; flex-wrap: wrap;
+  margin-bottom: 14px; min-height: 44px;
+  background: rgba(255,255,255,0.03); border-radius: var(--radius-md);
+  padding: 8px; border: 1px solid rgba(255,255,255,0.07);
+}
+.sc-slot {
+  width: 36px; height: 36px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px; font-weight: 900; font-family: var(--font-mono);
+}
+.sc-slot.filled {
+  background: rgba(124,58,237,0.25); border: 1px solid rgba(124,58,237,0.5);
+  color: #e9d5ff; cursor: pointer; transition: all 0.12s;
+}
+.sc-slot.filled:hover { background: rgba(239,68,68,0.2); border-color: var(--red); }
+.sc-slot.empty {
+  background: rgba(255,255,255,0.04); border: 1px dashed rgba(255,255,255,0.15);
+  color: rgba(255,255,255,0.2);
+}
+.mg-letters { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.sc-letter {
+  width: 38px; height: 38px; border-radius: 8px;
+  background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.35);
+  color: var(--orange); font-size: 16px; font-weight: 900;
+  cursor: pointer; font-family: var(--font-mono);
+  transition: all 0.12s;
+}
+.sc-letter:hover:not(.used) { background: rgba(249,115,22,0.3); transform: scale(1.1); }
+.sc-letter.used { opacity: 0.25; cursor: default; }
+.mg-btn-clear {
+  padding: 8px 18px; border-radius: 999px;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  color: var(--grey); font-size: 12px; font-weight: 600;
+  cursor: pointer; font-family: var(--font-main); transition: all 0.12s;
+}
+.mg-btn-check {
+  padding: 8px 20px; border-radius: 999px;
+  background: rgba(124,58,237,0.2); border: 1px solid rgba(124,58,237,0.4);
+  color: #c4b5fd; font-size: 12px; font-weight: 700;
+  cursor: pointer; font-family: var(--font-main); transition: all 0.12s;
+}
+.mg-btn-check:hover { background: rgba(124,58,237,0.35); transform: scale(1.04); }
+
+/* Match pairs */
+.match-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 4px; }
+.match-col  { display: flex; flex-direction: column; gap: 7px; }
+.match-card {
+  padding: 10px 14px; border-radius: var(--radius-md); text-align: center;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  color: var(--white); font-size: 12px; font-weight: 600; cursor: pointer;
+  font-family: var(--font-main); transition: all 0.15s; line-height: 1.4;
+}
+.match-card:hover:not(:disabled) {
+  border-color: rgba(124,58,237,0.5); background: rgba(124,58,237,0.12);
+  transform: scale(1.03);
+}
+.match-card.selected {
+  border-color: var(--orange); background: rgba(249,115,22,0.15); color: var(--orange);
+  box-shadow: 0 0 0 2px rgba(249,115,22,0.3);
+}
+.match-card.matched {
+  border-color: var(--green); background: rgba(34,197,94,0.15); color: var(--green);
+  animation: correctFlash 0.5s ease;
+}
+
+/* Sort steps */
+.sort-list { display: flex; flex-direction: column; gap: 7px; margin-bottom: 4px; }
+.sort-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: var(--radius-md);
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  transition: all 0.15s;
+}
+.sort-num {
+  width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0;
+  background: rgba(249,115,22,0.2); color: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 11px; font-weight: 700;
+}
+.sort-text { flex: 1; font-size: 13px; line-height: 1.4; }
+.sort-arrows { display: flex; flex-direction: column; gap: 2px; }
+.sort-arrows button {
+  padding: 1px 6px; background: rgba(255,255,255,0.07); border: none;
+  color: var(--grey); cursor: pointer; border-radius: 4px; font-size: 10px;
+  transition: all 0.12s;
+}
+.sort-arrows button:hover:not(:disabled) { background: rgba(249,115,22,0.2); color: var(--orange); }
+.sort-arrows button:disabled { opacity: 0.2; cursor: default; }
+
+/* ═══ DAY SUMMARY ═══ */
+.day-summary {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,0.85); backdrop-filter: blur(8px);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px; animation: fadeIn 0.3s ease;
+}
+.day-summary-inner {
+  background: linear-gradient(135deg, rgba(15,12,61,0.98), rgba(26,20,100,0.98));
+  border: 1px solid rgba(249,115,22,0.35);
+  border-radius: 24px; padding: 36px 32px; max-width: 440px; width: 100%;
+  text-align: center; box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+}
+.ds-badge {
+  display: inline-block; padding: 4px 16px;
+  background: rgba(249,115,22,0.2); border: 1px solid rgba(249,115,22,0.4);
+  border-radius: 999px; font-size: 11px; font-weight: 700;
+  color: var(--orange); letter-spacing: 1px; margin-bottom: 14px;
+  font-family: var(--font-mono);
+}
+.ds-title { font-size: 20px; font-weight: 800; margin-bottom: 20px; }
+.ds-scores { display: flex; justify-content: center; gap: 16px; margin-bottom: 20px; }
+.ds-xp { font-size: 18px; color: var(--gold); margin-bottom: 8px; }
+.ds-msg { font-size: 13px; color: var(--grey); margin-bottom: 20px; line-height: 1.6; }
+.ds-btn {
+  padding: 12px 32px; background: var(--orange);
+  border: none; border-radius: 999px; color: white;
+  font-size: 15px; font-weight: 700; cursor: pointer;
+  font-family: var(--font-main); transition: all 0.15s;
+}
+.ds-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
 </style>
 </head>
 <body>
@@ -402,6 +724,11 @@ body { background: var(--navy-deep); }
   </div>
 </div>
 
+<!-- ═══════════════ STREAK BANNER ═══════════════ -->
+<div class="streak-banner" id="streak-banner">
+  🔥 You've studied <span class="streak-days">0</span> days in a row — keep going!
+</div>
+
 <!-- ═══════════════ WEEK HERO ═══════════════ -->
 <section class="week-hero">
   <div class="week-hero-inner">
@@ -444,6 +771,16 @@ body { background: var(--navy-deep); }
     <button class="day-tab" onclick="showDay(5,this)">
       Day 5 <span id="d5_check" class="check" style="display:none">✓</span>
     </button>
+  </div>
+</div>
+
+<!-- ═══════════════ XP BAR ═══════════════ -->
+<div class="xp-bar-wrap">
+  <div class="xp-bar-inner">
+    <div class="xp-level-badge"><span id="xp-icon">📋</span><span id="xp-label">Rookie</span></div>
+    <div class="xp-track"><div id="xp-fill"></div></div>
+    <div class="xp-num" id="xp-num">0 XP</div>
+    <div class="streak-pill" id="streak-pill">🔥 <span id="streak-count">0</span></div>
   </div>
 </div>
 
@@ -2325,26 +2662,892 @@ function loadVideo(dayId, youtubeUrl) {
   box.outerHTML = `<div class="video-iframe-wrap"><iframe src="${youtubeUrl}?autoplay=1" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`;
 }
 
+// ═══════════════════════════════════════════════════════════
+// EAGLE ACADEMY — WEEK 1 GAME ENGINE
+// XP · Streaks · T/F Blitz · Speed Round · Mini-Games · Confetti
+// ═══════════════════════════════════════════════════════════
+
+// ── XP SYSTEM ────────────────────────────────────────────
+const XP = {
+  get() { try { return parseInt(localStorage.getItem('ea_xp_w1') || '0'); } catch(e) { return 0; } },
+  add(amount, label) {
+    const n = this.get() + amount;
+    try { localStorage.setItem('ea_xp_w1', n); } catch(e) {}
+    this.render(n);
+    showToast('+' + amount + ' XP' + (label ? ' · ' + label : ''), 'xp');
+  },
+  render(val) {
+    val = val || this.get();
+    const levels = [
+      { name: 'Rookie',     min: 0,   max: 100,  color: '#94a3b8', icon: '📋' },
+      { name: 'Dispatcher', min: 100, max: 300,  color: '#f97316', icon: '📞' },
+      { name: 'Pro',        min: 300, max: 600,  color: '#06b6d4', icon: '⚡' },
+      { name: 'Expert',     min: 600, max: 1000, color: '#22c55e', icon: '🏆' },
+      { name: 'Master',     min: 1000,max: 9999, color: '#f59e0b', icon: '👑' },
+    ];
+    const lv = levels.find(l => val >= l.min && val < l.max) || levels[levels.length-1];
+    const pct = Math.min(100, Math.round(((val - lv.min) / (lv.max - lv.min)) * 100));
+    const bar = document.getElementById('xp-fill');
+    const lbl = document.getElementById('xp-label');
+    const num = document.getElementById('xp-num');
+    const ico = document.getElementById('xp-icon');
+    if (bar) { bar.style.width = pct + '%'; bar.style.background = lv.color; }
+    if (lbl) lbl.textContent = lv.icon + ' ' + lv.name;
+    if (num) num.textContent = val + ' XP';
+    if (ico) ico.textContent = lv.icon;
+  }
+};
+
+// ── STREAK SYSTEM ─────────────────────────────────────────
+const Streak = {
+  count: 0,
+  add(correct) {
+    if (correct) {
+      this.count++;
+      if (this.count === 3) showToast('🔥 On Fire! 3 in a row!', 'fire');
+      if (this.count === 5) showToast('⚡ Unstoppable! 5 streak!', 'gold');
+      if (this.count === 10) showToast('👑 LEGENDARY! 10 streak!', 'gold');
+    } else {
+      this.count = 0;
+    }
+    const el = document.getElementById('streak-count');
+    if (el) {
+      el.textContent = this.count;
+      el.parentElement.style.display = this.count > 0 ? 'flex' : 'none';
+    }
+  }
+};
+
+// ── TOAST NOTIFICATIONS ───────────────────────────────────
+function showToast(msg, type = 'xp') {
+  const colors = {
+    xp:   { bg: 'rgba(34,197,94,0.95)',   border: '#22c55e' },
+    fire: { bg: 'rgba(249,115,22,0.95)',  border: '#f97316' },
+    gold: { bg: 'rgba(245,158,11,0.95)',  border: '#f59e0b' },
+    info: { bg: 'rgba(6,182,212,0.95)',   border: '#06b6d4' },
+  };
+  const c = colors[type] || colors.xp;
+  const t = document.createElement('div');
+  t.style.cssText = `
+    position:fixed;bottom:100px;left:50%;transform:translateX(-50%) translateY(0);
+    background:${c.bg};border:1px solid ${c.border};
+    color:white;font-weight:700;font-size:13px;font-family:'DM Sans',sans-serif;
+    padding:9px 20px;border-radius:999px;z-index:99999;
+    box-shadow:0 4px 20px rgba(0,0,0,0.3);
+    animation:toastUp 1.8s cubic-bezier(.22,1,.36,1) forwards;
+    white-space:nowrap;pointer-events:none;
+  `;
+  t.textContent = msg;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 1900);
+}
+
+// ── CONFETTI ──────────────────────────────────────────────
+function fireConfetti() {
+  const canvas = document.createElement('canvas');
+  canvas.style.cssText = 'position:fixed;top:0;left:0;width:100%;height:100%;z-index:99998;pointer-events:none';
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  const colors = ['#f97316','#f59e0b','#22c55e','#06b6d4','#f8fafc','#a855f7'];
+  const particles = Array.from({length: 120}, () => ({
+    x: Math.random() * canvas.width,
+    y: -10,
+    w: Math.random() * 10 + 5,
+    h: Math.random() * 6 + 3,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    vx: (Math.random() - 0.5) * 4,
+    vy: Math.random() * 3 + 2,
+    rot: Math.random() * 360,
+    vrot: (Math.random() - 0.5) * 8,
+  }));
+  let frame = 0;
+  function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy; p.rot += p.vrot;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.w/2, -p.h/2, p.w, p.h);
+      ctx.restore();
+    });
+    frame++;
+    if (frame < 120) requestAnimationFrame(draw);
+    else canvas.remove();
+  }
+  draw();
+}
+
+// ── DAILY STREAK BANNER ───────────────────────────────────
+function initDailyStreak() {
+  try {
+    const last = parseInt(localStorage.getItem('ea_last_visit') || '0');
+    const today = new Date().toDateString();
+    const lastDay = new Date(last).toDateString();
+    let streak = parseInt(localStorage.getItem('ea_day_streak') || '0');
+    if (lastDay === today) { /* same day, no change */ }
+    else {
+      const diff = (Date.now() - last) / (1000 * 60 * 60);
+      streak = diff < 48 ? streak + 1 : 1;
+      localStorage.setItem('ea_day_streak', streak);
+      localStorage.setItem('ea_last_visit', Date.now());
+    }
+    if (streak >= 2) {
+      const banner = document.getElementById('streak-banner');
+      if (banner) {
+        banner.style.display = 'flex';
+        banner.querySelector('.streak-days').textContent = streak;
+      }
+    }
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════
+// TRUE/FALSE BLITZ DATA — 4 questions per topic
+// ═══════════════════════════════════════════════════════════
+const TF_DATA = {
+  '1_1': [
+    { q: 'A freight dispatcher drives the truck themselves', a: false },
+    { q: 'Dispatchers typically earn 5–10% commission on load value', a: true },
+    { q: 'DAT is a UK-only load board', a: false },
+    { q: 'Over 70% of US freight moves by truck', a: true },
+  ],
+  '1_2': [
+    { q: 'The shipper pays the carrier directly without a broker', a: false },
+    { q: 'A dispatcher works FOR the carrier, not the broker', a: true },
+    { q: 'Brokers must have a valid MC number to operate', a: true },
+    { q: 'The driver is at the top of the logistics payment chain', a: false },
+  ],
+  '1_3': [
+    { q: 'A dispatcher can legally charge shippers directly', a: false },
+    { q: 'A Dispatcher-Carrier Agreement must be signed before starting work', a: true },
+    { q: 'Double brokering is perfectly legal in the USA', a: false },
+    { q: 'You should always verify a carrier\'s MC number before working with them', a: true },
+  ],
+  '2_1': [
+    { q: 'FTL means multiple shippers share one truck', a: false },
+    { q: 'LTL loads are more complex to manage than FTL', a: true },
+    { q: 'New dispatchers should focus on FTL loads first', a: true },
+    { q: 'LTL always pays more per load than FTL', a: false },
+  ],
+  '2_2': [
+    { q: 'A Dry Van trailer is temperature-controlled', a: false },
+    { q: 'A Flatbed trailer has no roof or sides', a: true },
+    { q: 'Reefer trailers are used for fresh produce and medicines', a: true },
+    { q: 'Tanker trailers carry only solid cargo', a: false },
+  ],
+  '2_3': [
+    { q: 'Intermodal freight uses only road transport', a: false },
+    { q: 'A curtainsider trailer is the most common in UK freight', a: true },
+    { q: 'Drayage means a short move from port to nearby warehouse', a: true },
+    { q: 'A low loader trailer is used for light general parcels', a: false },
+  ],
+  '3_1': [
+    { q: 'Chicago is the most important freight hub in the entire USA', a: true },
+    { q: 'Los Angeles is the largest import port in the United States', a: true },
+    { q: 'The Northeast USA is the easiest region for truck drivers to operate', a: false },
+    { q: 'Dallas to Chicago is one of the top five US freight corridors', a: true },
+  ],
+  '3_2': [
+    { q: 'India Standard Time is ahead of the USA in time', a: true },
+    { q: 'IST is behind GMT', a: false },
+    { q: 'When it is 9 AM in India, New York brokers are already at their desks', a: false },
+    { q: 'A dispatcher in India can work US market hours during their evening', a: true },
+  ],
+  '4_1': [
+    { q: 'A truck driver in the USA can drive a maximum of 11 hours per day', a: true },
+    { q: 'The 30-minute break rule applies after 6 cumulative hours of driving', a: false },
+    { q: 'An ELD automatically records the driver\'s driving time', a: true },
+    { q: 'A dispatcher can legally ask a driver to push past HOS limits for urgent loads', a: false },
+  ],
+  '4_2': [
+    { q: 'ELD stands for Electronic Logging Device', a: true },
+    { q: 'Paper logs are still acceptable for all drivers since 2019', a: false },
+    { q: 'A dispatcher should check the driver\'s ELD hours before booking a load', a: true },
+    { q: 'DVSA officers cannot inspect ELD data at a roadside check', a: false },
+  ],
+  '5_1': [
+    { q: 'DAT is the largest freight load board in the United States', a: true },
+    { q: 'A broker credit score of 65 on DAT is considered safe to work with', a: false },
+    { q: 'DAT shows historical lane rate data to help with negotiations', a: true },
+    { q: 'Truckstop.com is a competitor load board to DAT', a: true },
+  ],
+  '5_2': [
+    { q: 'RPM stands for Rate Per Mile', a: true },
+    { q: 'A dry van RPM above $2.50 is generally considered good', a: true },
+    { q: 'The broker\'s first offer is always the best rate available', a: false },
+    { q: 'RPM is calculated by dividing miles by the load rate', a: false },
+  ],
+  '5_3': [
+    { q: 'A legitimate broker always sends a Rate Confirmation before the truck moves', a: true },
+    { q: 'Cryptocurrency payment requests are normal in professional US freight', a: false },
+    { q: 'You should always verify a broker\'s MC number on the FMCSA website', a: true },
+    { q: 'A rate far below the market average is always a good bargain', a: false },
+  ],
+};
+
+// ═══════════════════════════════════════════════════════════
+// MINI-GAME DATA
+// ═══════════════════════════════════════════════════════════
+const MINI_GAMES = {
+  // WORD SCRAMBLE topics
+  '1_1': { type: 'scramble', word: 'DISPATCHER',  hint: 'The person who manages loads for a carrier' },
+  '2_2': { type: 'scramble', word: 'FLATBED',     hint: 'Open trailer with no roof or sides' },
+  '3_1': { type: 'scramble', word: 'CORRIDOR',    hint: 'A major freight route between two cities' },
+  '4_1': { type: 'scramble', word: 'COMPLIANCE',  hint: 'Following all legal rules and regulations' },
+  '5_1': { type: 'scramble', word: 'LOADBOARD',   hint: 'Platform where brokers post available freight' },
+  '5_3': { type: 'scramble', word: 'DETENTION',   hint: 'Extra time at a shipper — you can claim this pay' },
+
+  // MATCH PAIRS topics
+  '1_2': {
+    type: 'match',
+    pairs: [
+      { term: 'Shipper',    def: 'Has goods to move' },
+      { term: 'Broker',     def: 'Holds MC number' },
+      { term: 'Dispatcher', def: 'Works for carrier' },
+    ]
+  },
+  '2_1': {
+    type: 'match',
+    pairs: [
+      { term: 'FTL',      def: 'One shipper fills truck' },
+      { term: 'LTL',      def: 'Multiple shippers share' },
+      { term: 'Dry Van',  def: 'Most common trailer' },
+    ]
+  },
+  '3_2': {
+    type: 'match',
+    pairs: [
+      { term: 'IST',  def: 'UTC + 5:30' },
+      { term: 'EST',  def: 'UTC − 5:00' },
+      { term: 'PST',  def: 'UTC − 8:00' },
+    ]
+  },
+  '4_2': {
+    type: 'match',
+    pairs: [
+      { term: 'ELD',  def: 'Records drive time' },
+      { term: 'FMCSA', def: 'US transport authority' },
+      { term: 'HOS',  def: 'Hours of Service rules' },
+    ]
+  },
+  '5_2': {
+    type: 'match',
+    pairs: [
+      { term: 'RPM', def: 'Rate Per Mile' },
+      { term: 'BOL', def: 'Bill of Lading' },
+      { term: 'DAT', def: 'Largest US load board' },
+    ]
+  },
+
+  // SORT STEPS topics
+  '1_3': {
+    type: 'sort',
+    title: 'Put the ICAR method in correct order:',
+    items: ['Introduce yourself & carrier', 'Confirm the load details', 'Ask qualifying questions', 'Rate — negotiate the price'],
+    correct: [0, 1, 2, 3]
+  },
+  '2_3': {
+    type: 'sort',
+    title: 'Put the intermodal journey in correct order:',
+    items: ['Container arrives at port', 'Rail journey across country', 'Drayage to local depot', 'Final road delivery'],
+    correct: [0, 1, 2, 3]
+  },
+};
+
+// ═══════════════════════════════════════════════════════════
+// T/F BLITZ ENGINE
+// ═══════════════════════════════════════════════════════════
+function renderTFBlitz(topicId) {
+  const data = TF_DATA[topicId];
+  const wrap = document.getElementById('tf_' + topicId);
+  if (!data || !wrap || wrap.dataset.built) return;
+  wrap.dataset.built = '1';
+
+  const id = 'tfg_' + topicId;
+  wrap.innerHTML = `
+    <div class="tf-blitz" id="${id}">
+      <div class="tf-header">
+        <span class="tf-icon">⚡</span>
+        <div>
+          <div class="tf-title">True / False Blitz</div>
+          <div class="tf-sub">4 quick questions — test yourself first!</div>
+        </div>
+        <button class="tf-start-btn" onclick="startTFBlitz('${topicId}')">▶ Start</button>
+      </div>
+      <div class="tf-body" id="tf-body-${topicId}" style="display:none"></div>
+    </div>
+  `;
+}
+
+function startTFBlitz(topicId) {
+  const data = TF_DATA[topicId];
+  const body = document.getElementById('tf-body-' + topicId);
+  const header = document.querySelector('#tfg_' + topicId + ' .tf-header');
+  if (!body) return;
+  header.querySelector('.tf-start-btn').style.display = 'none';
+  body.style.display = 'block';
+  let idx = 0, score = 0;
+
+  function showQ() {
+    if (idx >= data.length) {
+      // Done
+      const pct = Math.round((score / data.length) * 100);
+      body.innerHTML = `
+        <div style="text-align:center;padding:16px 0">
+          <div style="font-size:36px;font-weight:900;color:${pct>=75?'var(--green)':'var(--orange)'}">${score}/${data.length}</div>
+          <div style="font-size:13px;color:var(--grey);margin-top:4px">${pct>=75?'Great instincts! Now do the full quiz ↓':'Review the topic, then try the quiz ↓'}</div>
+        </div>
+      `;
+      XP.add(score * 3, 'T/F Blitz');
+      return;
+    }
+    const q = data[idx];
+    let timer = 5, interval;
+    body.innerHTML = `
+      <div class="tf-q-wrap">
+        <div class="tf-progress"><span style="font-family:var(--font-mono);font-size:11px;color:var(--grey)">Q${idx+1} of ${data.length}</span><span id="tf-timer-${topicId}" style="font-family:var(--font-mono);font-size:12px;color:var(--orange);font-weight:700">5s</span></div>
+        <div class="tf-timer-bar-wrap"><div class="tf-timer-bar" id="tf-tbar-${topicId}" style="width:100%"></div></div>
+        <div class="tf-question">${q.q}</div>
+        <div class="tf-btns">
+          <button class="tf-btn tf-true" onclick="answerTF(this,'${topicId}',true,${q.a})">✅ True</button>
+          <button class="tf-btn tf-false" onclick="answerTF(this,'${topicId}',false,${q.a})">❌ False</button>
+        </div>
+        <div class="tf-feedback" id="tf-fb-${topicId}" style="display:none"></div>
+      </div>
+    `;
+    interval = setInterval(() => {
+      timer--;
+      const tEl = document.getElementById('tf-timer-' + topicId);
+      const tBar = document.getElementById('tf-tbar-' + topicId);
+      if (tEl) tEl.textContent = timer + 's';
+      if (tBar) tBar.style.width = (timer / 5 * 100) + '%';
+      if (timer <= 0) {
+        clearInterval(interval);
+        // Time out
+        document.querySelectorAll('.tf-btn').forEach(b => b.disabled = true);
+        const fb = document.getElementById('tf-fb-' + topicId);
+        if (fb) { fb.style.display = 'block'; fb.innerHTML = `⏱ Time up! Answer: <strong>${q.a ? 'TRUE ✅' : 'FALSE ❌'}</strong>`; fb.style.color = 'var(--gold)'; }
+        Streak.add(false);
+        setTimeout(() => { idx++; showQ(); }, 1200);
+      }
+    }, 1000);
+
+    window['tf_interval_' + topicId] = interval;
+  }
+
+  window['answerTF'] = function(btn, tId, answer, correct) {
+    clearInterval(window['tf_interval_' + tId]);
+    document.querySelectorAll('.tf-btn').forEach(b => b.disabled = true);
+    const isRight = answer === correct;
+    if (isRight) score++;
+    btn.style.background = isRight ? 'rgba(34,197,94,0.3)' : 'rgba(239,68,68,0.3)';
+    btn.style.borderColor = isRight ? 'var(--green)' : 'var(--red)';
+    const fb = document.getElementById('tf-fb-' + tId);
+    if (fb) {
+      fb.style.display = 'block';
+      fb.innerHTML = isRight ? '✅ Correct!' : `❌ Incorrect — answer was <strong>${correct ? 'TRUE' : 'FALSE'}</strong>`;
+      fb.style.color = isRight ? 'var(--green)' : 'var(--red)';
+    }
+    Streak.add(isRight);
+    setTimeout(() => { idx++; showQ(); }, 1100);
+  };
+
+  showQ();
+}
+
+// ═══════════════════════════════════════════════════════════
+// SPEED ROUND — wraps existing quiz with countdown timer
+// ═══════════════════════════════════════════════════════════
+let speedRoundActive = {};
+let speedTimers = {};
+
+function toggleSpeedRound(quizBodyId) {
+  speedRoundActive[quizBodyId] = !speedRoundActive[quizBodyId];
+  const btn = document.getElementById('speed-btn-' + quizBodyId);
+  if (btn) {
+    btn.textContent = speedRoundActive[quizBodyId] ? '⚡ Speed ON' : '⚡ Speed Round';
+    btn.style.background = speedRoundActive[quizBodyId] ? 'rgba(249,115,22,0.3)' : 'rgba(249,115,22,0.1)';
+    btn.style.borderColor = speedRoundActive[quizBodyId] ? 'var(--orange)' : 'rgba(249,115,22,0.3)';
+  }
+  const bar = document.getElementById('speed-bar-' + quizBodyId);
+  if (bar) bar.style.display = speedRoundActive[quizBodyId] ? 'block' : 'none';
+  if (speedRoundActive[quizBodyId]) startSpeedTimer(quizBodyId);
+  else stopSpeedTimer(quizBodyId);
+}
+
+function startSpeedTimer(qbId) {
+  stopSpeedTimer(qbId);
+  let t = 10;
+  const bar = document.getElementById('speed-fill-' + qbId);
+  const lbl = document.getElementById('speed-lbl-' + qbId);
+  if (bar) { bar.style.width = '100%'; bar.style.background = 'var(--orange)'; }
+  speedTimers[qbId] = setInterval(() => {
+    t--;
+    if (bar) {
+      bar.style.width = (t / 10 * 100) + '%';
+      bar.style.background = t <= 3 ? 'var(--red)' : t <= 6 ? 'var(--gold)' : 'var(--orange)';
+    }
+    if (lbl) lbl.textContent = t + 's';
+    if (t <= 0) {
+      stopSpeedTimer(qbId);
+      showToast('⏱ Too slow! Answer was shown', 'fire');
+    }
+  }, 1000);
+  window['speed_start_' + qbId] = Date.now();
+}
+
+function stopSpeedTimer(qbId) {
+  clearInterval(speedTimers[qbId]);
+  const bar = document.getElementById('speed-fill-' + qbId);
+  if (bar) bar.style.width = '100%';
+}
+
+function getSpeedBonus(qbId) {
+  const elapsed = (Date.now() - (window['speed_start_' + qbId] || Date.now())) / 1000;
+  stopSpeedTimer(qbId);
+  if (!speedRoundActive[qbId]) return 0;
+  return elapsed < 5 ? 3 : 0;
+}
+
+// ═══════════════════════════════════════════════════════════
+// MINI-GAME ENGINE
+// ═══════════════════════════════════════════════════════════
+function renderMiniGame(topicId) {
+  const data = MINI_GAMES[topicId];
+  const wrap = document.getElementById('mg_' + topicId);
+  if (!data || !wrap || wrap.dataset.built) return;
+  wrap.dataset.built = '1';
+
+  wrap.innerHTML = `
+    <div class="mg-unlock" id="mg-unlock-${topicId}">
+      <button class="mg-unlock-btn" onclick="launchMiniGame('${topicId}')">
+        🎮 Play Mini-Game — Earn +15 XP
+        <span class="mg-type-badge">${data.type === 'scramble' ? '🔤 Word Scramble' : data.type === 'match' ? '🃏 Match Pairs' : '↕️ Sort Steps'}</span>
+      </button>
+    </div>
+    <div class="mg-game-area" id="mg-area-${topicId}" style="display:none"></div>
+  `;
+}
+
+function launchMiniGame(topicId) {
+  const data = MINI_GAMES[topicId];
+  const area = document.getElementById('mg-area-' + topicId);
+  const unlock = document.getElementById('mg-unlock-' + topicId);
+  if (!area || !data) return;
+  unlock.style.display = 'none';
+  area.style.display = 'block';
+  if (data.type === 'scramble') buildScramble(topicId, data, area);
+  else if (data.type === 'match')  buildMatch(topicId, data, area);
+  else if (data.type === 'sort')   buildSort(topicId, data, area);
+}
+
+// ── WORD SCRAMBLE ─────────────────────────────────────────
+function buildScramble(topicId, data, area) {
+  const shuffled = data.word.split('').sort(() => Math.random() - 0.5);
+  let selected = [];
+  let startTime = Date.now();
+
+  function render() {
+    area.innerHTML = `
+      <div class="mg-card">
+        <div class="mg-header"><span>🔤</span><span class="mg-title">Word Scramble</span><span class="mg-hint">${data.hint}</span></div>
+        <div class="mg-answer-slots" id="sc-slots-${topicId}">
+          ${selected.map((l,i) => `<div class="sc-slot filled" data-idx="${i}" onclick="removeScrambleLetter('${topicId}',${i})">${l}</div>`).join('')}
+          ${Array(data.word.length - selected.length).fill('<div class="sc-slot empty">_</div>').join('')}
+        </div>
+        <div class="mg-letters" id="sc-letters-${topicId}">
+          ${shuffled.map((l,i) => `<button class="sc-letter ${selected.filter((_,si) => window['sc_used_'+topicId] && window['sc_used_'+topicId][i]).length ? 'used' : ''}" 
+            data-i="${i}" onclick="addScrambleLetter('${topicId}','${l}',${i})">${l}</button>`).join('')}
+        </div>
+        <div style="display:flex;gap:8px;margin-top:12px;justify-content:center">
+          <button class="mg-btn-clear" onclick="clearScramble('${topicId}')">Clear</button>
+          <button class="mg-btn-check" onclick="checkScramble('${topicId}','${data.word}')">Check ✓</button>
+        </div>
+        <div id="sc-result-${topicId}" style="margin-top:10px;text-align:center;font-weight:700;font-size:15px"></div>
+      </div>
+    `;
+    window['sc_selected_' + topicId] = selected;
+    window['sc_shuffled_' + topicId] = shuffled;
+    window['sc_used_' + topicId] = window['sc_used_' + topicId] || {};
+    window['sc_start_' + topicId] = startTime;
+  }
+
+  window['addScrambleLetter'] = function(tId, letter, idx) {
+    const sel = window['sc_selected_' + tId] || [];
+    const used = window['sc_used_' + tId] || {};
+    if (used[idx] || sel.length >= data.word.length) return;
+    used[idx] = true;
+    sel.push(letter);
+    window['sc_selected_' + tId] = sel;
+    window['sc_used_' + tId] = used;
+    render();
+  };
+  window['removeScrambleLetter'] = function(tId, slotIdx) {
+    const sel = window['sc_selected_' + tId] || [];
+    const used = window['sc_used_' + tId] || {};
+    sel.splice(slotIdx, 1);
+    // Rebuild used from remaining
+    const newUsed = {};
+    window['sc_shuffled_' + tId].forEach((l, i) => {
+      let count = sel.filter(s => s === l).length;
+      if (count > 0) { newUsed[i] = true; count--; }
+    });
+    window['sc_selected_' + tId] = sel;
+    window['sc_used_' + tId] = newUsed;
+    render();
+  };
+  window['clearScramble'] = function(tId) {
+    window['sc_selected_' + tId] = [];
+    window['sc_used_' + tId] = {};
+    selected = [];
+    render();
+  };
+  window['checkScramble'] = function(tId, word) {
+    const sel = window['sc_selected_' + tId] || [];
+    const attempt = sel.join('');
+    const res = document.getElementById('sc-result-' + tId);
+    if (attempt === word) {
+      const elapsed = (Date.now() - window['sc_start_' + tId]) / 1000;
+      const bonus = elapsed < 20 ? ' ⚡+5 SPEED BONUS!' : '';
+      const xp = elapsed < 20 ? 20 : 15;
+      if (res) { res.textContent = '✅ Correct! ' + word + bonus; res.style.color = 'var(--green)'; }
+      XP.add(xp, 'Word Scramble');
+      Streak.add(true);
+      fireConfetti();
+      mgComplete(tId);
+    } else {
+      if (res) { res.textContent = '❌ Not quite — try again!'; res.style.color = 'var(--red)'; }
+      area.querySelector('.mg-card').style.animation = 'shake 0.4s ease';
+      setTimeout(() => area.querySelector('.mg-card').style.animation = '', 500);
+    }
+  };
+  render();
+}
+
+// ── MATCH PAIRS ───────────────────────────────────────────
+function buildMatch(topicId, data, area) {
+  const pairs = data.pairs;
+  const terms = pairs.map(p => ({ text: p.term, type: 'term', id: p.term }));
+  const defs  = [...pairs].sort(() => Math.random() - 0.5).map(p => ({ text: p.def, type: 'def', id: p.term }));
+  let selected = null, matched = {};
+  let startTime = Date.now();
+
+  function render() {
+    area.innerHTML = `
+      <div class="mg-card">
+        <div class="mg-header"><span>🃏</span><span class="mg-title">Match the Pairs</span><span class="mg-hint">Tap term then definition</span></div>
+        <div class="match-grid">
+          <div class="match-col">
+            ${terms.map(t => `<button class="match-card ${matched[t.id] ? 'matched' : ''} ${selected && selected.id === t.id && selected.type === 'term' ? 'selected' : ''}" 
+              onclick="selectMatch('${topicId}','term','${t.id}','${t.text}')" ${matched[t.id] ? 'disabled' : ''}>${t.text}</button>`).join('')}
+          </div>
+          <div class="match-col">
+            ${defs.map(d => `<button class="match-card ${matched[d.id] ? 'matched' : ''} ${selected && selected.id === d.id && selected.type === 'def' ? 'selected' : ''}" 
+              onclick="selectMatch('${topicId}','def','${d.id}','${d.text}')" ${matched[d.id] ? 'disabled' : ''}>${d.text}</button>`).join('')}
+          </div>
+        </div>
+        <div id="match-result-${topicId}" style="text-align:center;margin-top:10px;font-weight:700;font-size:14px"></div>
+      </div>
+    `;
+    window['match_selected_' + topicId] = selected;
+    window['match_matched_' + topicId] = matched;
+  }
+
+  window['selectMatch'] = function(tId, type, id, text) {
+    const sel = window['match_selected_' + tId];
+    const mat = window['match_matched_' + tId] || {};
+    if (mat[id]) return;
+
+    if (!sel) {
+      window['match_selected_' + tId] = { type, id, text };
+      selected = { type, id, text };
+      matched = mat;
+      render();
+      return;
+    }
+
+    // Check if matching opposite type
+    if (sel.type !== type && sel.id === id) {
+      // Correct match!
+      mat[id] = true;
+      window['match_matched_' + tId] = mat;
+      window['match_selected_' + tId] = null;
+      selected = null;
+      matched = mat;
+      render();
+      Streak.add(true);
+      const res = document.getElementById('match-result-' + tId);
+      if (res) { res.textContent = '✅ Matched! Keep going…'; res.style.color = 'var(--green)'; }
+
+      // Check all matched
+      if (Object.keys(mat).length === pairs.length) {
+        const elapsed = (Date.now() - startTime) / 1000;
+        const xp = elapsed < 30 ? 20 : 15;
+        if (res) { res.textContent = '🏆 All matched! +' + xp + ' XP'; }
+        XP.add(xp, 'Match Pairs');
+        fireConfetti();
+        mgComplete(tId);
+      }
+    } else {
+      // Wrong
+      window['match_selected_' + tId] = { type, id, text };
+      selected = { type, id, text };
+      matched = mat;
+      render();
+      const res = document.getElementById('match-result-' + tId);
+      if (res) { res.textContent = '❌ No match — try another'; res.style.color = 'var(--red)'; }
+      Streak.add(false);
+      const card = area.querySelector('.mg-card');
+      if (card) { card.style.animation = 'shake 0.3s ease'; setTimeout(() => card.style.animation = '', 400); }
+    }
+  };
+
+  render();
+}
+
+// ── SORT THE STEPS ────────────────────────────────────────
+function buildSort(topicId, data, area) {
+  let order = [...data.correct].sort(() => Math.random() - 0.5);
+
+  function render() {
+    area.innerHTML = `
+      <div class="mg-card">
+        <div class="mg-header"><span>↕️</span><span class="mg-title">Sort the Steps</span><span class="mg-hint">${data.title}</span></div>
+        <div class="sort-list" id="sort-list-${topicId}">
+          ${order.map((idx, pos) => `
+            <div class="sort-item" data-pos="${pos}">
+              <span class="sort-num">${pos + 1}</span>
+              <span class="sort-text">${data.items[idx]}</span>
+              <div class="sort-arrows">
+                <button onclick="moveSort('${topicId}',${pos},-1)" ${pos === 0 ? 'disabled' : ''}>▲</button>
+                <button onclick="moveSort('${topicId}',${pos},1)"  ${pos === order.length-1 ? 'disabled' : ''}>▼</button>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+        <div style="display:flex;justify-content:center;margin-top:12px">
+          <button class="mg-btn-check" onclick="checkSort('${topicId}')">Submit Order ✓</button>
+        </div>
+        <div id="sort-result-${topicId}" style="text-align:center;margin-top:10px;font-weight:700;font-size:14px"></div>
+      </div>
+    `;
+    window['sort_order_' + topicId] = order;
+  }
+
+  window['moveSort'] = function(tId, pos, dir) {
+    const ord = window['sort_order_' + tId];
+    const newPos = pos + dir;
+    if (newPos < 0 || newPos >= ord.length) return;
+    [ord[pos], ord[newPos]] = [ord[newPos], ord[pos]];
+    window['sort_order_' + tId] = ord;
+    order = ord;
+    render();
+  };
+
+  window['checkSort'] = function(tId) {
+    const ord = window['sort_order_' + tId];
+    const res = document.getElementById('sort-result-' + tId);
+    const isCorrect = JSON.stringify(ord) === JSON.stringify(data.correct);
+    if (isCorrect) {
+      if (res) { res.textContent = '🏆 Perfect order! +15 XP'; res.style.color = 'var(--green)'; }
+      XP.add(15, 'Sort the Steps');
+      Streak.add(true);
+      fireConfetti();
+      mgComplete(tId);
+    } else {
+      // Show which ones are wrong
+      const items = area.querySelectorAll('.sort-item');
+      ord.forEach((idx, pos) => {
+        if (data.correct[pos] !== idx) {
+          items[pos].style.borderColor = 'var(--red)';
+          items[pos].style.background = 'rgba(239,68,68,0.1)';
+        } else {
+          items[pos].style.borderColor = 'var(--green)';
+          items[pos].style.background = 'rgba(34,197,94,0.1)';
+        }
+      });
+      if (res) { res.textContent = '❌ Not quite — adjust the highlighted steps'; res.style.color = 'var(--orange)'; }
+      Streak.add(false);
+    }
+  };
+
+  render();
+}
+
+// ── MINI-GAME COMPLETE ────────────────────────────────────
+function mgComplete(topicId) {
+  // Add star to topic card
+  const card = document.getElementById('tc_' + topicId);
+  if (card && !card.querySelector('.mg-star')) {
+    const star = document.createElement('span');
+    star.className = 'mg-star';
+    star.textContent = '⭐';
+    star.style.cssText = 'margin-left:6px;font-size:14px;animation:starPop 0.4s cubic-bezier(.22,1,.36,1)';
+    const tNum = card.querySelector('.t-num');
+    if (tNum) tNum.parentElement.querySelector('.t-en').appendChild(star);
+  }
+  try {
+    const done = JSON.parse(localStorage.getItem('ea_mg_done') || '{}');
+    done[topicId] = true;
+    localStorage.setItem('ea_mg_done', JSON.stringify(done));
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════════
+// DAY COMPLETION SUMMARY
+// ═══════════════════════════════════════════════════════════
+function checkDayComplete(dayNum) {
+  // Check all quizzes for this day are done
+  const dayTopics = {
+    1: ['1_1','1_2','1_3'],
+    2: ['2_1','2_2','2_3'],
+    3: ['3_1','3_2'],
+    4: ['4_1','4_2'],
+    5: ['5_1','5_2','5_3'],
+  };
+  const topics = dayTopics[dayNum];
+  if (!topics) return;
+  try {
+    const scores = JSON.parse(localStorage.getItem('ea_quiz_scores') || '{}');
+    const allDone = topics.every(t => scores['qb_' + t]);
+    if (!allDone) return;
+    showDaySummary(dayNum, topics, scores);
+  } catch(e) {}
+}
+
+function showDaySummary(dayNum, topics, scores) {
+  const existing = document.getElementById('day-summary-' + dayNum);
+  if (existing) return; // already shown
+
+  const totalXP = XP.get();
+  const dayNames = {1:'Welcome to Dispatch World', 2:'Freight & Trailer Types', 3:'Geography & Time Zones', 4:'Hours of Service', 5:'Load Boards & Red Flags'};
+
+  const summary = document.createElement('div');
+  summary.id = 'day-summary-' + dayNum;
+  summary.className = 'day-summary';
+  summary.innerHTML = `
+    <div class="day-summary-inner">
+      <div class="ds-badge">🎉 DAY ${dayNum} COMPLETE</div>
+      <div class="ds-title">Day ${dayNum}: ${dayNames[dayNum]}</div>
+      <div class="ds-scores">
+        ${topics.map(t => {
+          const s = scores['qb_' + t] || {};
+          const pct = s.pct || 0;
+          const r = 18; const c = 2 * Math.PI * r;
+          const color = pct >= 90 ? '#22c55e' : pct >= 70 ? '#f97316' : '#ef4444';
+          return `<div style="text-align:center">
+            <svg width="48" height="48" viewBox="0 0 48 48" style="transform:rotate(-90deg)">
+              <circle cx="24" cy="24" r="${r}" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="4"/>
+              <circle cx="24" cy="24" r="${r}" fill="none" stroke="${color}" stroke-width="4"
+                stroke-dasharray="${c}" stroke-dashoffset="${c - (pct/100*c)}" stroke-linecap="round"/>
+            </svg>
+            <div style="font-size:10px;color:var(--grey);margin-top:2px">Topic ${t.split('_')[1].toUpperCase()}</div>
+          </div>`;
+        }).join('')}
+      </div>
+      <div class="ds-xp">🏆 Total XP: <strong>${totalXP}</strong></div>
+      <div class="ds-msg">${totalXP >= 100 ? '🔥 Outstanding progress! You are ready for Day ' + (dayNum+1) + '!' : '✅ Day complete! Keep building your skills.'}</div>
+      <button class="ds-btn" onclick="this.closest('.day-summary').remove()">Continue →</button>
+    </div>
+  `;
+  const panel = document.getElementById('day' + dayNum);
+  if (panel) { panel.appendChild(summary); }
+  fireConfetti();
+  XP.add(50, 'Day ' + dayNum + ' Complete! 🎉');
+}
+
+// ═══════════════════════════════════════════════════════════
+// INJECTION — runs on DOMContentLoaded
+// ═══════════════════════════════════════════════════════════
+function injectGameElements() {
+  // For each topic, inject T/F wrapper before quiz and mini-game wrapper after quiz-result
+  const topics = ['1_1','1_2','1_3','2_1','2_2','2_3','3_1','3_2','4_1','4_2','5_1','5_2','5_3'];
+
+  topics.forEach(tid => {
+    const quizEl = document.getElementById('quiz_' + tid);
+    if (!quizEl) return;
+
+    // 1. Inject T/F before quiz
+    if (!document.getElementById('tf_' + tid)) {
+      const tfWrap = document.createElement('div');
+      tfWrap.id = 'tf_' + tid;
+      quizEl.parentElement.insertBefore(tfWrap, quizEl);
+      renderTFBlitz(tid);
+    }
+
+    // 2. Add speed round controls inside quiz header
+    const qHeader = quizEl.querySelector('.quiz-header');
+    if (qHeader && !qHeader.querySelector('.speed-btn')) {
+      const speedBtn = document.createElement('button');
+      speedBtn.id = 'speed-btn-qb_' + tid;
+      speedBtn.className = 'speed-btn';
+      speedBtn.textContent = '⚡ Speed Round';
+      speedBtn.onclick = () => toggleSpeedRound('qb_' + tid);
+      const speedBarWrap = document.createElement('div');
+      speedBarWrap.id = 'speed-bar-qb_' + tid;
+      speedBarWrap.style.cssText = 'display:none;height:4px;background:rgba(255,255,255,0.07);margin:0;';
+      speedBarWrap.innerHTML = `<div id="speed-fill-qb_${tid}" style="height:100%;width:100%;background:var(--orange);transition:width 1s linear;border-radius:0"></div>`;
+      qHeader.appendChild(speedBtn);
+      quizEl.insertBefore(speedBarWrap, quizEl.querySelector('.quiz-body'));
+    }
+
+    // 3. Inject mini-game after quiz-result
+    const qResult = document.getElementById('qr_' + tid);
+    if (qResult && !document.getElementById('mg_' + tid)) {
+      const mgWrap = document.createElement('div');
+      mgWrap.id = 'mg_' + tid;
+      qResult.parentElement.insertBefore(mgWrap, qResult.nextSibling);
+    }
+  });
+
+  // Restore mini-game stars
+  try {
+    const done = JSON.parse(localStorage.getItem('ea_mg_done') || '{}');
+    Object.keys(done).forEach(tid => mgComplete(tid));
+  } catch(e) {}
+}
+
+
 // ── Quiz Engine ───────────────────────────────────
 function checkAns(btn, quizBodyId, qKey, isCorrect) {
   if (!quizAnswers[quizBodyId]) quizAnswers[quizBodyId] = {};
-  if (quizAnswers[quizBodyId][qKey]) return; // already answered
+  if (quizAnswers[quizBodyId][qKey]) return;
   quizAnswers[quizBodyId][qKey] = isCorrect;
-  // Disable all options in this question
   const qItem = btn.closest('.q-item');
   qItem.querySelectorAll('.q-opt').forEach(b => { b.disabled = true; });
   btn.classList.add(isCorrect ? 'correct' : 'wrong');
-  // If wrong, highlight correct
   if (!isCorrect) {
     qItem.querySelectorAll('.q-opt').forEach(b => {
       if (b.onclick && b.onclick.toString().includes('true')) b.classList.add('correct');
     });
   }
-  // Check if all questions in this quiz are answered
+  // XP + Streak
+  const speedBonus = getSpeedBonus(quizBodyId);
+  if (isCorrect) {
+    XP.add(10 + speedBonus, speedBonus > 0 ? '⚡ Speed Bonus!' : null);
+    Streak.add(true);
+    if (speedRoundActive[quizBodyId]) startSpeedTimer(quizBodyId);
+  } else {
+    XP.add(0);
+    Streak.add(false);
+    if (speedRoundActive[quizBodyId]) startSpeedTimer(quizBodyId);
+  }
   const allQItems = document.getElementById(quizBodyId).querySelectorAll('.q-item');
   const answered = Object.keys(quizAnswers[quizBodyId]).length;
   if (answered >= allQItems.length) {
+    stopSpeedTimer(quizBodyId);
     showQuizResult(quizBodyId);
+    // Unlock mini-game
+    const tid = quizBodyId.replace('qb_','');
+    const mg = document.getElementById('mg_' + tid);
+    if (mg) renderMiniGame(tid);
+    // Check day complete
+    const dayNum = parseInt(tid.split('_')[0]);
+    setTimeout(() => checkDayComplete(dayNum), 800);
   }
 }
 
@@ -2438,6 +3641,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (window.speechSynthesis) {
     window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
   }
+  // Boot game systems
+  XP.render();
+  initDailyStreak();
+  injectGameElements();
 });
 </script>
 </body>
