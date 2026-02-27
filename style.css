@@ -455,3 +455,125 @@ html,body {
 .hero img,
 .hero-logo,
 .ea-hero img
+/* ================================
+   3D HOVER GLOW CARDS (Eagle look)
+   Paste at END of style.css
+================================== */
+
+/* Apply to common card classes (covers most setups) */
+.card,
+.day-card,
+.topic-card,
+.week-card,
+.quiz-card,
+.tool-card,
+.panel,
+.section-card {
+  position: relative;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(10,18,32,0.92), rgba(6,10,20,0.92));
+  border: 1px solid rgba(255,255,255,0.08);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+  transform: translateZ(0);
+  transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease, filter .25s ease;
+  cursor: pointer; /* makes it feel clickable */
+}
+
+/* “Backside” deep blue glow layer */
+.card::before,
+.day-card::before,
+.topic-card::before,
+.week-card::before,
+.quiz-card::before,
+.tool-card::before,
+.panel::before,
+.section-card::before {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border-radius: 20px;
+  background:
+    radial-gradient(800px 200px at 20% 0%, rgba(30,64,175,0.35), transparent 60%),
+    radial-gradient(800px 240px at 90% 30%, rgba(59,130,246,0.25), transparent 55%),
+    radial-gradient(600px 220px at 50% 120%, rgba(249,115,22,0.18), transparent 60%);
+  filter: blur(14px);
+  opacity: 0;
+  z-index: -1;
+  transition: opacity .25s ease;
+}
+
+/* Shiny border ring (gives premium 3D edge) */
+.card::after,
+.day-card::after,
+.topic-card::after,
+.week-card::after,
+.quiz-card::after,
+.tool-card::after,
+.panel::after,
+.section-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 18px;
+  border: 1px solid rgba(255,255,255,0.10);
+  pointer-events: none;
+  transition: border-color .25s ease;
+}
+
+/* Hover = 3D lift + tilt + glow */
+.card:hover,
+.day-card:hover,
+.topic-card:hover,
+.week-card:hover,
+.quiz-card:hover,
+.tool-card:hover,
+.panel:hover,
+.section-card:hover {
+  transform: translateY(-6px) perspective(900px) rotateX(2deg) rotateY(-2deg);
+  border-color: rgba(59,130,246,0.35);
+  box-shadow:
+    0 18px 50px rgba(0,0,0,0.55),
+    0 0 0 1px rgba(59,130,246,0.15);
+  filter: saturate(1.05);
+}
+
+.card:hover::before,
+.day-card:hover::before,
+.topic-card:hover::before,
+.week-card:hover::before,
+.quiz-card:hover::before,
+.tool-card:hover::before,
+.panel:hover::before,
+.section-card:hover::before {
+  opacity: 1;
+}
+
+.card:hover::after,
+.day-card:hover::after,
+.topic-card:hover::after,
+.week-card:hover::after,
+.quiz-card:hover::after,
+.tool-card:hover::after,
+.panel:hover::after,
+.section-card:hover::after {
+  border-color: rgba(255,255,255,0.18);
+}
+
+/* Click press effect */
+.card:active,
+.day-card:active,
+.topic-card:active,
+.week-card:active,
+.quiz-card:active,
+.tool-card:active,
+.panel:active,
+.section-card:active {
+  transform: translateY(-2px) perspective(900px) rotateX(1deg) rotateY(-1deg) scale(0.99);
+}.day-tab, .nav-tab, .chip, .pill {
+  transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+}
+
+.day-tab:hover, .nav-tab:hover, .chip:hover, .pill:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 18px rgba(59,130,246,0.35), 0 0 30px rgba(249,115,22,0.18);
+}
