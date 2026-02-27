@@ -443,3 +443,9 @@ html,body {
   .day-hero  { padding:20px; }
   .header-inner { height:58px; }
 }
+/* Header logo fix */
+.ea-logo img {
+    height: 42px;
+    width: auto;
+    object-fit: contain;
+}
