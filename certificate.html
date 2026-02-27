@@ -497,7 +497,7 @@ window.addEventListener('DOMContentLoaded',()=>{
 <style>
 #mj-fab {
   position: fixed !important; bottom: 88px !important; right: 20px !important;
-  z-index: 99999 !important; width: 58px; height: 58px; border-radius: 50%;
+  z-index: 99999 !important; width: 60px; height: 60px; border-radius: 50%;
   background: linear-gradient(135deg, #7c3aed, #4f46e5);
   border: none; outline: none; font-family: inherit;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -510,30 +510,40 @@ window.addEventListener('DOMContentLoaded',()=>{
   background: linear-gradient(135deg, #9333ea, #6366f1) !important;
   box-shadow: 0 0 0 12px rgba(124,58,237,0.12), 0 8px 36px rgba(124,58,237,0.7) !important;
 }
-#mj-fab:hover .mj-tooltip-ring { opacity: 1 !important; transform: translateY(-4px) !important; }
-.mj-label {
-  font-size: 17px; font-weight: 900; color: white; letter-spacing: .5px;
-  font-family: 'DM Sans', sans-serif; pointer-events: none; z-index: 1;
-  text-shadow: 0 1px 4px rgba(0,0,0,0.3);
+/* Inner icon — owl emoji centred */
+.mj-inner {
+  font-size: 26px; line-height: 1; pointer-events: none; z-index: 1;
 }
+/* Orbit track — sits outside the circle */
 .mj-orbit-ring {
-  position: absolute; inset: -10px;
-  animation: orbitSpin 2.4s linear infinite;
+  position: absolute;
+  width: 82px; height: 82px;
+  top: 50%; left: 50%;
+  margin-top: -41px; margin-left: -41px;
+  animation: orbitSpin 2.8s linear infinite;
   pointer-events: none;
 }
-.mj-badge {
-  position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+/* "MJ" pill that rides the orbit track */
+.mj-orbit-badge {
+  position: absolute; top: -1px; left: 50%;
+  transform: translateX(-50%);
   background: linear-gradient(135deg, #f97316, #ea6c0a);
-  color: white; font-size: 8px; font-weight: 900;
-  padding: 2px 6px; border-radius: 999px;
+  color: white; font-size: 9px; font-weight: 900; letter-spacing: 1px;
+  padding: 3px 7px; border-radius: 999px;
   font-family: 'DM Sans', sans-serif;
-  border: 1.5px solid rgba(255,255,255,0.3);
-  box-shadow: 0 2px 8px rgba(249,115,22,0.5);
-  white-space: nowrap; letter-spacing: .5px;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  box-shadow: 0 2px 10px rgba(249,115,22,0.6);
+  white-space: nowrap;
+  /* Counter-rotate so text stays upright */
+  animation: orbitCounterSpin 2.8s linear infinite;
 }
 @keyframes orbitSpin {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes orbitCounterSpin {
+  from { transform: translateX(-50%) rotate(0deg); }
+  to   { transform: translateX(-50%) rotate(-360deg); }
 }
 @keyframes mjBounce {
   0%,100% { transform: translateY(0); }
@@ -659,8 +669,8 @@ window.addEventListener('DOMContentLoaded',()=>{
 
 <!-- Madam JI Button + Popup -->
 <button id="mj-fab" onclick="mjToggle()" title="Confused? Ask Madam JI" type="button">
-  <span class="mj-label">MJ</span>
-  <span class="mj-orbit-ring"><span class="mj-badge">AI</span></span>
+  <span class="mj-inner">🦉</span>
+  <span class="mj-orbit-ring"><span class="mj-orbit-badge">MJ</span></span>
 </button>
 <div id="mj-tooltip" class="fab-tooltip">Confused? Ask Madam JI 🦉</div>
 <div id="mj-popup">
@@ -696,28 +706,140 @@ window.addEventListener('DOMContentLoaded',()=>{
 </button>
 <div id="tools-tooltip" class="fab-tooltip">Toolkit 🔧</div>
 <div id="tools-popup">
+  <!-- Header with tab bar -->
   <div class="tp-head">
-    <div class="tp-head-title">🛠️ Quick Tools</div>
+    <div class="tp-head-title">🛠️ Toolkit</div>
+    <a href="tools.html" class="tp-all-link">All Tools →</a>
     <button class="tp-close" onclick="toolsToggle()" type="button">✕</button>
   </div>
-  <a href="tools.html" class="tp-link" onclick="toolsToggle()">
-    <div class="tp-icon" style="background:rgba(249,115,22,0.15)">⏱</div>
-    <div><div class="tp-name">Drivers' Hours Checker</div><div class="tp-desc">UK · Legal drive time check</div></div>
-  </a>
-  <a href="tools.html" class="tp-link" onclick="toolsToggle()">
-    <div class="tp-icon" style="background:rgba(139,92,246,0.15)">📋</div>
-    <div><div class="tp-name">Tachograph & WTD Checker</div><div class="tp-desc">UK · Infringement · 48hr WTD</div></div>
-  </a>
-  <a href="tools.html" class="tp-link" onclick="toolsToggle()">
-    <div class="tp-icon" style="background:rgba(34,197,94,0.15)">💷</div>
-    <div><div class="tp-name">Rate Calculator</div><div class="tp-desc">UK & USA · Cost per mile</div></div>
-  </a>
-  <a href="tools.html" class="tp-link" onclick="toolsToggle()">
-    <div class="tp-icon" style="background:rgba(6,182,212,0.15)">🌍</div>
-    <div><div class="tp-name">Time Zone Converter</div><div class="tp-desc">IST · GMT · EST · PST</div></div>
-  </a>
-  <a href="tools.html" class="tp-all">View All Tools →</a>
+  <!-- Tab buttons -->
+  <div class="tp-tabs">
+    <button class="tp-tab active" onclick="tpTab(this,'tp-hours')">⏱ Hours</button>
+    <button class="tp-tab" onclick="tpTab(this,'tp-rate')">💷 Rate</button>
+    <button class="tp-tab" onclick="tpTab(this,'tp-time')">🌍 Time</button>
+  </div>
+  <!-- PANEL 1: Drivers Hours -->
+  <div class="tp-panel" id="tp-hours">
+    <div class="tp-field-row">
+      <label>Driving (hrs)</label>
+      <input type="number" id="tp-drive" placeholder="e.g. 9" min="0" max="15" step="0.5"/>
+    </div>
+    <div class="tp-field-row">
+      <label>On duty (hrs)</label>
+      <input type="number" id="tp-duty" placeholder="e.g. 11" min="0" max="16" step="0.5"/>
+    </div>
+    <div class="tp-field-row">
+      <label>Rest (hrs)</label>
+      <input type="number" id="tp-rest" placeholder="e.g. 11" min="0" max="24" step="0.5"/>
+    </div>
+    <button class="tp-calc-btn" onclick="tpCalcHours()">Check Compliance</button>
+    <div class="tp-result" id="tp-hours-result"></div>
+  </div>
+  <!-- PANEL 2: Rate Calculator -->
+  <div class="tp-panel" id="tp-rate" style="display:none">
+    <div class="tp-field-row">
+      <label>Load rate (£/$)</label>
+      <input type="number" id="tp-loadrate" placeholder="e.g. 2800" min="0"/>
+    </div>
+    <div class="tp-field-row">
+      <label>Miles</label>
+      <input type="number" id="tp-miles" placeholder="e.g. 400" min="0"/>
+    </div>
+    <div class="tp-field-row">
+      <label>Fee %</label>
+      <input type="number" id="tp-feepct" placeholder="8" min="1" max="20" value="8"/>
+    </div>
+    <button class="tp-calc-btn" onclick="tpCalcRate()">Calculate</button>
+    <div class="tp-result" id="tp-rate-result"></div>
+  </div>
+  <!-- PANEL 3: Time Zone -->
+  <div class="tp-panel" id="tp-time" style="display:none">
+    <div class="tp-field-row">
+      <label>IST time (24h)</label>
+      <input type="time" id="tp-ist" value="09:00"/>
+    </div>
+    <button class="tp-calc-btn" onclick="tpCalcTime()">Convert</button>
+    <div class="tp-result" id="tp-time-result"></div>
+  </div>
 </div>
+<style>
+.tp-tabs { display:flex; gap:0; border-bottom:1px solid rgba(249,115,22,0.15); }
+.tp-tab { flex:1; padding:8px 4px; background:none; border:none; color:rgba(255,255,255,0.4); font-size:11px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .15s; border-bottom:2px solid transparent; }
+.tp-tab.active { color:var(--orange,#f97316); border-bottom-color:var(--orange,#f97316); }
+.tp-tab:hover { color:rgba(255,255,255,0.8); }
+.tp-panel { padding:14px 16px; }
+.tp-field-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; gap:8px; }
+.tp-field-row label { font-size:12px; color:rgba(255,255,255,0.6); white-space:nowrap; }
+.tp-field-row input { width:110px; padding:6px 10px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:8px; color:white; font-size:13px; font-family:'DM Sans',sans-serif; outline:none; text-align:right; }
+.tp-field-row input:focus { border-color:rgba(249,115,22,0.5); }
+.tp-calc-btn { width:100%; padding:9px; background:linear-gradient(135deg,#f97316,#ea6c0a); border:none; border-radius:10px; color:white; font-size:13px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; margin-top:4px; transition:filter .15s; }
+.tp-calc-btn:hover { filter:brightness(1.1); }
+.tp-result { margin-top:10px; padding:10px 12px; border-radius:10px; font-size:12px; font-weight:600; line-height:1.6; display:none; }
+.tp-result.ok  { background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.3); color:#86efac; display:block; }
+.tp-result.bad { background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); color:#fca5a5; display:block; }
+.tp-result.info { background:rgba(6,182,212,0.1); border:1px solid rgba(6,182,212,0.25); color:#67e8f9; display:block; }
+.tp-all-link { font-size:11px; color:rgba(249,115,22,0.8); text-decoration:none; margin-left:auto; margin-right:8px; font-weight:600; }
+.tp-all-link:hover { color:#f97316; }
+</style>
+<script>
+function tpTab(btn, panelId) {
+  document.querySelectorAll('.tp-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tp-panel').forEach(p => p.style.display = 'none');
+  btn.classList.add('active');
+  var p = document.getElementById(panelId);
+  if (p) p.style.display = 'block';
+}
+function tpCalcHours() {
+  var drive = parseFloat(document.getElementById('tp-drive').value) || 0;
+  var duty  = parseFloat(document.getElementById('tp-duty').value)  || 0;
+  var rest  = parseFloat(document.getElementById('tp-rest').value)  || 0;
+  var r = document.getElementById('tp-hours-result');
+  var issues = [];
+  if (drive > 10) issues.push('⛔ Driving exceeds 10hr max (extension)');
+  else if (drive > 9) issues.push('⚠️ Using 10hr extension — max 2×/week');
+  if (duty > 13) issues.push('⛔ On-duty exceeds 13hr max');
+  if (rest < 9)  issues.push('⛔ Rest below 9hr minimum');
+  else if (rest < 11) issues.push('⚠️ Reduced rest (9hr) — max 3×/week');
+  if (issues.length === 0) {
+    r.className = 'tp-result ok';
+    r.textContent = '✅ COMPLIANT — Drive ' + drive + 'h · Duty ' + duty + 'h · Rest ' + rest + 'h';
+  } else {
+    r.className = 'tp-result bad';
+    r.innerHTML = issues.join('<br>');
+  }
+}
+function tpCalcRate() {
+  var rate  = parseFloat(document.getElementById('tp-loadrate').value) || 0;
+  var miles = parseFloat(document.getElementById('tp-miles').value)    || 0;
+  var fee   = parseFloat(document.getElementById('tp-feepct').value)   || 8;
+  var r = document.getElementById('tp-rate-result');
+  if (!rate || !miles) { r.className='tp-result bad'; r.textContent='Enter load rate and miles'; return; }
+  var rpm = (rate / miles).toFixed(2);
+  var feeAmt = (rate * fee / 100).toFixed(2);
+  var sym = '£';
+  r.className = 'tp-result info';
+  r.innerHTML = 'RPM: <strong>' + sym + rpm + '/mile</strong><br>Fee (' + fee + '%): <strong>' + sym + feeAmt + '</strong><br>Carrier nets: <strong>' + sym + (rate - feeAmt).toFixed(2) + '</strong>';
+}
+function tpCalcTime() {
+  var ist = document.getElementById('tp-ist').value;
+  if (!ist) return;
+  var parts = ist.split(':');
+  var h = parseInt(parts[0]), m = parseInt(parts[1]);
+  var totalMins = h * 60 + m;
+  function fmt(mins) {
+    mins = ((mins % 1440) + 1440) % 1440;
+    var hh = Math.floor(mins/60), mm = mins%60;
+    return (hh<10?'0':'')+hh+':'+(mm<10?'0':'')+mm;
+  }
+  var gmtMins  = totalMins - 330;
+  var estMins  = totalMins - 630;
+  var cstMins  = totalMins - 690;
+  var pstMins  = totalMins - 810;
+  var r = document.getElementById('tp-time-result');
+  r.className = 'tp-result info';
+  r.innerHTML = 'IST ' + ist + '<br>GMT/UK: <strong>' + fmt(gmtMins) + '</strong><br>EST (NY): <strong>' + fmt(estMins) + '</strong><br>CST (Chicago): <strong>' + fmt(cstMins) + '</strong><br>PST (LA): <strong>' + fmt(pstMins) + '</strong>';
+}
+</script>
 
 <script>
 // ── Madam JI Chat ──────────────────────────────
