@@ -537,69 +537,204 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // ══════════════════════════════════════════════
-// 12. FLOATING MADAM JI CHAT WIDGET
-// Shows on ALL pages always
+// 12 + 13. FLOATING FABs — MADAM JI + TOOLS
+// Injected on ALL pages via app.js
+// Bouncy + colour-cycling + tooltip + popup
 // ══════════════════════════════════════════════
 (function() {
 
-  const CSS = `
-    #mj-fab{position:fixed;bottom:88px;right:20px;z-index:9000;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4f46e5);border:2px solid rgba(168,85,247,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 24px rgba(124,58,237,0.4);transition:transform .2s,box-shadow .2s;animation:mjBounce 2.5s ease-in-out infinite,mjColorCycle 4s ease-in-out infinite}
-    #mj-fab:hover{transform:scale(1.15) rotate(5deg)!important;box-shadow:0 6px 36px rgba(124,58,237,0.7)!important;animation:none!important;background:linear-gradient(135deg,#9333ea,#6366f1)!important}
-    #mj-fab::after{content:"Ask Madam JI 🦉";position:absolute;right:64px;top:50%;transform:translateY(-50%) scale(0.8);background:rgba(15,12,61,0.95);border:1px solid rgba(124,58,237,0.4);color:#e9d5ff;font-size:11px;font-weight:700;font-family:'DM Sans',sans-serif;padding:5px 12px;border-radius:999px;white-space:nowrap;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
-    #mj-fab:hover::after{opacity:1;transform:translateY(-50%) scale(1)}
-    @keyframes mjBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-    @keyframes mjColorCycle{0%,100%{box-shadow:0 4px 24px rgba(124,58,237,0.5),0 0 0 0 rgba(124,58,237,0.2)}33%{box-shadow:0 4px 28px rgba(99,102,241,0.6),0 0 0 6px rgba(99,102,241,0.1)}66%{box-shadow:0 4px 28px rgba(219,39,119,0.5),0 0 0 6px rgba(219,39,119,0.1)}}
-    #mj-fab .mj-badge{position:absolute;top:-4px;right:-4px;width:18px;height:18px;border-radius:50%;background:#f97316;font-size:9px;font-weight:900;color:white;display:flex;align-items:center;justify-content:center;font-family:'DM Sans',sans-serif;border:2px solid #0f0c3d}
-    #mj-popup{position:fixed;bottom:154px;right:20px;z-index:9000;width:360px;max-height:540px;background:rgba(15,12,61,0.98);border:1px solid rgba(124,58,237,0.4);border-radius:20px;box-shadow:0 16px 56px rgba(0,0,0,0.6);display:flex;flex-direction:column;transform:translateY(20px) scale(0.95);opacity:0;pointer-events:none;transition:all .25s cubic-bezier(.22,1,.36,1);backdrop-filter:blur(20px)}
-    #mj-popup.open{transform:translateY(0) scale(1);opacity:1;pointer-events:all}
-    .mj-pop-head{padding:14px 16px;border-bottom:1px solid rgba(124,58,237,0.2);display:flex;align-items:center;gap:10px;flex-shrink:0}
-    .mj-pop-orb{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#f97316);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-    .mj-pop-info .mj-pop-name{font-weight:700;font-size:13px;color:#f0f2f8}
-    .mj-pop-info .mj-pop-sub{font-size:10px;color:rgba(168,85,247,0.9);font-family:'JetBrains Mono',monospace;letter-spacing:.5px}
-    .mj-pop-close{margin-left:auto;background:none;border:none;color:rgba(255,255,255,0.4);font-size:18px;cursor:pointer;padding:4px;line-height:1;transition:color .15s}
-    .mj-pop-close:hover{color:white}
-    .mj-pop-msgs{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px;max-height:340px;scrollbar-width:thin;scrollbar-color:rgba(124,58,237,0.3) transparent}
-    .mj-msg{max-width:85%;padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.5}
-    .mj-msg.bot{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.2);color:#e2d9f3;border-bottom-left-radius:3px;align-self:flex-start}
-    .mj-msg.user{background:rgba(249,115,22,0.15);border:1px solid rgba(249,115,22,0.2);color:#fde8d8;border-bottom-right-radius:3px;align-self:flex-end}
-    .mj-msg.typing{display:flex;gap:4px;align-items:center;padding:12px}
-    .mj-dot{width:7px;height:7px;border-radius:50%;background:#a855f7;animation:dotB .8s ease-in-out infinite}
-    .mj-dot:nth-child(2){animation-delay:.15s}.mj-dot:nth-child(3){animation-delay:.3s}
-    @keyframes dotB{0%,80%,100%{transform:scale(.6);opacity:.4}40%{transform:scale(1);opacity:1}}
-    .mj-pop-key{padding:8px 12px;border-top:1px solid rgba(124,58,237,0.15);flex-shrink:0;display:none}
-    .mj-pop-key input{width:100%;padding:7px 10px;background:rgba(255,255,255,0.05);border:1px solid rgba(124,58,237,0.3);border-radius:8px;color:white;font-size:11px;font-family:'JetBrains Mono',monospace;outline:none}
-    .mj-pop-key input::placeholder{color:rgba(255,255,255,0.25)}
-    .mj-pop-input{padding:10px 12px;border-top:1px solid rgba(124,58,237,0.15);display:flex;gap:8px;flex-shrink:0}
-    .mj-pop-input input{flex:1;padding:9px 12px;background:rgba(255,255,255,0.06);border:1px solid rgba(124,58,237,0.25);border-radius:10px;color:white;font-size:13px;font-family:'DM Sans',sans-serif;outline:none;transition:border-color .15s}
-    .mj-pop-input input:focus{border-color:rgba(124,58,237,0.6)}
-    .mj-pop-input input::placeholder{color:rgba(255,255,255,0.2)}
-    .mj-send{padding:9px 14px;background:linear-gradient(135deg,#7c3aed,#4f46e5);border:none;border-radius:10px;color:white;cursor:pointer;font-size:15px;transition:filter .15s;flex-shrink:0}
-    .mj-send:hover{filter:brightness(1.15)}
-    @media(max-width:400px){#mj-popup{width:calc(100vw - 16px);right:8px;bottom:84px}}
+  // ── Shared CSS ──────────────────────────────
+  const FAB_CSS = `
+    /* ── Madam JI FAB ── */
+    #mj-fab {
+      position: fixed; bottom: 88px; right: 20px; z-index: 9999;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, #7c3aed, #4f46e5);
+      border: 2px solid rgba(168,85,247,0.6);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 26px; outline: none;
+      transition: transform .18s ease, box-shadow .18s ease, background .18s;
+      animation: mjBounce 2.5s ease-in-out infinite, mjColorCycle 4s ease-in-out infinite;
+    }
+    #mj-fab:hover {
+      transform: scale(1.15) rotate(5deg) !important;
+      animation: none !important;
+      background: linear-gradient(135deg, #9333ea, #6366f1) !important;
+      box-shadow: 0 0 0 10px rgba(124,58,237,0.15), 0 8px 36px rgba(124,58,237,0.7) !important;
+    }
+    #mj-fab .mj-badge {
+      position: absolute; top: -4px; right: -4px;
+      width: 19px; height: 19px; border-radius: 50%;
+      background: #f97316; font-size: 9px; font-weight: 900; color: white;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Sans', sans-serif; border: 2px solid #0f0c3d;
+    }
+    .mj-tooltip {
+      position: fixed; right: 84px; z-index: 9999;
+      background: rgba(15,12,61,0.96); border: 1px solid rgba(124,58,237,0.5);
+      color: #e9d5ff; font-size: 12px; font-weight: 700;
+      font-family: 'DM Sans', sans-serif; padding: 6px 14px;
+      border-radius: 999px; white-space: nowrap; pointer-events: none;
+      opacity: 0; transform: scale(0.85); transition: opacity .2s, transform .2s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    #mj-fab:hover + .mj-tooltip,
+    #mj-fab:hover ~ .mj-tooltip { opacity: 1; transform: scale(1); }
+    @keyframes mjBounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-7px); }
+    }
+    @keyframes mjColorCycle {
+      0%,100% { box-shadow: 0 4px 24px rgba(124,58,237,0.5); border-color: rgba(168,85,247,0.6); }
+      33%     { box-shadow: 0 4px 28px rgba(99,102,241,0.6), 0 0 0 6px rgba(99,102,241,0.08); border-color: rgba(99,102,241,0.7); }
+      66%     { box-shadow: 0 4px 28px rgba(219,39,119,0.6), 0 0 0 6px rgba(219,39,119,0.08); border-color: rgba(219,39,119,0.7); }
+    }
+
+    /* ── Madam JI Popup ── */
+    #mj-popup {
+      position: fixed; bottom: 156px; right: 20px; z-index: 9998;
+      width: 360px; max-height: 540px;
+      background: rgba(15,12,61,0.98);
+      border: 1px solid rgba(124,58,237,0.4); border-radius: 20px;
+      box-shadow: 0 16px 56px rgba(0,0,0,0.6);
+      display: flex; flex-direction: column;
+      transform: translateY(20px) scale(0.95); opacity: 0; pointer-events: none;
+      transition: all .25s cubic-bezier(.22,1,.36,1);
+      backdrop-filter: blur(20px);
+    }
+    #mj-popup.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+    .mj-pop-head { padding: 14px 16px; border-bottom: 1px solid rgba(124,58,237,0.2); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+    .mj-pop-orb { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#7c3aed,#f97316); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+    .mj-pop-name { font-weight: 700; font-size: 13px; color: #f0f2f8; }
+    .mj-pop-sub { font-size: 10px; color: rgba(168,85,247,0.9); font-family: 'JetBrains Mono',monospace; letter-spacing: .5px; }
+    .mj-pop-close { margin-left: auto; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 18px; cursor: pointer; padding: 4px; line-height: 1; transition: color .15s; }
+    .mj-pop-close:hover { color: white; }
+    .mj-pop-msgs { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; max-height: 300px; scrollbar-width: thin; scrollbar-color: rgba(124,58,237,0.3) transparent; }
+    .mj-msg { max-width: 85%; padding: 9px 12px; border-radius: 12px; font-size: 13px; line-height: 1.5; font-family: 'DM Sans',sans-serif; }
+    .mj-msg.bot  { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.2); color: #e2d9f3; border-bottom-left-radius: 3px; align-self: flex-start; }
+    .mj-msg.user { background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.2); color: #fde8d8; border-bottom-right-radius: 3px; align-self: flex-end; }
+    .mj-msg.typing { display: flex; gap: 4px; align-items: center; padding: 12px; }
+    .mj-dot { width: 7px; height: 7px; border-radius: 50%; background: #a855f7; animation: mjDotB .8s ease-in-out infinite; }
+    .mj-dot:nth-child(2) { animation-delay: .15s; } .mj-dot:nth-child(3) { animation-delay: .3s; }
+    @keyframes mjDotB { 0%,80%,100%{transform:scale(.6);opacity:.4} 40%{transform:scale(1);opacity:1} }
+    .mj-pop-key { padding: 8px 12px; border-top: 1px solid rgba(124,58,237,0.15); flex-shrink: 0; display: none; }
+    .mj-pop-key input { width: 100%; padding: 7px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(124,58,237,0.3); border-radius: 8px; color: white; font-family: 'JetBrains Mono',monospace; font-size: 11px; outline: none; }
+    .mj-pop-key input::placeholder { color: rgba(255,255,255,0.25); }
+    .mj-pop-input { padding: 10px 12px; border-top: 1px solid rgba(124,58,237,0.15); display: flex; gap: 8px; flex-shrink: 0; }
+    .mj-pop-input input { flex: 1; padding: 9px 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(124,58,237,0.25); border-radius: 10px; color: white; font-size: 13px; font-family: 'DM Sans',sans-serif; outline: none; transition: border-color .15s; }
+    .mj-pop-input input:focus { border-color: rgba(124,58,237,0.6); }
+    .mj-pop-input input::placeholder { color: rgba(255,255,255,0.2); }
+    .mj-send { padding: 9px 14px; background: linear-gradient(135deg,#7c3aed,#4f46e5); border: none; border-radius: 10px; color: white; cursor: pointer; font-size: 15px; transition: filter .15s; flex-shrink: 0; }
+    .mj-send:hover { filter: brightness(1.15); }
+    .mj-chips { display: flex; flex-wrap: wrap; gap: 5px; padding: 4px 0; }
+    .mj-chip { padding: 4px 10px; border-radius: 999px; border: 1px solid rgba(124,58,237,0.35); background: rgba(124,58,237,0.1); color: #c4b5fd; font-size: 11px; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: background .15s; }
+    .mj-chip:hover { background: rgba(124,58,237,0.25); }
+
+    /* ── Tools FAB ── */
+    #tools-fab {
+      position: fixed; bottom: 20px; left: 20px; z-index: 9999;
+      width: 56px; height: 56px; border-radius: 50%;
+      background: linear-gradient(135deg, #f97316, #ea6c0a);
+      border: 2px solid rgba(249,115,22,0.6);
+      cursor: pointer; display: flex; align-items: center; justify-content: center;
+      font-size: 24px; outline: none;
+      transition: transform .18s ease, box-shadow .18s ease;
+      animation: toolsBounce 2.5s ease-in-out 1.2s infinite, toolsColorCycle 4s ease-in-out 0.8s infinite;
+    }
+    #tools-fab:hover {
+      transform: scale(1.15) rotate(-5deg) !important;
+      animation: none !important;
+      background: linear-gradient(135deg, #fb923c, #f97316) !important;
+      box-shadow: 0 0 0 10px rgba(249,115,22,0.12), 0 8px 36px rgba(249,115,22,0.7) !important;
+    }
+    .tools-tooltip {
+      position: fixed; left: 84px; z-index: 9999;
+      background: rgba(15,12,61,0.96); border: 1px solid rgba(249,115,22,0.5);
+      color: #fed7aa; font-size: 12px; font-weight: 700;
+      font-family: 'DM Sans', sans-serif; padding: 6px 14px;
+      border-radius: 999px; white-space: nowrap; pointer-events: none;
+      opacity: 0; transform: scale(0.85); transition: opacity .2s, transform .2s;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+    }
+    #tools-fab:hover ~ .tools-tooltip { opacity: 1; transform: scale(1); }
+    @keyframes toolsBounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-7px); }
+    }
+    @keyframes toolsColorCycle {
+      0%,100% { box-shadow: 0 4px 24px rgba(249,115,22,0.5); border-color: rgba(249,115,22,0.6); }
+      33%     { box-shadow: 0 4px 28px rgba(245,158,11,0.6), 0 0 0 6px rgba(245,158,11,0.08); border-color: rgba(245,158,11,0.7); }
+      66%     { box-shadow: 0 4px 28px rgba(239,68,68,0.6), 0 0 0 6px rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.7); }
+    }
+
+    /* ── Tools Popup ── */
+    #tools-popup {
+      position: fixed; bottom: 88px; left: 20px; z-index: 9998;
+      width: 320px; background: rgba(15,12,61,0.98);
+      border: 1px solid rgba(249,115,22,0.3); border-radius: 20px;
+      box-shadow: 0 16px 56px rgba(0,0,0,0.6);
+      transform: translateY(20px) scale(0.95); opacity: 0; pointer-events: none;
+      transition: all .25s cubic-bezier(.22,1,.36,1);
+      backdrop-filter: blur(20px); overflow: hidden;
+    }
+    #tools-popup.open { transform: translateY(0) scale(1); opacity: 1; pointer-events: all; }
+    .tp-head { padding: 13px 16px; border-bottom: 1px solid rgba(249,115,22,0.15); display: flex; align-items: center; justify-content: space-between; }
+    .tp-head-title { font-weight: 700; font-size: 13px; color: #f0f2f8; display: flex; align-items: center; gap: 7px; }
+    .tp-close { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 17px; cursor: pointer; transition: color .15s; }
+    .tp-close:hover { color: white; }
+    .tp-link { display: flex; align-items: center; gap: 12px; padding: 11px 16px; text-decoration: none; color: #f0f2f8; transition: background .15s; border-bottom: 1px solid rgba(255,255,255,0.05); }
+    .tp-link:last-of-type { border-bottom: none; }
+    .tp-link:hover { background: rgba(249,115,22,0.08); }
+    .tp-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .tp-name { font-size: 13px; font-weight: 600; }
+    .tp-desc { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 1px; font-family: 'JetBrains Mono',monospace; }
+    .tp-all { display: block; text-align: center; padding: 10px; font-size: 12px; font-weight: 600; color: #f97316; text-decoration: none; background: rgba(249,115,22,0.06); transition: background .15s; }
+    .tp-all:hover { background: rgba(249,115,22,0.12); }
+
+    /* ── Mobile ── */
+    @media(max-width: 480px) {
+      #mj-fab    { bottom: 80px; right: 16px; width: 50px; height: 50px; font-size: 22px; }
+      #tools-fab { bottom: 80px; left: 16px;  width: 50px; height: 50px; font-size: 20px; }
+      #mj-popup  { width: calc(100vw - 24px); right: 12px; bottom: 144px; }
+      #tools-popup { width: calc(100vw - 24px); left: 12px; bottom: 144px; }
+      .mj-tooltip, .tools-tooltip { display: none; }
+    }
   `;
 
-  const el = document.createElement('style');
-  el.textContent = CSS;
-  document.head.appendChild(el);
+  const styleEl = document.createElement('style');
+  styleEl.textContent = FAB_CSS;
+  document.head.appendChild(styleEl);
 
-  const SYSTEM = `You are Madam JI — the AI study assistant for Eagle Academy UK Freight Dispatcher Certification. You help students understand UK and USA freight dispatch concepts. You are friendly, encouraging, and knowledgeable. Topics you help with: UK transport law, O-Licence, DVSA, drivers hours, tachographs, CMR notes, Courier Exchange, pallet networks, USA HOS rules, broker calls, ICAR method, load boards, BOL, Rate Confirmation, freight documentation. Keep answers concise and student-friendly. You can respond in Hindi if asked. Never discuss earnings figures or make income promises — focus only on skills and knowledge.`;
+  // ── System prompt for Madam JI ──────────────
+  const MJ_SYSTEM = `You are Madam JI — the AI study assistant for Eagle Academy UK Freight Dispatcher Certification. Help students understand UK and international freight dispatch. Be friendly, encouraging, concise. Topics: UK transport law, O-Licence, DVSA, tachographs, CMR notes, drivers hours, WTD, Courier Exchange, pallet networks (Palletforce, Pall-Ex, TPN), USA HOS rules, ICAR method, load boards, BOL, Rate Confirmation, freight documentation. Never mention earnings figures or make income promises — focus only on skills and knowledge. Respond in Hindi if asked.`;
 
-  let history = [];
-  let apiKey = localStorage.getItem('ea_mj_key') || '';
+  let mjHistory = [];
+  let mjApiKey = '';
+  try { mjApiKey = localStorage.getItem('ea_mj_key') || ''; } catch(e) {}
 
+  // ── Inject HTML ──────────────────────────────
   document.body.insertAdjacentHTML('beforeend', `
-    <button id="mj-fab" onclick="mjToggle()" title="Ask Madam JI">🦉<span class="mj-badge">AI</span></button>
-    <div id="mj-popup">
+    <!-- MADAM JI FAB -->
+    <button id="mj-fab" onclick="mjToggle()" aria-label="Ask Madam JI">🦉<span class="mj-badge">AI</span></button>
+    <div class="mj-tooltip" id="mj-tooltip" style="bottom:100px">Ask Madam JI 🦉</div>
+
+    <div id="mj-popup" role="dialog" aria-label="Madam JI Chat">
       <div class="mj-pop-head">
         <div class="mj-pop-orb">🦉</div>
-        <div class="mj-pop-info">
+        <div>
           <div class="mj-pop-name">Madam JI</div>
           <div class="mj-pop-sub">AI STUDY ASSISTANT · EAGLE ACADEMY</div>
         </div>
-        <button class="mj-pop-close" onclick="mjToggle()">✕</button>
+        <button class="mj-pop-close" onclick="mjToggle()" aria-label="Close">✕</button>
       </div>
       <div class="mj-pop-msgs" id="mj-msgs">
         <div class="mj-msg bot">नमस्ते! 🙏 Hi! I'm Madam JI — your Eagle Academy AI tutor. Ask me anything about UK or USA freight dispatch!</div>
+        <div class="mj-chips">
+          <button class="mj-chip" onclick="mjChip('What is an O-Licence?')">O-Licence?</button>
+          <button class="mj-chip" onclick="mjChip('How do UK drivers hours work?')">UK Hours?</button>
+          <button class="mj-chip" onclick="mjChip('What is the ICAR method?')">ICAR method?</button>
+          <button class="mj-chip" onclick="mjChip('What is a tachograph?')">Tachograph?</button>
+        </div>
       </div>
       <div class="mj-pop-key" id="mj-key-row">
         <input id="mj-api-input" type="password" placeholder="Paste Anthropic API key to activate Madam JI…" onchange="mjSaveKey(this.value)"/>
@@ -609,38 +744,96 @@ document.addEventListener('DOMContentLoaded', () => {
         <button class="mj-send" onclick="mjSend()">➤</button>
       </div>
     </div>
+
+    <!-- TOOLS FAB -->
+    <button id="tools-fab" onclick="toolsToggle()" aria-label="Quick Tools">🔧</button>
+    <div class="tools-tooltip" id="tools-tooltip" style="bottom:32px">Quick Tools 🔧</div>
+
+    <div id="tools-popup">
+      <div class="tp-head">
+        <div class="tp-head-title">🛠️ Quick Tools</div>
+        <button class="tp-close" onclick="toolsToggle()">✕</button>
+      </div>
+      <a href="tools.html" class="tp-link" onclick="toolsToggle()">
+        <div class="tp-icon" style="background:rgba(249,115,22,0.15)">⏱</div>
+        <div><div class="tp-name">Drivers' Hours Checker</div><div class="tp-desc">UK · Legal drive time check</div></div>
+      </a>
+      <a href="tools.html" class="tp-link" onclick="toolsToggle()">
+        <div class="tp-icon" style="background:rgba(139,92,246,0.15)">📋</div>
+        <div><div class="tp-name">Tachograph & WTD Checker</div><div class="tp-desc">UK · Infringement · 48hr WTD</div></div>
+      </a>
+      <a href="tools.html" class="tp-link" onclick="toolsToggle()">
+        <div class="tp-icon" style="background:rgba(34,197,94,0.15)">💷</div>
+        <div><div class="tp-name">Rate Calculator</div><div class="tp-desc">UK & USA · Cost per mile</div></div>
+      </a>
+      <a href="tools.html" class="tp-link" onclick="toolsToggle()">
+        <div class="tp-icon" style="background:rgba(6,182,212,0.15)">🌍</div>
+        <div><div class="tp-name">Time Zone Converter</div><div class="tp-desc">IST · GMT · EST · PST</div></div>
+      </a>
+      <a href="tools.html" class="tp-all">View All 7 Tools →</a>
+    </div>
   `);
 
-  // Show API key row if no key saved
-  if (!apiKey) document.getElementById('mj-key-row').style.display = 'block';
+  if (!mjApiKey) document.getElementById('mj-key-row').style.display = 'block';
 
+  // ── FAB toggle functions ─────────────────────
   window.mjToggle = function() {
-    document.getElementById('mj-popup').classList.toggle('open');
+    const popup = document.getElementById('mj-popup');
+    const toolsPopup = document.getElementById('tools-popup');
+    if (toolsPopup) toolsPopup.classList.remove('open');
+    popup.classList.toggle('open');
+    if (popup.classList.contains('open')) {
+      setTimeout(() => { const q = document.getElementById('mj-q'); if(q) q.focus(); }, 300);
+    }
   };
 
+  window.toolsToggle = function() {
+    const popup = document.getElementById('tools-popup');
+    const mjPopup = document.getElementById('mj-popup');
+    if (mjPopup) mjPopup.classList.remove('open');
+    popup.classList.toggle('open');
+  };
+
+  // Tooltip positioning — align vertically with FAB
+  function positionTooltips() {
+    const mj = document.getElementById('mj-fab');
+    const t  = document.getElementById('mj-tooltip');
+    const tf = document.getElementById('tools-fab');
+    const tt = document.getElementById('tools-tooltip');
+    if (mj && t)  { const r = mj.getBoundingClientRect();  t.style.bottom  = (window.innerHeight - r.bottom + 8) + 'px'; }
+    if (tf && tt) { const r = tf.getBoundingClientRect(); tt.style.bottom = (window.innerHeight - r.bottom + 8) + 'px'; }
+  }
+  window.addEventListener('resize', positionTooltips);
+  setTimeout(positionTooltips, 100);
+
+  // ── Madam JI chat ────────────────────────────
   window.mjSaveKey = function(val) {
-    apiKey = val.trim();
-    localStorage.setItem('ea_mj_key', apiKey);
-    if (apiKey) document.getElementById('mj-key-row').style.display = 'none';
+    mjApiKey = val.trim();
+    try { localStorage.setItem('ea_mj_key', mjApiKey); } catch(e) {}
+    if (mjApiKey) document.getElementById('mj-key-row').style.display = 'none';
+  };
+
+  window.mjChip = function(q) {
+    const inp = document.getElementById('mj-q');
+    if (inp) inp.value = q;
+    mjSend();
   };
 
   window.mjSend = async function() {
     const inp = document.getElementById('mj-q');
-    const q = inp.value.trim();
+    const q = inp ? inp.value.trim() : '';
     if (!q) return;
-    inp.value = '';
+    if (inp) inp.value = '';
 
-    // Check API key
-    if (!apiKey) {
+    if (!mjApiKey) {
       document.getElementById('mj-key-row').style.display = 'block';
       mjAddMsg('Please paste your Anthropic API key above to use Madam JI. 🔑', 'bot');
       return;
     }
 
     mjAddMsg(q, 'user');
-    history.push({ role: 'user', content: q });
+    mjHistory.push({ role: 'user', content: q });
 
-    // Typing indicator
     const typing = document.createElement('div');
     typing.className = 'mj-msg bot typing';
     typing.id = 'mj-typing';
@@ -653,20 +846,20 @@ document.addEventListener('DOMContentLoaded', () => {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'x-api-key': apiKey,
+          'x-api-key': mjApiKey,
           'anthropic-version': '2023-06-01',
           'anthropic-dangerous-direct-browser-access': 'true'
         },
         body: JSON.stringify({
           model: 'claude-haiku-4-5-20251001',
           max_tokens: 400,
-          system: SYSTEM,
-          messages: history
+          system: MJ_SYSTEM,
+          messages: mjHistory
         })
       });
       const data = await res.json();
-      const reply = data.content?.[0]?.text || 'Sorry, I could not get a response. Please try again.';
-      history.push({ role: 'assistant', content: reply });
+      const reply = data.content?.[0]?.text || 'Sorry, try again.';
+      mjHistory.push({ role: 'assistant', content: reply });
       document.getElementById('mj-typing')?.remove();
       mjAddMsg(reply, 'bot');
     } catch(e) {
@@ -682,109 +875,22 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('mj-msgs').appendChild(div);
     mjScroll();
   }
-
   function mjScroll() {
-    const msgs = document.getElementById('mj-msgs');
-    msgs.scrollTop = msgs.scrollHeight;
+    const m = document.getElementById('mj-msgs');
+    if (m) m.scrollTop = m.scrollHeight;
   }
 
-  // Quick question chips — inject after first message
-  setTimeout(() => {
-    const chips = ['What is an O-Licence?','How do UK drivers hours work?','What is the ICAR method?','What is a tachograph?'];
-    const wrap = document.createElement('div');
-    wrap.style.cssText = 'display:flex;flex-wrap:wrap;gap:5px;padding:4px 0';
-    chips.forEach(c => {
-      const b = document.createElement('button');
-      b.style.cssText = 'padding:4px 10px;border-radius:999px;border:1px solid rgba(124,58,237,0.35);background:rgba(124,58,237,0.1);color:#c4b5fd;font-size:11px;cursor:pointer;font-family:"DM Sans",sans-serif;transition:all .15s';
-      b.onmouseover = () => { b.style.background = 'rgba(124,58,237,0.25)'; };
-      b.onmouseout = () => { b.style.background = 'rgba(124,58,237,0.1)'; };
-      b.textContent = c;
-      b.onclick = () => { document.getElementById('mj-q').value = c; mjSend(); };
-      wrap.appendChild(b);
-    });
-    document.getElementById('mj-msgs').appendChild(wrap);
-  }, 200);
+  // Close on outside click
+  document.addEventListener('click', function(e) {
+    const mj = document.getElementById('mj-fab');
+    const mjP = document.getElementById('mj-popup');
+    const tf = document.getElementById('tools-fab');
+    const tfP = document.getElementById('tools-popup');
+    if (mjP && mjP.classList.contains('open') && !mjP.contains(e.target) && e.target !== mj) mjP.classList.remove('open');
+    if (tfP && tfP.classList.contains('open') && !tfP.contains(e.target) && e.target !== tf) tfP.classList.remove('open');
+  });
 
 })();
-
-
-// ══════════════════════════════════════════════
-// 13. FLOATING TOOLS QUICK-ACCESS PANEL
-// Shows on ALL pages always
-// ══════════════════════════════════════════════
-(function() {
-
-  const CSS = `
-    #tools-fab{position:fixed;bottom:24px;left:20px;z-index:9000;width:54px;height:54px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea6c0a);border:2px solid rgba(249,115,22,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:24px;transition:transform .2s,box-shadow .2s;animation:toolsBounce 2.5s ease-in-out infinite 1.2s,toolsColorCycle 4s ease-in-out infinite 0.8s}
-    #tools-fab:hover{transform:scale(1.15) rotate(-5deg)!important;box-shadow:0 6px 36px rgba(249,115,22,0.7)!important;animation:none!important;background:linear-gradient(135deg,#fb923c,#f97316)!important}
-    #tools-fab::after{content:"Quick Tools 🔧";position:absolute;left:64px;top:50%;transform:translateY(-50%) scale(0.8);background:rgba(15,12,61,0.95);border:1px solid rgba(249,115,22,0.4);color:#fed7aa;font-size:11px;font-weight:700;font-family:'DM Sans',sans-serif;padding:5px 12px;border-radius:999px;white-space:nowrap;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none}
-    #tools-fab:hover::after{opacity:1;transform:translateY(-50%) scale(1)}
-    @keyframes toolsBounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-7px)}}
-    @keyframes toolsColorCycle{0%,100%{box-shadow:0 4px 24px rgba(249,115,22,0.5),0 0 0 0 rgba(249,115,22,0.2)}33%{box-shadow:0 4px 28px rgba(245,158,11,0.6),0 0 0 6px rgba(245,158,11,0.1)}66%{box-shadow:0 4px 28px rgba(239,68,68,0.5),0 0 0 6px rgba(239,68,68,0.1)}}
-    #tools-popup{position:fixed;bottom:90px;left:20px;z-index:9000;width:320px;background:rgba(15,12,61,0.98);border:1px solid rgba(249,115,22,0.3);border-radius:20px;box-shadow:0 16px 56px rgba(0,0,0,0.6);transform:translateY(20px) scale(0.95);opacity:0;pointer-events:none;transition:all .25s cubic-bezier(.22,1,.36,1);backdrop-filter:blur(20px);overflow:hidden}
-    #tools-popup.open{transform:translateY(0) scale(1);opacity:1;pointer-events:all}
-    .tp-head{padding:13px 16px;border-bottom:1px solid rgba(249,115,22,0.15);display:flex;align-items:center;justify-content:space-between}
-    .tp-head-title{font-weight:700;font-size:13px;color:#f0f2f8;display:flex;align-items:center;gap:7px}
-    .tp-close{background:none;border:none;color:rgba(255,255,255,0.4);font-size:17px;cursor:pointer;transition:color .15s}
-    .tp-close:hover{color:white}
-    .tp-link{display:flex;align-items:center;gap:12px;padding:11px 16px;text-decoration:none;color:#f0f2f8;transition:background .15s;border-bottom:1px solid rgba(255,255,255,0.05)}
-    .tp-link:last-child{border-bottom:none}
-    .tp-link:hover{background:rgba(249,115,22,0.08)}
-    .tp-icon{width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-    .tp-text .tp-name{font-size:13px;font-weight:600}
-    .tp-text .tp-desc{font-size:10px;color:rgba(255,255,255,0.35);margin-top:1px;font-family:'JetBrains Mono',monospace}
-    .tp-all{display:block;text-align:center;padding:10px;font-size:12px;font-weight:600;color:var(--orange,#f97316);text-decoration:none;background:rgba(249,115,22,0.06);transition:background .15s}
-    .tp-all:hover{background:rgba(249,115,22,0.12)}
-  `;
-
-  const el = document.createElement('style');
-  el.textContent = CSS;
-  document.head.appendChild(el);
-
-  document.body.insertAdjacentHTML('beforeend', `
-    <button id="tools-fab" onclick="toolsToggle()" title="Quick Tools">🔧</button>
-    <div id="tools-popup">
-      <div class="tp-head">
-        <div class="tp-head-title">🛠️ Quick Tools</div>
-        <button class="tp-close" onclick="toolsToggle()">✕</button>
-      </div>
-      <a href="tools.html" class="tp-link" onclick="toolsToggle()">
-        <div class="tp-icon" style="background:rgba(249,115,22,0.15)">⏱</div>
-        <div class="tp-text"><div class="tp-name">Drivers' Hours Checker</div><div class="tp-desc">UK · Can they legally complete this load?</div></div>
-      </a>
-      <a href="tools.html" class="tp-link" onclick="toolsToggle()">
-        <div class="tp-icon" style="background:rgba(34,197,94,0.15)">💷</div>
-        <div class="tp-text"><div class="tp-name">Rate Calculator</div><div class="tp-desc">UK & USA · Cost per mile · Profitability</div></div>
-      </a>
-      <a href="tools.html" class="tp-link" onclick="toolsToggle()">
-        <div class="tp-icon" style="background:rgba(6,182,212,0.15)">🌍</div>
-        <div class="tp-text"><div class="tp-name">Time Zone Converter</div><div class="tp-desc">IST · GMT · EST · PST</div></div>
-      </a>
-      <a href="tools.html" class="tp-link" onclick="toolsToggle()">
-        <div class="tp-icon" style="background:rgba(239,68,68,0.15)">📋</div>
-        <div class="tp-text"><div class="tp-name">Tachograph Checker</div><div class="tp-desc">UK · Infringement · WTD hours</div></div>
-      </a>
-      <a href="tools.html" class="tp-all">View All Tools →</a>
-    </div>
-  `);
-
-  window.toolsToggle = function() {
-    document.getElementById('tools-popup').classList.toggle('open');
-    // Close Madam JI if open
-    document.getElementById('mj-popup')?.classList.remove('open');
-  };
-
-  // Close Madam JI closes tools too
-  const origMjToggle = window.mjToggle;
-  if (origMjToggle) {
-    window.mjToggle = function() {
-      document.getElementById('tools-popup')?.classList.remove('open');
-      origMjToggle();
-    };
-  }
-
-})();
-
 
 // ══════════════════════════════════════════════
 // 14. GLOBAL CARD HOVER GLOW ENHANCEMENT
