@@ -449,3 +449,9 @@ html,body {
     width: auto;
     object-fit: contain;
 }
+/* STOP huge logos anywhere (safe guard) */
+.week-hero img,
+.day-hero img,
+.hero img,
+.hero-logo,
+.ea-hero img
