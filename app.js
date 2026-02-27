@@ -538,10 +538,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ══════════════════════════════════════════════
 // 12. FLOATING MADAM JI CHAT WIDGET
-// Auto-injects on every page except madam-ji.html
+// Shows on ALL pages always
 // ══════════════════════════════════════════════
 (function() {
-  if (document.location.pathname.includes('madam-ji')) return;
 
   const CSS = `
     #mj-fab{position:fixed;bottom:24px;right:24px;z-index:9000;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4f46e5);border:2px solid rgba(168,85,247,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:26px;box-shadow:0 4px 24px rgba(124,58,237,0.4);transition:transform .2s,box-shadow .2s;animation:mjPulse 3s ease-in-out infinite}
@@ -708,10 +707,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // ══════════════════════════════════════════════
 // 13. FLOATING TOOLS QUICK-ACCESS PANEL
-// Auto-injects on every page except tools.html
+// Shows on ALL pages always
 // ══════════════════════════════════════════════
 (function() {
-  if (document.location.pathname.includes('tools')) return;
 
   const CSS = `
     #tools-fab{position:fixed;bottom:24px;left:24px;z-index:9000;width:56px;height:56px;border-radius:50%;background:linear-gradient(135deg,#f97316,#ea6c0a);border:2px solid rgba(249,115,22,0.5);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 4px 24px rgba(249,115,22,0.35);transition:transform .2s,box-shadow .2s}

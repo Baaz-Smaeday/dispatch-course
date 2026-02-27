@@ -2208,16 +2208,29 @@ function speakTopic(lang, textId, btnId) {
 
   const text = textEl.innerText || textEl.textContent;
   const utt = new SpeechSynthesisUtterance(text.replace(/\s+/g, ' ').trim());
-  utt.lang = lang === 'hi' ? 'hi-IN' : 'en-US';
-  utt.rate = 0.88;
-  utt.pitch = 1;
+  utt.lang = lang === 'hi' ? 'hi-IN' : 'en-GB';
+  utt.rate = lang === 'hi' ? 0.82 : 0.86;
+  utt.pitch = lang === 'hi' ? 1.05 : 1.0;
+  utt.volume = 1;
 
-  // Pick best available voice
+  // Professional voice priority selection
   const voices = window.speechSynthesis.getVoices();
-  const match = lang === 'hi'
-    ? voices.find(v => v.lang.startsWith('hi'))
-    : voices.find(v => v.lang.startsWith('en') && v.name.includes('Google')) || voices.find(v => v.lang.startsWith('en'));
-  if (match) utt.voice = match;
+  if (lang === 'hi') {
+    const hiVoice =
+      voices.find(v => v.lang === 'hi-IN' && v.name.includes('Google')) ||
+      voices.find(v => v.lang === 'hi-IN' && !v.localService) ||
+      voices.find(v => v.lang.startsWith('hi'));
+    if (hiVoice) utt.voice = hiVoice;
+  } else {
+    const enVoice =
+      voices.find(v => v.lang === 'en-GB' && v.name.includes('Google')) ||
+      voices.find(v => v.lang === 'en-US' && v.name.includes('Google')) ||
+      voices.find(v => v.lang.startsWith('en') && v.name.toLowerCase().includes('neural')) ||
+      voices.find(v => v.lang.startsWith('en') && !v.localService) ||
+      voices.find(v => v.lang === 'en-GB') ||
+      voices.find(v => v.lang.startsWith('en'));
+    if (enVoice) utt.voice = enVoice;
+  }
 
   // Update button to STOP state
   const btn = document.getElementById(btnId);

@@ -129,12 +129,18 @@ select.tf option{background:#0d0c2e;color:white}
         <button class="seg-btn" onclick="segSwitch('seg_rate',this,'r_us')">🇺🇸 USA ($/mile)</button>
       </div>
 
-      <div id="r_uk">
+      <div id="r_uk" data-seg="seg_rate">
+        <label class="tl">Vehicle Type</label>
+        <select class="tf" id="r_uk_vtype" onchange="setUKVehicleDefaults();calcUKRate()" style="margin-bottom:10px">
+          <option value="artic">🚛 Artic (44t) — £1.50/mile default</option>
+          <option value="rigid">🚚 Rigid HGV (18t) — £1.25/mile default</option>
+          <option value="van">🚐 LWB/XL Van — £0.85/mile default</option>
+        </select>
         <label class="tl">Load Rate (£)</label>
         <input type="number" class="tf" id="r_uk_rate" placeholder="e.g. 1200" oninput="calcUKRate()"/>
         <div class="tf-row">
           <div><label class="tl">Miles</label><input type="number" class="tf" id="r_uk_miles" placeholder="e.g. 240" oninput="calcUKRate()"/></div>
-          <div><label class="tl">HGV Cost/Mile (£)</label><input type="number" class="tf" id="r_uk_cpm" placeholder="1.50" value="1.50" step="0.05" oninput="calcUKRate()"/></div>
+          <div><label class="tl">Cost/Mile (£)</label><input type="number" class="tf" id="r_uk_cpm" placeholder="1.50" value="1.50" step="0.05" oninput="calcUKRate()"/></div>
         </div>
         <div id="r_uk_result" class="result-box" style="display:none">
           <div class="result-main" id="r_uk_rpm">—</div>
@@ -142,7 +148,13 @@ select.tf option{background:#0d0c2e;color:white}
         </div>
       </div>
 
-      <div id="r_us" style="display:none">
+      <div id="r_us" data-seg="seg_rate" style="display:none">
+        <label class="tl">Vehicle Type</label>
+        <select class="tf" id="r_us_vtype" onchange="setUSVehicleDefaults();calcUSRate()" style="margin-bottom:10px">
+          <option value="semi">🚛 Semi/18-Wheeler — $1.65/mile default</option>
+          <option value="straight">🚚 Straight Truck — $1.30/mile default</option>
+          <option value="sprinter">🚐 Sprinter/Cargo Van — $0.95/mile default</option>
+        </select>
         <label class="tl">Load Rate ($)</label>
         <input type="number" class="tf" id="r_us_rate" placeholder="e.g. 2800" oninput="calcUSRate()"/>
         <div class="tf-row">
@@ -264,7 +276,7 @@ select.tf option{background:#0d0c2e;color:white}
       </div>
 
       <!-- Daily check -->
-      <div id="tc_daily">
+      <div id="tc_daily" data-seg="seg_tacho">
         <div class="tf-row">
           <div><label class="tl">Driving Time (hrs)</label><input type="number" class="tf" id="tc_drive" placeholder="e.g. 9.5" step="0.5" oninput="calcTacho()"/></div>
           <div><label class="tl">On-Duty Time (hrs)</label><input type="number" class="tf" id="tc_duty" placeholder="e.g. 11" step="0.5" oninput="calcTacho()"/></div>
@@ -276,7 +288,7 @@ select.tf option{background:#0d0c2e;color:white}
       </div>
 
       <!-- WTD check -->
-      <div id="tc_wtd" style="display:none">
+      <div id="tc_wtd" data-seg="seg_tacho" style="display:none">
         <label class="tl">Total Working Hours This Week</label>
         <input type="number" class="tf" id="tc_wtd_hrs" placeholder="e.g. 52" step="0.5" oninput="calcWTD()"/>
         <label class="tl" style="margin-top:8px">Opt-Out Agreement Signed?</label>
@@ -284,8 +296,8 @@ select.tf option{background:#0d0c2e;color:white}
           <button class="seg-btn act" id="optout_no" onclick="segSwitch('seg_optout',this,'dummy1');calcWTD()">No</button>
           <button class="seg-btn" id="optout_yes" onclick="segSwitch('seg_optout',this,'dummy2');calcWTD()">Yes (signed)</button>
         </div>
-        <div id="dummy1" style="display:none"></div>
-        <div id="dummy2" style="display:none"></div>
+        <div id="dummy1" data-seg="seg_optout" style="display:none"></div>
+        <div id="dummy2" data-seg="seg_optout" style="display:none"></div>
       </div>
 
       <div id="tc_result" class="result-box" style="display:none">
@@ -311,7 +323,7 @@ select.tf option{background:#0d0c2e;color:white}
         <button class="seg-btn" onclick="segSwitch('seg_det',this,'det_us');calcDet()">🇺🇸 USA</button>
       </div>
 
-      <div id="det_uk">
+      <div id="det_uk" data-seg="seg_det">
         <div class="tf-row">
           <div><label class="tl">Arrived Time</label><input type="time" class="tf" id="det_uk_arr" value="09:00" oninput="calcDet()"/></div>
           <div><label class="tl">Departed / Released</label><input type="time" class="tf" id="det_uk_dep" value="12:00" oninput="calcDet()"/></div>
@@ -320,7 +332,7 @@ select.tf option{background:#0d0c2e;color:white}
         <div style="font-size:11px;color:var(--grey);margin-bottom:10px">2 free hours included. Detention billed after that.</div>
       </div>
 
-      <div id="det_us" style="display:none">
+      <div id="det_us" data-seg="seg_det" style="display:none">
         <div class="tf-row">
           <div><label class="tl">Arrived Time</label><input type="time" class="tf" id="det_us_arr" value="09:00" oninput="calcDet()"/></div>
           <div><label class="tl">Departed / Released</label><input type="time" class="tf" id="det_us_dep" value="12:00" oninput="calcDet()"/></div>
@@ -387,7 +399,7 @@ select.tf option{background:#0d0c2e;color:white}
         <button class="seg-btn" onclick="segSwitch('seg_prof',this,'pf_us');calcProfit()">🇺🇸 USA ($)</button>
       </div>
 
-      <div id="pf_uk">
+      <div id="pf_uk" data-seg="seg_prof">
         <div class="tf-row">
           <div><label class="tl">Load Rate (£)</label><input type="number" class="tf" id="pf_uk_rate" placeholder="e.g. 1100" oninput="calcProfit()"/></div>
           <div><label class="tl">Miles</label><input type="number" class="tf" id="pf_uk_miles" placeholder="e.g. 280" oninput="calcProfit()"/></div>
@@ -402,7 +414,7 @@ select.tf option{background:#0d0c2e;color:white}
         </div>
       </div>
 
-      <div id="pf_us" style="display:none">
+      <div id="pf_us" data-seg="seg_prof" style="display:none">
         <div class="tf-row">
           <div><label class="tl">Load Rate ($)</label><input type="number" class="tf" id="pf_us_rate" placeholder="e.g. 2600" oninput="calcProfit()"/></div>
           <div><label class="tl">Miles</label><input type="number" class="tf" id="pf_us_miles" placeholder="e.g. 850" oninput="calcProfit()"/></div>
@@ -442,13 +454,25 @@ select.tf option{background:#0d0c2e;color:white}
 let lang='en';
 function setLang(l,btn){lang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.hi-note').forEach(el=>el.style.display=l==='hi'?'block':'none');}
 function segSwitch(segId,btn,showId){
-  document.querySelectorAll('#'+segId+' .seg-btn').forEach(b=>b.classList.remove('act'));btn.classList.add('act');
-  const seg=document.getElementById(segId);
-  seg.parentNode.querySelectorAll('[id^="'+showId.replace(/_.*/,'_')+'"]').forEach(el=>{if(el.id!==segId)el.style.display='none';});
-  const show=document.getElementById(showId);if(show)show.style.display='block';
+  document.querySelectorAll('#'+segId+' .seg-btn').forEach(b=>b.classList.remove('act'));
+  btn.classList.add('act');
+  // Hide all panels registered to this seg group via data-seg attribute
+  document.querySelectorAll('[data-seg="'+segId+'"]').forEach(el=>el.style.display='none');
+  const show=document.getElementById(showId);
+  if(show)show.style.display='block';
 }
 
 /* ─── TOOL 1: UK/US Rate Calculator ─── */
+function setUKVehicleDefaults(){
+  const v=document.getElementById('r_uk_vtype').value;
+  const defaults={artic:'1.50',rigid:'1.25',van:'0.85'};
+  document.getElementById('r_uk_cpm').value=defaults[v];
+}
+function setUSVehicleDefaults(){
+  const v=document.getElementById('r_us_vtype').value;
+  const defaults={semi:'1.65',straight:'1.30',sprinter:'0.95'};
+  document.getElementById('r_us_cpm').value=defaults[v];
+}
 function calcUKRate(){
   const rate=parseFloat(document.getElementById('r_uk_rate').value)||0;
   const miles=parseFloat(document.getElementById('r_uk_miles').value)||0;
