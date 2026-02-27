@@ -793,53 +793,95 @@ window.addEventListener('DOMContentLoaded',()=>{tick();setInterval(tick,1000);lo
 <style>
 #mj-fab {
   position: fixed !important; bottom: 88px !important; right: 20px !important;
-  z-index: 99999 !important; width: 60px; height: 60px; border-radius: 50%;
+  z-index: 99999 !important; width: 64px; height: 64px; border-radius: 50%;
   background: linear-gradient(135deg, #7c3aed, #4f46e5);
-  border: none; outline: none; font-family: inherit;
+  border: 2px solid rgba(168,85,247,0.5);
+  outline: none; font-family: inherit;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: transform .18s ease, background .18s;
+  overflow: hidden;
   animation: mjBounce 2.5s ease-in-out infinite, mjColorCycle 4s ease-in-out infinite;
+  transition: transform .18s ease;
 }
 #mj-fab:hover {
   transform: scale(1.12) !important;
   animation: none !important;
   background: linear-gradient(135deg, #9333ea, #6366f1) !important;
-  box-shadow: 0 0 0 12px rgba(124,58,237,0.12), 0 8px 36px rgba(124,58,237,0.7) !important;
+  box-shadow: 0 0 0 12px rgba(124,58,237,0.12), 0 8px 36px rgba(124,58,237,0.8) !important;
 }
-/* Inner icon — owl emoji centred */
-.mj-inner {
-  font-size: 26px; line-height: 1; pointer-events: none; z-index: 1;
-}
-/* Orbit track — sits outside the circle */
-.mj-orbit-ring {
-  position: absolute;
-  width: 82px; height: 82px;
-  top: 50%; left: 50%;
-  margin-top: -41px; margin-left: -41px;
-  animation: orbitSpin 2.8s linear infinite;
+/* Cycle wrapper — clips content to circle */
+.mj-cycle-wrap {
+  position: relative; width: 100%; height: 100%;
+  display: flex; align-items: center; justify-content: center;
   pointer-events: none;
 }
-/* "MJ" pill that rides the orbit track */
-.mj-orbit-badge {
-  position: absolute; top: -1px; left: 50%;
-  transform: translateX(-50%);
-  background: linear-gradient(135deg, #f97316, #ea6c0a);
-  color: white; font-size: 9px; font-weight: 900; letter-spacing: 1px;
-  padding: 3px 7px; border-radius: 999px;
-  font-family: 'DM Sans', sans-serif;
-  border: 1.5px solid rgba(255,255,255,0.4);
-  box-shadow: 0 2px 10px rgba(249,115,22,0.6);
-  white-space: nowrap;
-  /* Counter-rotate so text stays upright */
-  animation: orbitCounterSpin 2.8s linear infinite;
+/* Each state */
+.mj-state {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  text-align: center; line-height: 1.2;
+  opacity: 0; pointer-events: none;
 }
-@keyframes orbitSpin {
-  from { transform: rotate(0deg); }
-  to   { transform: rotate(360deg); }
+/* 😕 confused face */
+.mj-s1 {
+  font-size: 30px;
+  animation: mjCycle1 5s ease-in-out infinite;
 }
-@keyframes orbitCounterSpin {
-  from { transform: translateX(-50%) rotate(0deg); }
-  to   { transform: translateX(-50%) rotate(-360deg); }
+/* "Ask" */
+.mj-s2 {
+  font-size: 13px; font-weight: 900; color: rgba(255,255,255,0.9);
+  letter-spacing: 1px; font-family: 'DM Sans', sans-serif;
+  animation: mjCycle2 5s ease-in-out infinite;
+}
+/* "Madam JI" */
+.mj-s3 {
+  font-size: 10px; font-weight: 800; color: white;
+  letter-spacing: .3px; font-family: 'DM Sans', sans-serif;
+  animation: mjCycle3 5s ease-in-out infinite;
+}
+/* 
+  5s total cycle:
+  0.0–2.0s  → 😕 visible   (2s)
+  2.0–2.5s  → fade to Ask  (0.5s)
+  2.5–3.5s  → Ask visible  (1s)
+  3.5–4.0s  → fade to MJ   (0.5s)
+  4.0–5.0s  → Madam JI     (1s) then fades back to 😕
+*/
+@keyframes mjCycle1 {
+  0%   { opacity:0; transform:scale(0.7); }
+  5%   { opacity:1; transform:scale(1.1); }
+  15%  { opacity:1; transform:scale(1); }
+  40%  { opacity:1; transform:scale(1); }
+  50%  { opacity:0; transform:scale(0.8); }
+  100% { opacity:0; transform:scale(0.7); }
+}
+@keyframes mjCycle2 {
+  0%   { opacity:0; transform:scale(0.5); }
+  42%  { opacity:0; transform:scale(0.5); }
+  50%  { opacity:1; transform:scale(1.15); }
+  56%  { opacity:1; transform:scale(1); }
+  66%  { opacity:1; transform:scale(1); }
+  74%  { opacity:0; transform:scale(0.7); }
+  100% { opacity:0; }
+}
+@keyframes mjCycle3 {
+  0%   { opacity:0; transform:scale(0.5); }
+  72%  { opacity:0; transform:scale(0.5); }
+  80%  { opacity:1; transform:scale(1.1); }
+  86%  { opacity:1; transform:scale(1); }
+  94%  { opacity:1; transform:scale(1); }
+  100% { opacity:0; transform:scale(0.8); }
+}
+/* Pause cycle on hover — show owl instead */
+#mj-fab:hover .mj-state { animation-play-state: paused !important; opacity:0 !important; }
+#mj-fab:hover .mj-cycle-wrap::after {
+  content: '🦉';
+  font-size: 28px;
+  position: absolute;
+  animation: popIn .2s cubic-bezier(.22,1,.36,1);
+}
+@keyframes popIn {
+  from { transform: scale(0.5); opacity:0; }
+  to   { transform: scale(1);   opacity:1; }
 }
 @keyframes mjBounce {
   0%,100% { transform: translateY(0); }
@@ -889,28 +931,57 @@ window.addEventListener('DOMContentLoaded',()=>{tick();setInterval(tick,1000);lo
 .mj-chip:hover { background: rgba(124,58,237,0.25); }
 #tools-fab {
   position: fixed !important; bottom: 20px !important; left: 20px !important;
-  z-index: 99999 !important; width: 58px; height: 58px; border-radius: 50%;
+  z-index: 99999 !important; width: 64px; height: 64px; border-radius: 50%;
   background: linear-gradient(135deg, #f97316, #ea6c0a);
-  border: none; outline: none; font-family: inherit;
+  border: 2px solid rgba(249,115,22,0.5);
+  outline: none; font-family: inherit; overflow: hidden;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
-  transition: transform .18s ease;
   animation: toolsBounce 2.5s ease-in-out 1.2s infinite, toolsColorCycle 4s ease-in-out 0.8s infinite;
+  transition: transform .18s ease;
 }
 #tools-fab:hover {
   transform: scale(1.12) !important;
   animation: none !important;
   background: linear-gradient(135deg, #fb923c, #f97316) !important;
-  box-shadow: 0 0 0 12px rgba(249,115,22,0.1), 0 8px 36px rgba(249,115,22,0.7) !important;
+  box-shadow: 0 0 0 12px rgba(249,115,22,0.1), 0 8px 36px rgba(249,115,22,0.8) !important;
 }
-.tools-gear {
-  font-size: 26px; line-height: 1; pointer-events: none;
-  display: block; animation: gearSpin 4s linear infinite;
+.tools-inner {
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 1px; pointer-events: none;
+}
+/* Gear — spins slowly, speeds up on hover */
+.tools-gear-icon {
+  font-size: 20px; line-height: 1;
+  display: block;
+  animation: gearSpin 5s linear infinite;
   filter: drop-shadow(0 1px 3px rgba(0,0,0,0.3));
+  transition: font-size .2s;
 }
-#tools-fab:hover .tools-gear { animation: gearSpin .6s linear infinite !important; }
+#tools-fab:hover .tools-gear-icon {
+  animation: gearSpin .5s linear infinite !important;
+  font-size: 24px;
+}
+/* "Toolkit" — breathes: tiny → big → tiny */
+.tools-word {
+  font-size: 6px; font-weight: 900; color: white; letter-spacing: .5px;
+  font-family: 'DM Sans', sans-serif; white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+  animation: toolkitBreathe 2.2s ease-in-out infinite;
+  transform-origin: center;
+}
+#tools-fab:hover .tools-word {
+  animation: none !important;
+  font-size: 9px !important;
+  letter-spacing: 1px;
+}
 @keyframes gearSpin {
-  0%   { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes toolkitBreathe {
+  0%,100% { transform: scale(0.5); opacity: 0.5; font-size: 6px; }
+  50%     { transform: scale(1);   opacity: 1;   font-size: 9px; }
 }
 @keyframes toolsBounce {
   0%,100% { transform: translateY(0); }
@@ -965,8 +1036,11 @@ window.addEventListener('DOMContentLoaded',()=>{tick();setInterval(tick,1000);lo
 
 <!-- Madam JI Button + Popup -->
 <button id="mj-fab" onclick="mjToggle()" title="Confused? Ask Madam JI" type="button">
-  <span class="mj-inner">🦉</span>
-  <span class="mj-orbit-ring"><span class="mj-orbit-badge">MJ</span></span>
+  <span class="mj-cycle-wrap">
+    <span class="mj-state mj-s1">😕</span>
+    <span class="mj-state mj-s2">Ask</span>
+    <span class="mj-state mj-s3">Madam<br>JI</span>
+  </span>
 </button>
 <div id="mj-tooltip" class="fab-tooltip">Confused? Ask Madam JI 🦉</div>
 <div id="mj-popup">
@@ -998,7 +1072,10 @@ window.addEventListener('DOMContentLoaded',()=>{tick();setInterval(tick,1000);lo
 
 <!-- Tools Button + Popup -->
 <button id="tools-fab" onclick="toolsToggle()" title="Toolkit" type="button">
-  <span class="tools-gear">⚙</span>
+  <span class="tools-inner">
+    <span class="tools-gear-icon">⚙</span>
+    <span class="tools-word">Toolkit</span>
+  </span>
 </button>
 <div id="tools-tooltip" class="fab-tooltip">Toolkit 🔧</div>
 <div id="tools-popup">
