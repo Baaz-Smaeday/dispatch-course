@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Week 2 — Professional Dispatch Operations | Eagle Academy</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<style>
+.week-hero{background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 60%,rgba(6,182,212,0.1) 100%);border-bottom:1px solid rgba(6,182,212,0.2);padding:40px 24px 32px;position:relative;overflow:hidden}
+.week-hero::before{content:'2';position:absolute;right:5%;top:-20px;font-size:220px;font-weight:900;color:rgba(6,182,212,0.04);line-height:1;pointer-events:none}
+.week-hero-inner{max-width:1200px;margin:0 auto}
+.day-tabs-wrap{background:rgba(8,7,48,0.9);border-bottom:1px solid rgba(6,182,212,0.15);position:sticky;top:68px;z-index:100;backdrop-filter:blur(12px)}
+.day-tabs{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.day-tabs::-webkit-scrollbar{display:none}
+.day-tab{padding:14px 22px;border:none;background:transparent;color:var(--grey);font-family:var(--font-main);font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition);border-bottom:3px solid transparent;white-space:nowrap;flex-shrink:0}
+.day-tab:hover{color:var(--white)}.day-tab.active{color:var(--cyan);border-bottom-color:var(--cyan)}
+.day-tab .check{color:var(--green);margin-left:5px}
+.main-wrap{max-width:1200px;margin:0 auto;padding:32px 24px}
+.day-panel{display:none}.day-panel.active{display:block;animation:fadeUp 0.4s ease}
+.day-hero{background:linear-gradient(135deg,rgba(6,182,212,0.1),rgba(30,27,139,0.3));border:1px solid rgba(6,182,212,0.25);border-radius:var(--radius-xl);padding:28px 32px;margin-bottom:28px;display:flex;align-items:flex-start;gap:20px}
+.day-num{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--cyan),#0284c7);display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:900;flex-shrink:0;box-shadow:0 8px 32px rgba(6,182,212,0.3);color:white}
+.day-info h2{font-size:24px;font-weight:800;margin-bottom:4px}
+.day-info .htitle{color:var(--cyan);font-family:var(--font-hindi);font-size:15px}
+.day-info .dmeta{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.sec-hdr{display:flex;align-items:center;gap:12px;margin:28px 0 18px}
+.sec-hdr h3{font-size:18px;font-weight:800}
+.sec-line{flex:1;height:1px;background:rgba(6,182,212,0.2)}
+.vbox{margin-bottom:28px;border-radius:var(--radius-lg);overflow:hidden;border:2px solid rgba(6,182,212,0.25);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.vhdr{background:linear-gradient(90deg,var(--navy-dark),var(--navy));padding:12px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(6,182,212,0.2);font-size:13px;font-weight:600}
+.dot{width:10px;height:10px;border-radius:50%}
+.vph{aspect-ratio:16/9;background:linear-gradient(135deg,var(--navy-dark),rgba(6,182,212,0.06));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer;transition:var(--transition)}
+.vph:hover{background:rgba(6,182,212,0.08)}
+.pcirc{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--cyan),#0284c7);display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 0 40px rgba(6,182,212,0.4);animation:pulseOrange 2.5s ease infinite}
+.vnote{padding:10px 18px;background:rgba(6,182,212,0.07);border-top:1px solid rgba(6,182,212,0.15);font-size:12px;color:var(--cyan)}
+.tc{background:rgba(255,255,255,0.03);border:1px solid rgba(6,182,212,0.15);border-radius:var(--radius-lg);margin-bottom:18px;overflow:hidden}
+.tt{width:100%;background:none;border:none;padding:18px 22px;cursor:pointer;display:flex;align-items:center;gap:14px;transition:var(--transition);text-align:left}
+.tt:hover{background:rgba(6,182,212,0.05)}
+.tnum{width:38px;height:38px;border-radius:10px;flex-shrink:0;background:linear-gradient(135deg,var(--cyan),#0284c7);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:white}
+.tt-titles{flex:1}.t-en{font-size:15px;font-weight:700;color:var(--white)}.t-hi{font-size:12px;color:var(--cyan);font-family:var(--font-hindi);margin-top:2px}
+.tarr{font-size:18px;color:var(--grey);transition:transform 0.3s}
+.tt.open .tarr{transform:rotate(90deg);color:var(--cyan)}
+.tbody{display:none;padding:0 22px 22px}.tbody.open{display:block;animation:fadeUp 0.3s ease}
+.abar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;background:rgba(30,27,139,0.5);border:1px solid rgba(6,182,212,0.2);border-radius:var(--radius-md);margin-bottom:16px}
+.albl{font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px}
+.ab{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:999px;border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font-main);transition:var(--transition)}
+.ab-en{background:rgba(6,182,212,0.15);color:var(--cyan);border:1px solid rgba(6,182,212,0.3)}.ab-en:hover,.ab-en.on{background:var(--cyan);color:white}
+.ab-hi{background:rgba(251,191,36,0.15);color:var(--gold);border:1px solid rgba(251,191,36,0.3);font-family:var(--font-hindi)}.ab-hi:hover,.ab-hi.on{background:var(--gold);color:var(--navy-deep)}
+.ab-stop{background:rgba(239,68,68,0.12);color:var(--red);border:1px solid rgba(239,68,68,0.3)}.ab-stop:hover{background:var(--red);color:white}
+.ab-tog{background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3)}
+.cen{font-size:14px;line-height:1.9;color:rgba(255,255,255,0.85)}
+.chi{font-size:15px;line-height:2;color:rgba(255,220,120,0.92);font-family:var(--font-hindi);display:none}
+.chi.show{display:block;animation:fadeIn 0.3s ease}
+.hbox{background:rgba(6,182,212,0.08);border-left:3px solid var(--cyan);padding:14px 18px;border-radius:0 var(--radius-md) var(--radius-md) 0;margin:12px 0;font-size:13px;line-height:1.8}
+.obox{background:rgba(249,115,22,0.08);border-left:3px solid var(--orange);padding:14px 18px;border-radius:0 var(--radius-md) var(--radius-md) 0;margin:12px 0;font-size:13px;line-height:1.8}
+.gbox{background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.25);border-radius:var(--radius-md);padding:14px 18px;margin:12px 0;font-size:13px;line-height:1.8}
+.wbox{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:var(--radius-md);padding:14px 18px;margin:12px 0;font-size:13px;line-height:1.8}
+.sbox{background:rgba(30,27,139,0.5);border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-md);padding:16px 20px;margin:12px 0;font-size:13px;line-height:1.9;font-family:var(--font-mono)}
+.kts{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.kt{background:rgba(30,27,139,0.6);border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-full);padding:4px 14px;font-size:12px;font-weight:600;color:#a5b4fc;font-family:var(--font-mono)}
+.plist{list-style:none;padding:0;margin:0}
+.plist li{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px;line-height:1.7}
+.plist li:last-child{border-bottom:none}
+.pn{width:26px;height:26px;border-radius:50%;background:rgba(6,182,212,0.2);color:var(--cyan);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:1px}
+.hwbox{background:linear-gradient(135deg,rgba(30,27,139,0.5),rgba(6,182,212,0.08));border:1px solid rgba(6,182,212,0.25);border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:20px}
+.hwbox h4{font-size:16px;font-weight:800;margin-bottom:8px;display:flex;align-items:center;gap:10px}
+.tquiz{margin-top:24px;background:rgba(30,27,139,0.4);border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-lg);overflow:hidden}
+.qhdr{padding:14px 20px;background:rgba(30,27,139,0.6);display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.qhdr h4{font-size:15px;font-weight:700}
+.qbody{padding:20px}
+.qi{margin-bottom:22px}.qi:last-child{margin-bottom:0}
+.qt{font-size:14px;font-weight:600;margin-bottom:10px;line-height:1.6}
+.qopts{display:flex;flex-direction:column;gap:8px}
+.qo{width:100%;padding:10px 16px;text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-md);cursor:pointer;font-size:13px;color:var(--white);font-family:var(--font-main);transition:var(--transition)}
+.qo:hover{border-color:var(--cyan);background:rgba(6,182,212,0.08)}
+.qo.correct{border-color:var(--green)!important;background:rgba(34,197,94,0.15)!important;color:var(--green)}
+.qo.wrong{border-color:var(--red)!important;background:rgba(239,68,68,0.15)!important;color:var(--red)}
+.qo:disabled{cursor:default}
+.qresult{display:none;padding:16px 20px;background:rgba(255,255,255,0.04);border-top:1px solid rgba(255,255,255,0.08);text-align:center}
+.qresult.show{display:block;animation:fadeUp 0.3s ease}
+.qscore{font-size:32px;font-weight:900}
+.dnav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:24px;border-top:1px solid rgba(6,182,212,0.15)}
+@media(max-width:640px){.day-hero{flex-direction:column;padding:20px}.main-wrap{padding:20px 16px}}
+</style>
+</head>
+<body>
+
+<header class="ea-header">
+  <div class="ea-header-inner">
+    <a href="index.html" class="ea-logo">
+      <img src="assets/logo.png" alt="Eagle Academy" onerror="this.style.display='none'"/>
+      <div class="ea-logo-text"><div class="brand">EAGLE ACADEMY</div><div class="sub">Freight Dispatcher Certification</div></div>
+    </a>
+    <nav class="ea-nav">
+      <a href="index.html" class="ea-nav-btn">🏠 Home</a>
+      <a href="week1.html" class="ea-nav-btn">Week 1</a>
+      <a href="week2.html" class="ea-nav-btn active">Week 2</a>
+      <a href="week3.html" class="ea-nav-btn">Week 3</a>
+      <a href="week4.html" class="ea-nav-btn">Week 4</a>
+      <a href="tools.html" class="ea-nav-btn">🧮 Tools</a>
+      <a href="madam-ji.html" class="ea-nav-btn">🎓 Madam JI</a>
+      <a href="exam.html" class="ea-nav-btn">📝 Final Exam</a>
+    </nav>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('hi',this)">हिं</button>
+    </div>
+  </div>
+</header>
+
+<div class="ticker-wrap"><div class="ticker-inner" id="ticker_inner" style="font-size:12px;color:var(--cyan);font-family:var(--font-mono);">
+  <span>📞 ICAR: Introduce → Confirm → Ask → Respond</span><span>🤐 Negotiation Tip: Silence is Power</span><span>📄 No signed RC = No legal protection</span><span>💰 Factoring: Get paid in 24hrs for 2–4% fee</span><span>📊 TMS: Tailwind, Aljex, McLeod</span><span>🎯 Check-call driver every 2–4 hours</span><span>⚡ Quick Pay: 2–3% for fast payment</span><span>📞 ICAR: Introduce → Confirm → Ask → Respond</span><span>🤐 Silence is Power</span><span>📄 No signed RC = No legal protection</span></div></div>
+
+<section class="week-hero">
+  <div class="week-hero-inner">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;"><span class="tag tag-cyan">Week 2 of 4</span><span class="tag tag-orange">40 Hours</span><span class="tag tag-green">5 Days</span></div>
+    <h1 style="font-size:clamp(24px,4vw,42px);font-weight:900;margin-bottom:8px;">Professional Dispatch Operations</h1>
+    <p style="font-size:15px;color:var(--grey);margin-bottom:4px;">Broker calls, negotiation, documentation, TMS, email writing, detention claims and safety compliance</p>
+    <p style="font-size:14px;color:var(--cyan);font-family:var(--font-hindi);">पेशेवर डिस्पैच संचालन — ब्रोकर कॉल, बातचीत, दस्तावेज़, TMS और सुरक्षा</p>
+    <div style="margin-top:20px;max-width:500px;">
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--grey);margin-bottom:6px;"><span>Week Progress</span><span id="week_pct">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="week_prog" style="width:0%;background:linear-gradient(90deg,var(--cyan),var(--orange))"></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="day-tabs-wrap"><div class="day-tabs">
+  <button class="day-tab active" onclick="showDay(6,this)">Day 6 <span id="d6_check" class="check" style="display:none">✓</span></button>
+  <button class="day-tab" onclick="showDay(7,this)">Day 7 <span id="d7_check" class="check" style="display:none">✓</span></button>
+  <button class="day-tab" onclick="showDay(8,this)">Day 8 <span id="d8_check" class="check" style="display:none">✓</span></button>
+  <button class="day-tab" onclick="showDay(9,this)">Day 9 <span id="d9_check" class="check" style="display:none">✓</span></button>
+  <button class="day-tab" onclick="showDay(10,this)">Day 10 <span id="d10_check" class="check" style="display:none">✓</span></button>
+</div></div>
+
+<main class="main-wrap">
+
+<!-- ═══════════ DAY 6: Broker Calls & Negotiation ═══════════ -->
+<div class="day-panel active" id="day6">
+  <div class="day-hero fade-up">
+    <div class="day-num">D6</div>
+    <div class="day-info">
+      <h2>Broker Calls & Negotiation</h2>
+      <div class="htitle">ब्रोकर कॉल और बातचीत</div>
+      <div class="dmeta"><span class="tag tag-cyan">2hrs Theory</span><span class="tag tag-orange">2hrs Practical</span><span class="tag tag-green">3 Topics</span></div>
+    </div>
+  </div>
+  <div class="vbox fade-up delay-1">
+    <div class="vhdr"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 6 — Broker Calls & Negotiation</span><span style="margin-left:auto;font-size:11px;color:var(--grey);font-family:var(--font-mono);">~12 min</span></div>
+    <div class="vph" onclick="loadVid(this,'YOUR_D6_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 6: Broker Calls & Negotiation</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D6_VIDEO_ID with YouTube ID</div></div></div>
+    <div class="vnote">💡 Instructor: Find the text YOUR_D6_VIDEO_ID in this file and replace with your real YouTube video ID</div>
+  </div>
+
+  <div class="sec-hdr"><h3>📖 Theory Topics</h3><div class="sec-line"></div><span class="tag tag-cyan">3 Topics</span></div>
+
+  <!-- TOPIC A: ICAR -->
+  <div class="tc" id="tc_6_1">
+    <button class="tt" onclick="openTopic('tc_6_1',this)">
+      <div class="tnum">A</div><div class="tt-titles"><div class="t-en">The ICAR Broker Call Method</div><div class="t-hi">ICAR ब्रोकर कॉल विधि</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_6_1">
+      <div class="abar"><span class="albl">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="speak('text_en_6_1',this,'en-US')">▶ English</button>
+        <button class="ab ab-hi" onclick="speak('text_hi_6_1',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpeak()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="toggleHi('hi_6_1')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="text_en_6_1">
+        <p>The ICAR method is your daily weapon as a dispatcher. Every professional broker call follows this exact 4-step structure.</p>
+        <div class="hbox"><strong style="color:var(--cyan)">ICAR = Introduce → Confirm → Ask → Respond</strong><br/><br/>
+          <strong>I — Introduce:</strong> Your name, company name, carrier name, MC number.<br/>
+          <strong>C — Confirm:</strong> Reference the exact load posting (DAT ref number, origin, destination).<br/>
+          <strong>A — Ask:</strong> Ask for THEIR rate first — never give yours first. You gain information.<br/>
+          <strong>R — Respond:</strong> Counter using DAT rate history as your weapon. Never use emotion.
+        </div>
+        <div class="sbox">
+          <strong style="color:var(--cyan)">📞 Full ICAR Script:</strong><br/><br/>
+          "Hi, good morning! This is [Name] calling from [Company],<br/>
+          dispatching for [Carrier Name], MC number [####].<br/><br/>
+          I'm calling about your dry van load on DAT — ref [####],<br/>
+          Chicago to Atlanta, available tomorrow.<br/><br/>
+          What rate are you working with on that?"<br/><br/>
+          BROKER: "Best I can do is $2,200."<br/><br/>
+          YOU: "I appreciate that. DAT shows this lane averaging $2,650 this week.<br/>
+          My driver can make it work at $2,500. Can you do $2,500?"
+        </div>
+        <div class="obox"><strong>🔑 Why it works:</strong> You sound prepared from word one. Confirming the load reference shows you are organised. Getting their number first anchors the negotiation. DAT data removes emotion from the conversation — it is market facts, not your opinion.</div>
+        <div class="kts"><span class="kt">ICAR</span><span class="kt">Load Reference</span><span class="kt">Rate Anchor</span><span class="kt">DAT History</span></div>
+      </div>
+      <div class="chi" id="hi_6_1"><div id="text_hi_6_1">
+        <p>ICAR विधि हर पेशेवर ब्रोकर कॉल की संरचना है।</p>
+        <div class="hbox"><strong style="color:var(--cyan)">ICAR = परिचय → पुष्टि → पूछना → जवाब देना</strong><br/>
+          I: नाम, कंपनी, कैरियर नाम, MC नंबर बताएं<br/>
+          C: DAT पोस्टिंग का रेफरेंस नंबर और रूट बताएं<br/>
+          A: पहले उनका रेट पूछें — अपना पहले कभी न बताएं<br/>
+          R: DAT रेट इतिहास से जवाब दें — भावना नहीं, डेटा
+        </div>
+        <div class="sbox">"हाय, मैं [नाम] बोल रहा हूँ [कंपनी] से, MC# [####] के लिए।<br/>DAT पर आपका शिकागो → अटलांटा वाला रेफरेंस [####] देखा।<br/>उस लोड पर क्या रेट है?"</div>
+      </div></div>
+      <div class="tquiz"><div class="qhdr"><span>🧠</span><h4>Quick Check — ICAR</h4><span style="margin-left:auto" class="tag tag-cyan">3 Qs</span></div>
+        <div class="qbody" id="qb_6_1">
+          <div class="qi"><div class="qt">1. What does ICAR stand for?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_6_1','q1',false)">A. Inquire, Calculate, Adjust, Record</button>
+            <button class="qo" onclick="ans(this,'qb_6_1','q1',true)">B. Introduce, Confirm, Ask, Respond</button>
+            <button class="qo" onclick="ans(this,'qb_6_1','q1',false)">C. Identify, Call, Agree, Route</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. In ICAR, why do you ask for the broker's rate FIRST?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_6_1','q2',false)">A. It is polite</button>
+            <button class="qo" onclick="ans(this,'qb_6_1','q2',true)">B. Their number anchors the negotiation — you gain information before revealing your position</button>
+            <button class="qo" onclick="ans(this,'qb_6_1','q2',false)">C. Brokers always give their best rate first</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Broker offers $1,900. DAT average is $2,500. Your best counter-response is?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_6_1','q3',false)">A. Accept — any load is better than none</button>
+            <button class="qo" onclick="ans(this,'qb_6_1','q3',false)">B. Hang up immediately</button>
+            <button class="qo" onclick="ans(this,'qb_6_1','q3',true)">C. "DAT shows this lane at $2,500 this week. My driver can do $2,400 — can you meet me there?"</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_6_1"><div class="qscore" id="qs_6_1"></div><div id="qm_6_1" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_6_1','qr_6_1','qs_6_1','qm_6_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC B: Negotiation Psychology -->
+  <div class="tc" id="tc_6_2">
+    <button class="tt" onclick="openTopic('tc_6_2',this)">
+      <div class="tnum">B</div><div class="tt-titles"><div class="t-en">5 Negotiation Power Techniques</div><div class="t-hi">5 बातचीत शक्ति तकनीकें</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_6_2">
+      <div class="abar"><span class="albl">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="speak('text_en_6_2',this,'en-US')">▶ English</button>
+        <button class="ab ab-hi" onclick="speak('text_hi_6_2',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpeak()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="toggleHi('hi_6_2')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="text_en_6_2">
+        <p>Negotiation is psychology, not aggression. These 5 techniques are used by the world's best negotiators — and they work perfectly in freight dispatch.</p>
+        <div class="obox">
+          <strong>Technique 1 — THE ANCHOR:</strong> Always counter higher than your real target. If you need $2,400, ask for $2,600. This anchors the conversation at a higher level.<br/><br/>
+          <strong>Technique 2 — THE SILENCE:</strong> State your rate. Then stop talking. The first person to fill the silence loses power. Most brokers will negotiate against themselves if you stay quiet for 5 seconds.<br/><br/>
+          <strong>Technique 3 — CHECK-BACK:</strong> "Let me check with my driver and call you back in 10 minutes." Then wait. 70% of brokers will move closer to your number when they think they might lose the truck.<br/><br/>
+          <strong>Technique 4 — WALK AWAY:</strong> "That doesn't work for us today, but thank you." Hang up or end the call. This is your strongest tool. Real walk-aways result in call-backs within 30 minutes about 50% of the time.<br/><br/>
+          <strong>Technique 5 — THE CLOSE:</strong> "If you can confirm at $2,500, I can get you the RC signed in 15 minutes." Speed is a value — use it to close deals at your rate.
+        </div>
+        <div class="gbox"><strong>🎯 Full Negotiation Sequence Example:</strong><br/>
+          Broker: "$2,000 best I can do." → You: "I need $2,400. DAT confirms it." [SILENCE 5 sec]<br/>
+          Broker: "$2,100." → You: "Let me check with driver." [10 min] → "He can do $2,300 as a favour."<br/>
+          Broker: "Fine. $2,300. Send the carrier packet." → <strong>You gained $300 using patience alone.</strong></div>
+        <div class="kts"><span class="kt">Anchor</span><span class="kt">The Silence</span><span class="kt">Check-Back</span><span class="kt">Walk Away</span><span class="kt">The Close</span></div>
+      </div>
+      <div class="chi" id="hi_6_2"><div id="text_hi_6_2">
+        <div class="obox">
+          <strong>1. एंकर:</strong> अपने लक्ष्य से ऊँचा काउंटर दें। $2,400 चाहिए तो $2,600 माँगें।<br/>
+          <strong>2. चुप्पी:</strong> रेट बताएं — फिर चुप रहें। 5 सेकंड की चुप्पी ब्रोकर को घबराती है।<br/>
+          <strong>3. चेक-बैक:</strong> "ड्राइवर से पूछकर 10 मिनट में कॉल करता हूँ।" 70% ब्रोकर रेट बढ़ाते हैं।<br/>
+          <strong>4. वॉक अवे:</strong> "आज काम नहीं करेगा। धन्यवाद।" — फोन रखें। 50% वापस कॉल करते हैं।<br/>
+          <strong>5. क्लोज़:</strong> "$2,500 पर कन्फर्म करें — 15 मिनट में RC भेजता हूँ।"
+        </div>
+      </div></div>
+      <div class="tquiz"><div class="qhdr"><span>🧠</span><h4>Quick Check — Negotiation</h4><span style="margin-left:auto" class="tag tag-cyan">3 Qs</span></div>
+        <div class="qbody" id="qb_6_2">
+          <div class="qi"><div class="qt">1. You say your rate. The broker is silent. What should YOU do?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_6_2','q1',false)">A. Immediately lower your rate to fill the silence</button>
+            <button class="qo" onclick="ans(this,'qb_6_2','q1',true)">B. Stay silent — the next person to speak loses bargaining power</button>
+            <button class="qo" onclick="ans(this,'qb_6_2','q1',false)">C. Repeat your rate louder</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. You need $2,400. Using the Anchor technique, what do you ask for?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_6_2','q2',false)">A. Exactly $2,400</button>
+            <button class="qo" onclick="ans(this,'qb_6_2','q2',false)">B. $2,200 to seem reasonable</button>
+            <button class="qo" onclick="ans(this,'qb_6_2','q2',true)">C. $2,600 or higher — anchor above your real target</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. After using the Walk Away technique, approximately what % of brokers call back?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_6_2','q3',false)">A. 5%</button>
+            <button class="qo" onclick="ans(this,'qb_6_2','q3',false)">B. 20%</button>
+            <button class="qo" onclick="ans(this,'qb_6_2','q3',true)">C. 50%</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_6_2"><div class="qscore" id="qs_6_2"></div><div id="qm_6_2" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_6_2','qr_6_2','qs_6_2','qm_6_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC C: Phone Presence -->
+  <div class="tc" id="tc_6_3">
+    <button class="tt" onclick="openTopic('tc_6_3',this)">
+      <div class="tnum">C</div><div class="tt-titles"><div class="t-en">Professional Phone Presence & US Number Setup</div><div class="t-hi">पेशेवर फोन उपस्थिति और US नंबर</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_6_3">
+      <div class="abar"><span class="albl">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="speak('text_en_6_3',this,'en-US')">▶ English</button>
+        <button class="ab ab-hi" onclick="speak('text_hi_6_3',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpeak()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="toggleHi('hi_6_3')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="text_en_6_3">
+        <p>Many Indian dispatchers worry about accent. Here is the truth: US brokers work with international dispatchers every single day. What matters is clarity, confidence, and knowing your numbers.</p>
+        <div class="hbox"><strong>✅ What US brokers actually care about:</strong><br/>
+          • Do you know exactly which load you are calling about? (Preparation)<br/>
+          • Can they understand you clearly? (Clarity — not accent)<br/>
+          • Do you know current lane rates and your carrier's requirements? (Knowledge)<br/>
+          • Are you wasting their time? (Efficiency)<br/>
+          <strong>Zero of these require a perfect American accent.</strong>
+        </div>
+        <div class="obox"><strong>📞 Phone Setup — What You Need:</strong><br/>
+          <strong>Google Voice (Free):</strong> US phone number, free calls to US/Canada. Setup in 10 minutes. Use this from Day 1.<br/>
+          <strong>CallHippo (~$15/month):</strong> Professional US number + call recording + CRM integration. Use when you have paying clients.<br/>
+          <strong>Why US number matters:</strong> Brokers routinely ignore international +91 numbers. A US number gets answered.
+        </div>
+        <div class="gbox"><strong>🎙️ 5 Voice Tips that Make a Real Difference:</strong><br/>
+          1. Speak 20% slower than you naturally would — clarity beats speed every time<br/>
+          2. Smile while talking — it physically changes your vocal tone and brokers sense confidence<br/>
+          3. Stand up for important calls — your voice projects stronger when standing<br/>
+          4. Use a proper headset — muffled audio loses deals before you even negotiate<br/>
+          5. Record yourself doing the ICAR script and listen back — fastest way to improve</div>
+        <div class="kts"><span class="kt">Google Voice</span><span class="kt">CallHippo</span><span class="kt">US Number</span><span class="kt">Clarity</span></div>
+      </div>
+      <div class="chi" id="hi_6_3"><div id="text_hi_6_3">
+        <p>भारतीय डिस्पैचर अपने उच्चारण की चिंता करते हैं — लेकिन सच यह है कि अमेरिकी ब्रोकर हर दिन अंतरराष्ट्रीय डिस्पैचर से काम करते हैं।</p>
+        <div class="hbox"><strong>जो मायने रखता है:</strong> तैयारी, स्पष्टता, ज्ञान, दक्षता। परफेक्ट अमेरिकी उच्चारण नहीं।</div>
+        <div class="obox"><strong>Google Voice:</strong> मुफ्त US नंबर। तुरंत सेटअप करें। ब्रोकर +91 नंबर नहीं उठाते।<br/><strong>5 टिप्स:</strong> 20% धीमे बोलें | मुस्कुराएं | खड़े होकर कॉल करें | अच्छा हेडसेट | खुद को रिकॉर्ड करें।</div>
+      </div></div>
+      <div class="tquiz"><div class="qhdr"><span>🧠</span><h4>Quick Check — Phone</h4><span style="margin-left:auto" class="tag tag-cyan">3 Qs</span></div>
+        <div class="qbody" id="qb_6_3">
+          <div class="qi"><div class="qt">1. Why must you call US brokers from a US number?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_6_3','q1',false)">A. It is a legal requirement</button>
+            <button class="qo" onclick="ans(this,'qb_6_3','q1',true)">B. Brokers routinely ignore +91 international numbers — a US number gets answered</button>
+            <button class="qo" onclick="ans(this,'qb_6_3','q1',false)">C. International calls are too expensive</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. Which free tool gives you a US phone number instantly?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_6_3','q2',false)">A. WhatsApp</button>
+            <button class="qo" onclick="ans(this,'qb_6_3','q2',true)">B. Google Voice</button>
+            <button class="qo" onclick="ans(this,'qb_6_3','q2',false)">C. Telegram</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Speaking 20% slower helps because:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_6_3','q3',false)">A. Brokers prefer slow-talking dispatchers</button>
+            <button class="qo" onclick="ans(this,'qb_6_3','q3',true)">B. Clarity beats speed — the broker understands you first time, which builds confidence</button>
+            <button class="qo" onclick="ans(this,'qb_6_3','q3',false)">C. It fills more time on the call</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_6_3"><div class="qscore" id="qs_6_3"></div><div id="qm_6_3" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_6_3','qr_6_3','qs_6_3','qm_6_3')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-hdr"><h3>⚡ Practical</h3><div class="sec-line"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px;"><ul class="plist">
+    <li><div class="pn">1</div><div><strong>Mock Call Roleplay:</strong> Student A = broker (start at $1,900). Student B = dispatcher using full ICAR + 3 negotiation techniques. Target: reach $2,400+. Switch roles. 3 rounds each.</div></li>
+    <li><div class="pn">2</div><div><strong>Record & Review:</strong> Record your ICAR opening on your phone. Score yourself — Clarity/10, Confidence/10, Preparation/10. What score would a broker give you?</div></li>
+    <li><div class="pn">3</div><div><strong>Google Voice Setup:</strong> Set up a Google Voice account with a US number right now in class. Call the instructor's number to confirm it works.</div></li>
+  </ul></div>
+  <div class="hwbox"><h4>📝 Homework — Day 6</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Memorise the full ICAR script word for word. Practise it 20 times aloud. Record your best attempt. Tomorrow you will do a live roleplay with the instructor as the broker. They will not be easy — be ready!</p></div>
+  <div class="dnav"><a href="week1.html" class="btn btn-ghost">← Week 1</a><button class="btn btn-primary" style="background:linear-gradient(135deg,var(--cyan),#0284c7)" onclick="doneDay(6);showDay(7,document.querySelectorAll('.day-tab')[1])">Day 7 →</button></div>
+</div>
+
+<!-- ═══════════ DAY 7: Documentation ═══════════ -->
+<div class="day-panel" id="day7">
+  <div class="day-hero fade-up"><div class="day-num">D7</div><div class="day-info"><h2>Documentation Mastery</h2><div class="htitle">दस्तावेज़ीकरण में महारत</div><div class="dmeta"><span class="tag tag-cyan">2hrs Theory</span><span class="tag tag-orange">2hrs Practical</span><span class="tag tag-green">3 Topics</span></div></div></div>
+  <div class="vbox fade-up delay-1"><div class="vhdr"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 7 — Documentation Mastery</span><span style="margin-left:auto;font-size:11px;color:var(--grey)">~13 min</span></div><div class="vph" onclick="loadVid(this,'YOUR_D7_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 7: Documentation</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D7_VIDEO_ID</div></div></div><div class="vnote">💡 Replace YOUR_D7_VIDEO_ID in HTML with your YouTube ID</div></div>
+  <div class="sec-hdr"><h3>📖 Theory Topics</h3><div class="sec-line"></div><span class="tag tag-cyan">3 Topics</span></div>
+
+  <!-- BOL -->
+  <div class="tc" id="tc_7_1">
+    <button class="tt" onclick="openTopic('tc_7_1',this)"><div class="tnum">A</div><div class="tt-titles"><div class="t-en">BOL — Bill of Lading (The Most Important Document)</div><div class="t-hi">BOL — बिल ऑफ लेडिंग (सबसे महत्वपूर्ण दस्तावेज़)</div></div><span class="tarr">›</span></button>
+    <div class="tbody" id="body_7_1">
+      <div class="abar"><span class="albl">🔊 Listen:</span><button class="ab ab-en" onclick="speak('text_en_7_1',this,'en-US')">▶ English</button><button class="ab ab-hi" onclick="speak('text_hi_7_1',this,'hi-IN')">▶ हिंदी</button><button class="ab ab-stop" onclick="stopSpeak()">⏹ Stop</button><button class="ab ab-tog" onclick="toggleHi('hi_7_1')">हिं Toggle</button></div>
+      <div class="cen" id="text_en_7_1">
+        <p>The <strong style="color:var(--cyan)">Bill of Lading (BOL)</strong> is the single most important document in trucking. It is three things simultaneously: a legal contract, a receipt for goods, and the trigger for payment when signed at delivery.</p>
+        <div class="hbox"><strong>Every BOL must contain:</strong><br/>
+          • Shipper full details (name, address, phone)<br/>
+          • Consignee full details (delivery address, contact, special instructions)<br/>
+          • Carrier details (company, MC number, driver name, truck/trailer number)<br/>
+          • Cargo details (commodity, number of pallets, total weight in lbs)<br/>
+          • Shipper signature at pickup + Consignee signature at delivery (= POD)
+        </div>
+        <div class="obox"><strong>BOL Workflow:</strong> Shipper prepares BOL → Driver inspects cargo and notes any damage as exceptions → Driver signs at pickup → Consignee signs at delivery (this becomes POD) → Signed POD submitted to broker → <strong>Payment released. No POD = No payment. Always.</strong></div>
+        <div class="wbox"><strong>⚠️ Never:</strong> Let driver leave without signing BOL | Ignore pre-existing damage (always note exceptions) | Lose the BOL (keep digital copy always)</div>
+        <div class="kts"><span class="kt">BOL</span><span class="kt">POD</span><span class="kt">Consignee</span><span class="kt">Exception</span><span class="kt">Proof of Delivery</span></div>
+      </div>
+      <div class="chi" id="hi_7_1"><div id="text_hi_7_1">
+        <p><strong style="color:var(--cyan)">BOL (बिल ऑफ लेडिंग)</strong> ट्रकिंग का सबसे महत्वपूर्ण दस्तावेज़ है — एक साथ: कानूनी अनुबंध + माल की रसीद + भुगतान का ट्रिगर।</p>
+        <div class="hbox">वर्कफ्लो: शिपर BOL तैयार करता है → ड्राइवर क्षति नोट करके साइन करता है → कन्साइनी डिलीवरी पर साइन करता है (= POD) → POD ब्रोकर को भेजो → भुगतान मिलता है।<br/><strong>कोई POD नहीं = कोई भुगतान नहीं।</strong></div>
+      </div></div>
+      <div class="tquiz"><div class="qhdr"><span>🧠</span><h4>Quick Check — BOL</h4><span style="margin-left:auto" class="tag tag-cyan">3 Qs</span></div>
+        <div class="qbody" id="qb_7_1">
+          <div class="qi"><div class="qt">1. When the consignee signs the BOL at delivery, it becomes:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_7_1','q1',false)">A. A Rate Confirmation</button>
+            <button class="qo" onclick="ans(this,'qb_7_1','q1',true)">B. A POD (Proof of Delivery) — which triggers payment</button>
+            <button class="qo" onclick="ans(this,'qb_7_1','q1',false)">C. A W-9 tax form</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. Driver sees 2 damaged pallets at pickup. What should happen?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_7_1','q2',false)">A. Load them and say nothing</button>
+            <button class="qo" onclick="ans(this,'qb_7_1','q2',true)">B. Note the damage as an EXCEPTION on the BOL before signing</button>
+            <button class="qo" onclick="ans(this,'qb_7_1','q2',false)">C. Refuse the entire load</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. What does BOL stand for?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_7_1','q3',false)">A. Broker Order Log</button>
+            <button class="qo" onclick="ans(this,'qb_7_1','q3',true)">B. Bill of Lading</button>
+            <button class="qo" onclick="ans(this,'qb_7_1','q3',false)">C. Base Operations List</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_7_1"><div class="qscore" id="qs_7_1"></div><div id="qm_7_1" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_7_1','qr_7_1','qs_7_1','qm_7_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RC, W9, COI -->
+  <div class="tc" id="tc_7_2">
+    <button class="tt" onclick="openTopic('tc_7_2',this)"><div class="tnum">B</div><div class="tt-titles"><div class="t-en">RC, W-9, COI & The Carrier Packet</div><div class="t-hi">RC, W-9, COI और कैरियर पैकेट</div></div><span class="tarr">›</span></button>
+    <div class="tbody" id="body_7_2">
+      <div class="abar"><span class="albl">🔊 Listen:</span><button class="ab ab-en" onclick="speak('text_en_7_2',this,'en-US')">▶ English</button><button class="ab ab-hi" onclick="speak('text_hi_7_2',this,'hi-IN')">▶ हिंदी</button><button class="ab ab-stop" onclick="stopSpeak()">⏹ Stop</button><button class="ab ab-tog" onclick="toggleHi('hi_7_2')">हिं Toggle</button></div>
+      <div class="cen" id="text_en_7_2">
+        <div class="obox"><strong style="color:var(--orange)">RC — Rate Confirmation:</strong> Legal load contract between broker and carrier. Must be signed by BOTH parties before the truck moves. Contains load details, rate, pickup/delivery times, detention rate, and TONU clause. If broker sends an RC with a different rate than agreed — call them immediately. Do NOT sign and do NOT move the truck.</div>
+        <div class="hbox"><strong style="color:var(--cyan)">W-9 — Tax Form:</strong> US IRS tax identification form. Every broker requires it before first payment. Contains carrier legal business name and EIN. Submitted once per broker relationship. Get this from your carrier immediately — you will need it for every new broker.</div>
+        <div class="hbox" style="border-left-color:var(--green)"><strong style="color:var(--green)">COI — Certificate of Insurance:</strong> Proof of carrier's active insurance. Must show cargo insurance minimum $100,000 and liability insurance minimum $1,000,000. Expires annually — always keep it updated. Some brokers require being listed as additional insured.</div>
+        <div class="obox"><strong>📦 The Complete Carrier Packet (for every new broker):</strong><br/>
+          1. ✅ W-9 form &nbsp; 2. ✅ COI &nbsp; 3. ✅ MC Authority Certificate &nbsp; 4. ✅ Operating Authority Letter &nbsp; 5. ✅ Void cheque<br/>
+          <strong>Keep this ready as a PDF folder — send it in 2 minutes when a broker asks.</strong></div>
+        <div class="kts"><span class="kt">RC</span><span class="kt">W-9</span><span class="kt">COI</span><span class="kt">TONU</span><span class="kt">Carrier Packet</span><span class="kt">EIN</span></div>
+      </div>
+      <div class="chi" id="hi_7_2"><div id="text_hi_7_2">
+        <div class="obox"><strong>RC:</strong> ट्रक चलने से पहले दोनों के हस्ताक्षर अनिवार्य। रेट बदला हो तो साइन न करें।</div>
+        <div class="hbox"><strong>W-9:</strong> अमेरिकी कर फॉर्म। हर नए ब्रोकर के साथ एक बार।</div>
+        <div class="hbox" style="border-left-color:var(--green)"><strong>COI:</strong> $100K कार्गो + $1M देयता बीमा। हर साल नवीनीकरण।</div>
+        <div class="obox"><strong>कैरियर पैकेट:</strong> W-9 + COI + MC अथॉरिटी + ऑपरेटिंग अथॉरिटी + वॉयड चेक। PDF में तैयार रखें।</div>
+      </div></div>
+      <div class="tquiz"><div class="qhdr"><span>🧠</span><h4>Quick Check — Documents</h4><span style="margin-left:auto" class="tag tag-cyan">3 Qs</span></div>
+        <div class="qbody" id="qb_7_2">
+          <div class="qi"><div class="qt">1. The RC must be signed before:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_7_2','q1',false)">A. After delivery</button>
+            <button class="qo" onclick="ans(this,'qb_7_2','q1',true)">B. Before the truck moves — by both broker AND carrier</button>
+            <button class="qo" onclick="ans(this,'qb_7_2','q1',false)">C. Within 24 hours of booking</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. Broker sends RC showing $2,100 but you agreed $2,400 on the phone. You should:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_7_2','q2',false)">A. Sign it — the driver needs to move</button>
+            <button class="qo" onclick="ans(this,'qb_7_2','q2',true)">B. NOT sign — call the broker and demand correction to $2,400 immediately</button>
+            <button class="qo" onclick="ans(this,'qb_7_2','q2',false)">C. Sign but add charges at delivery</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Minimum cargo insurance required in a COI is:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_7_2','q3',false)">A. $50,000</button>
+            <button class="qo" onclick="ans(this,'qb_7_2','q3',true)">B. $100,000</button>
+            <button class="qo" onclick="ans(this,'qb_7_2','q3',false)">C. $1,000,000</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_7_2"><div class="qscore" id="qs_7_2"></div><div id="qm_7_2" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_7_2','qr_7_2','qs_7_2','qm_7_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Factoring -->
+  <div class="tc" id="tc_7_3">
+    <button class="tt" onclick="openTopic('tc_7_3',this)"><div class="tnum">C</div><div class="tt-titles"><div class="t-en">Factoring & Quick Pay — Getting Paid Faster</div><div class="t-hi">फैक्टरिंग और क्विक पे — जल्दी भुगतान</div></div><span class="tarr">›</span></button>
+    <div class="tbody" id="body_7_3">
+      <div class="abar"><span class="albl">🔊 Listen:</span><button class="ab ab-en" onclick="speak('text_en_7_3',this,'en-US')">▶ English</button><button class="ab ab-hi" onclick="speak('text_hi_7_3',this,'hi-IN')">▶ हिंदी</button><button class="ab ab-stop" onclick="stopSpeak()">⏹ Stop</button><button class="ab ab-tog" onclick="toggleHi('hi_7_3')">हिं Toggle</button></div>
+      <div class="cen" id="text_en_7_3">
+        <p>Standard broker payment is Net 30–45 days. An owner-operator cannot wait 45 days to pay fuel and maintenance. Factoring solves this.</p>
+        <div class="hbox"><strong style="color:var(--cyan)">Factoring:</strong> A factoring company buys the carrier's invoice at a 2–5% discount and pays within 24–48 hours. They then collect from the broker on day 30–45.<br/>
+          Example: $3,000 invoice at 3% factoring = $90 fee → carrier gets $2,910 tomorrow instead of $3,000 in 45 days.<br/>
+          Top companies: RTS Financial, OTR Capital, Triumph Business Capital, Riviera Finance.</div>
+        <div class="obox"><strong style="color:var(--orange)">Quick Pay:</strong> Some brokers pay in 2–5 days directly for a 2–3% discount — no factoring company needed.<br/>
+          Example: $2,800 load at 2% quick pay = $56 fee → carrier gets $2,744 in 5 days vs $2,800 in 30 days.<br/>
+          Best when: Carrier is short on fuel money. Load is from a broker with unknown payment history.</div>
+        <div class="gbox"><strong>🎯 $3,000 Load Comparison:</strong><br/>
+          Factoring 3%: $2,910 tomorrow ✅<br/>
+          Quick Pay 2%: $2,940 in 5 days ✅<br/>
+          Net 30: $3,000 in 30 days — but carrier may run short on fuel ⚠️</div>
+        <div class="kts"><span class="kt">Factoring</span><span class="kt">Quick Pay</span><span class="kt">Net 30</span><span class="kt">RTS Financial</span><span class="kt">OTR Capital</span></div>
+      </div>
+      <div class="chi" id="hi_7_3"><div id="text_hi_7_3">
+        <p>ब्रोकर का भुगतान 30–45 दिन में आता है। ओनर-ऑपरेटर इतना इंतज़ार नहीं कर सकता।</p>
+        <div class="hbox"><strong>फैक्टरिंग:</strong> फैक्टरिंग कंपनी 2-5% डिस्काउंट पर इनवॉइस खरीदती है — 24-48 घंटे में भुगतान।</div>
+        <div class="obox"><strong>क्विक पे:</strong> कुछ ब्रोकर 2-3% डिस्काउंट पर 2-5 दिनों में भुगतान करते हैं।</div>
+      </div></div>
+      <div class="tquiz"><div class="qhdr"><span>🧠</span><h4>Quick Check — Factoring</h4><span style="margin-left:auto" class="tag tag-cyan">3 Qs</span></div>
+        <div class="qbody" id="qb_7_3">
+          <div class="qi"><div class="qt">1. Standard broker payment terms are:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_7_3','q1',false)">A. Same day</button>
+            <button class="qo" onclick="ans(this,'qb_7_3','q1',true)">B. Net 30–45 days</button>
+            <button class="qo" onclick="ans(this,'qb_7_3','q1',false)">C. Net 7 days</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. A $2,500 invoice factored at 3%. How much does the carrier receive?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_7_3','q2',false)">A. $2,500 (free)</button>
+            <button class="qo" onclick="ans(this,'qb_7_3','q2',true)">B. $2,425 ($75 fee at 3%)</button>
+            <button class="qo" onclick="ans(this,'qb_7_3','q2',false)">C. $2,000</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. RTS Financial and OTR Capital are examples of:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_7_3','q3',false)">A. Load boards</button>
+            <button class="qo" onclick="ans(this,'qb_7_3','q3',true)">B. Factoring companies</button>
+            <button class="qo" onclick="ans(this,'qb_7_3','q3',false)">C. GPS tracking companies</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_7_3"><div class="qscore" id="qs_7_3"></div><div id="qm_7_3" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_7_3','qr_7_3','qs_7_3','qm_7_3')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-hdr"><h3>⚡ Practical</h3><div class="sec-line"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px;"><ul class="plist">
+    <li><div class="pn">1</div><div><strong>BOL Fill-In:</strong> Complete a blank BOL using instructor-provided load details. Every field correct. Swap and mark each other's work.</div></li>
+    <li><div class="pn">2</div><div><strong>Carrier Packet:</strong> Assemble all 5 carrier packet items from sample docs into one PDF folder. Practise emailing to instructor (acting as new broker).</div></li>
+    <li><div class="pn">3</div><div><strong>Factoring Calculator:</strong> 5 invoices given. Calculate net payment at 2%, 3%, 5%. Decide: factor or wait for each?</div></li>
+  </ul></div>
+  <div class="hwbox"><h4>📝 Homework — Day 7</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Download a blank W-9 from irs.gov. Fill it in for a fictional carrier. Create a carrier packet checklist — laminate it and pin it above your workstation. You will use this checklist every day you work with a new broker.</p></div>
+  <div class="dnav"><button class="btn btn-ghost" onclick="showDay(6,document.querySelectorAll('.day-tab')[0])">← Day 6</button><button class="btn btn-primary" style="background:linear-gradient(135deg,var(--cyan),#0284c7)" onclick="doneDay(7);showDay(8,document.querySelectorAll('.day-tab')[2])">Day 8 →</button></div>
+</div>
+
+<!-- ═══════════ DAY 8: TMS & Tools ═══════════ -->
+<div class="day-panel" id="day8">
+  <div class="day-hero fade-up"><div class="day-num">D8</div><div class="day-info"><h2>TMS, GPS & Load Tracking Tools</h2><div class="htitle">TMS, GPS और लोड ट्रैकिंग टूल्स</div><div class="dmeta"><span class="tag tag-cyan">2hrs Theory</span><span class="tag tag-orange">2hrs Practical</span><span class="tag tag-green">2 Topics</span></div></div></div>
+  <div class="vbox fade-up delay-1"><div class="vhdr"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 8 — TMS & GPS Tools</span><span style="margin-left:auto;font-size:11px;color:var(--grey)">~11 min</span></div><div class="vph" onclick="loadVid(this,'YOUR_D8_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 8: TMS & GPS Tools</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D8_VIDEO_ID</div></div></div><div class="vnote">💡 Replace YOUR_D8_VIDEO_ID in HTML</div></div>
+  <div class="sec-hdr"><h3>📖 Theory Topics</h3><div class="sec-line"></div></div>
+
+  <div class="tc" id="tc_8_1">
+    <button class="tt" onclick="openTopic('tc_8_1',this)"><div class="tnum">A</div><div class="tt-titles"><div class="t-en">TMS — Transportation Management Systems</div><div class="t-hi">TMS — परिवहन प्रबंधन प्रणाली</div></div><span class="tarr">›</span></button>
+    <div class="tbody" id="body_8_1">
+      <div class="abar"><span class="albl">🔊 Listen:</span><button class="ab ab-en" onclick="speak('text_en_8_1',this,'en-US')">▶ English</button><button class="ab ab-hi" onclick="speak('text_hi_8_1',this,'hi-IN')">▶ हिंदी</button><button class="ab ab-stop" onclick="stopSpeak()">⏹ Stop</button><button class="ab ab-tog" onclick="toggleHi('hi_8_1')">हिं Toggle</button></div>
+      <div class="cen" id="text_en_8_1">
+        <p>A <strong style="color:var(--cyan)">TMS (Transportation Management System)</strong> manages all dispatch operations in one place. With 1–2 trucks, Excel works. With 5+ trucks, a TMS is essential.</p>
+        <div class="hbox"><strong>What a TMS does:</strong> Creates and tracks loads from booking to delivery | Assigns drivers and trucks | Stores all documents digitally | Generates invoices automatically | Manages driver pay | Produces financial reports and KPI dashboards</div>
+        <div class="obox"><strong>🖥️ Top TMS Options:</strong><br/>
+          <strong>Tailwind TMS (~$99/mo):</strong> Best for small carriers 1–10 trucks. User-friendly, great for beginners. Start here.<br/>
+          <strong>Aljex (~$200/mo):</strong> Industry standard for mid-size carriers. More powerful, steeper learning curve.<br/>
+          <strong>McLeod Software:</strong> Enterprise level for large fleets 50+ trucks. Very powerful.<br/>
+          <strong>RoseRocket:</strong> Modern, clean interface. Growing popularity with owner-operators.<br/>
+          <strong>Excel/Google Sheets:</strong> Free option for 1–2 trucks. Build your own load tracking template.
+        </div>
+        <div class="gbox"><strong>🎯 Your Excel Load Tracker (minimum columns):</strong><br/>
+          Load# | Broker | Lane (Origin→Dest) | Miles | Rate | RPM | Pickup Date | Delivery Date | Driver | Status | Paid? | Commission</div>
+        <div class="kts"><span class="kt">TMS</span><span class="kt">Tailwind</span><span class="kt">Aljex</span><span class="kt">McLeod</span><span class="kt">Load Tracker</span></div>
+      </div>
+      <div class="chi" id="hi_8_1"><div id="text_hi_8_1">
+        <p><strong>TMS</strong> सभी डिस्पैच ऑपरेशन एक जगह प्रबंधित करता है। 1-2 ट्रक के लिए Excel ठीक है। 5+ ट्रक के लिए TMS ज़रूरी है।</p>
+        <div class="obox"><strong>विकल्प:</strong> Tailwind ($99/माह) — छोटे कैरियर के लिए सबसे अच्छा। Aljex ($200/माह) — मध्यम आकार के लिए। Excel/Google Sheets — 1-2 ट्रक के लिए मुफ्त विकल्प।</div>
+      </div></div>
+      <div class="tquiz"><div class="qhdr"><span>🧠</span><h4>Quick Check — TMS</h4><span style="margin-left:auto" class="tag tag-cyan">3 Qs</span></div>
+        <div class="qbody" id="qb_8_1">
+          <div class="qi"><div class="qt">1. Which TMS is best recommended for a small carrier with 1–10 trucks?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_8_1','q1',true)">A. Tailwind TMS (~$99/month)</button>
+            <button class="qo" onclick="ans(this,'qb_8_1','q1',false)">B. McLeod Software (enterprise)</button>
+            <button class="qo" onclick="ans(this,'qb_8_1','q1',false)">C. Microsoft Word</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. What does a TMS replace as a carrier grows beyond 5 trucks?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_8_1','q2',false)">A. The broker</button>
+            <button class="qo" onclick="ans(this,'qb_8_1','q2',true)">B. Manual Excel tracking — which becomes unmanageable</button>
+            <button class="qo" onclick="ans(this,'qb_8_1','q2',false)">C. The DAT load board</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Which column is essential in an Excel load tracker?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_8_1','q3',false)">A. Driver's favourite food</button>
+            <button class="qo" onclick="ans(this,'qb_8_1','q3',true)">B. Rate, Miles, RPM, Status, Paid</button>
+            <button class="qo" onclick="ans(this,'qb_8_1','q3',false)">C. Weather at pickup</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_8_1"><div class="qscore" id="qs_8_1"></div><div id="qm_8_1" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_8_1','qr_8_1','qs_8_1','qm_8_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tc" id="tc_8_2">
+    <button class="tt" onclick="openTopic('tc_8_2',this)"><div class="tnum">B</div><div class="tt-titles"><div class="t-en">GPS Tracking, ELD Systems & Check-Calls</div><div class="t-hi">GPS ट्रैकिंग, ELD और चेक-कॉल</div></div><span class="tarr">›</span></button>
+    <div class="tbody" id="body_8_2">
+      <div class="abar"><span class="albl">🔊 Listen:</span><button class="ab ab-en" onclick="speak('text_en_8_2',this,'en-US')">▶ English</button><button class="ab ab-hi" onclick="speak('text_hi_8_2',this,'hi-IN')">▶ हिंदी</button><button class="ab ab-stop" onclick="stopSpeak()">⏹ Stop</button><button class="ab ab-tog" onclick="toggleHi('hi_8_2')">हिں Toggle</button></div>
+      <div class="cen" id="text_en_8_2">
+        <p>As a dispatcher, knowing where your truck is at every moment is your responsibility. If a broker calls asking for location, you must answer immediately with precision.</p>
+        <div class="hbox"><strong>Top GPS/ELD Systems Used by US Carriers:</strong><br/>
+          <strong>Samsara:</strong> Most popular. Real-time GPS, HOS compliance, dash cam, driver coaching. ~$25–35/truck/month.<br/>
+          <strong>KeepTruckin (now Motive):</strong> Very popular with owner-operators. User-friendly app. ~$20–30/truck/month.<br/>
+          <strong>Omnitracs:</strong> Older enterprise system, still widely used by large fleets.<br/>
+          <strong>Verizon Connect:</strong> Reliable mid-range option. Good reporting tools.
+        </div>
+        <div class="obox"><strong>📞 Check-Call Protocol:</strong><br/>
+          A check-call is when you call your driver to verify their location, load status, and ETA.<br/><br/>
+          <strong>Frequency:</strong> Every 2–4 hours on a moving load. Every 30 minutes if driver is approaching delivery deadline.<br/><br/>
+          <strong>What to ask on every check-call:</strong><br/>
+          1. "Where are you right now?" (city, state, highway)<br/>
+          2. "How are your hours looking?" (HOS remaining)<br/>
+          3. "Any issues with the load, truck, or route?"<br/>
+          4. "ETA to delivery?" (calculate if they are on time)<br/>
+          5. "Do you need me to contact the receiver?"
+        </div>
+        <div class="wbox"><strong>⚠️ If driver doesn't answer:</strong> Try again in 15 minutes. If still no answer: contact backup number. If no response after 1 hour: contact the broker and receiver to advise potential delay. Never leave a load unmonitored.</div>
+        <div class="kts"><span class="kt">Samsara</span><span class="kt">Motive/KeepTruckin</span><span class="kt">Check-Call</span><span class="kt">ETA</span><span class="kt">HOS Remaining</span></div>
+      </div>
+      <div class="chi" id="hi_8_2"><div id="text_hi_8_2">
+        <p>एक डिस्पैचर के रूप में, आपको हर समय अपने ट्रक की स्थिति पता होनी चाहिए।</p>
+        <div class="hbox"><strong>GPS सिस्टम:</strong> Samsara ($25-35/ट्रक/माह) — सबसे लोकप्रिय। KeepTruckin/Motive ($20-30) — ओनर-ऑपरेटर के लिए।</div>
+        <div class="obox"><strong>चेक-कॉल प्रोटोकॉल:</strong><br/>
+          हर 2-4 घंटे में कॉल करें। डिलीवरी नज़दीक हो तो हर 30 मिनट।<br/>
+          पूछें: स्थान, HOS शेष घंटे, ETA, कोई समस्या तो नहीं?
+        </div>
+      </div></div>
+      <div class="tquiz"><div class="qhdr"><span>🧠</span><h4>Quick Check — GPS & Check-Calls</h4><span style="margin-left:auto" class="tag tag-cyan">3 Qs</span></div>
+        <div class="qbody" id="qb_8_2">
+          <div class="qi"><div class="qt">1. How often should you check-call your driver on a moving load?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_8_2','q1',false)">A. Once per day</button>
+            <button class="qo" onclick="ans(this,'qb_8_2','q1',true)">B. Every 2–4 hours</button>
+            <button class="qo" onclick="ans(this,'qb_8_2','q1',false)">C. Only if something goes wrong</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. Driver does not answer your check-call. What do you do?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_8_2','q2',false)">A. Assume everything is fine and wait until tomorrow</button>
+            <button class="qo" onclick="ans(this,'qb_8_2','q2',true)">B. Retry in 15 min, then backup number, then notify broker/receiver after 1 hour of no response</button>
+            <button class="qo" onclick="ans(this,'qb_8_2','q2',false)">C. Cancel the load</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Which is the most popular GPS/ELD system used by US carriers?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_8_2','q3',true)">A. Samsara</button>
+            <button class="qo" onclick="ans(this,'qb_8_2','q3',false)">B. Google Maps</button>
+            <button class="qo" onclick="ans(this,'qb_8_2','q3',false)">C. Waze</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_8_2"><div class="qscore" id="qs_8_2"></div><div id="qm_8_2" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_8_2','qr_8_2','qs_8_2','qm_8_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-hdr"><h3>⚡ Practical</h3><div class="sec-line"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px;"><ul class="plist">
+    <li><div class="pn">1</div><div><strong>Build Your Excel Load Tracker:</strong> Create a Google Sheet with all essential columns. Enter 5 sample loads. Calculate RPM for each. Sort by profitability.</div></li>
+    <li><div class="pn">2</div><div><strong>Check-Call Roleplay:</strong> Instructor plays driver. Student practices all 5 check-call questions professionally. Switch — student plays driver with a problem (truck breakdown). How does dispatcher respond?</div></li>
+    <li><div class="pn">3</div><div><strong>Samsara Demo:</strong> Watch the Samsara YouTube demo video. List 5 features a dispatcher would use every day. Which ELD would you recommend to a new carrier starting out?</div></li>
+  </ul></div>
+  <div class="hwbox"><h4>📝 Homework — Day 8</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Complete your Excel Load Tracker template and save it to Google Drive. Add 10 sample loads with all columns filled. Practice reading your own tracker: Which load had the best RPM? Which broker paid the fastest? Which lane is most profitable?</p></div>
+  <div class="dnav"><button class="btn btn-ghost" onclick="showDay(7,document.querySelectorAll('.day-tab')[1])">← Day 7</button><button class="btn btn-primary" style="background:linear-gradient(135deg,var(--cyan),#0284c7)" onclick="doneDay(8);showDay(9,document.querySelectorAll('.day-tab')[3])">Day 9 →</button></div>
+</div>
+
+<!-- ═══════════ DAY 9: Email Writing & Detention ═══════════ -->
+<div class="day-panel" id="day9">
+  <div class="day-hero fade-up"><div class="day-num">D9</div><div class="day-info"><h2>Professional Email Writing & Detention Claims</h2><div class="htitle">पेशेवर ईमेल लेखन और डिटेंशन क्लेम</div><div class="dmeta"><span class="tag tag-cyan">2hrs Theory</span><span class="tag tag-orange">2hrs Practical</span><span class="tag tag-green">2 Topics</span></div></div></div>
+  <div class="vbox fade-up delay-1"><div class="vhdr"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 9 — Emails & Detention</span><span style="margin-left:auto;font-size:11px;color:var(--grey)">~10 min</span></div><div class="vph" onclick="loadVid(this,'YOUR_D9_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 9: Email Writing & Detention</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D9_VIDEO_ID</div></div></div><div class="vnote">💡 Replace YOUR_D9_VIDEO_ID in HTML</div></div>
+  <div class="sec-hdr"><h3>📖 Theory Topics</h3><div class="sec-line"></div></div>
+
+  <div class="tc" id="tc_9_1">
+    <button class="tt" onclick="openTopic('tc_9_1',this)"><div class="tnum">A</div><div class="tt-titles"><div class="t-en">Professional Dispatch Email Writing</div><div class="t-hi">पेशेवर डिस्पैच ईमेल लेखन</div></div><span class="tarr">›</span></button>
+    <div class="tbody" id="body_9_1">
+      <div class="abar"><span class="albl">🔊 Listen:</span><button class="ab ab-en" onclick="speak('text_en_9_1',this,'en-US')">▶ English</button><button class="ab ab-hi" onclick="speak('text_hi_9_1',this,'hi-IN')">▶ हिंदी</button><button class="ab ab-stop" onclick="stopSpeak()">⏹ Stop</button><button class="ab ab-tog" onclick="toggleHi('hi_9_1')">हिं Toggle</button></div>
+      <div class="cen" id="text_en_9_1">
+        <p>In dispatching, your emails create a legal paper trail. A well-written email can win a payment dispute. A poorly written one can lose it. Every email should be clear, professional, and include all relevant load details.</p>
+        <div class="hbox"><strong>The 4 Most Common Dispatch Emails:</strong><br/>
+          1. Carrier Packet submission to new broker<br/>
+          2. Load status / ETA update to broker<br/>
+          3. Detention claim to broker<br/>
+          4. Invoice submission for payment
+        </div>
+        <div class="sbox">
+          <strong style="color:var(--cyan)">📧 Email 1: Carrier Packet to New Broker</strong><br/>
+          Subject: Carrier Packet — [Carrier Name] MC# [####]<br/><br/>
+          Hi [Broker Name],<br/><br/>
+          Please find attached the carrier packet for [Carrier Company Name], MC# [####].<br/>
+          Included: W-9, COI, MC Authority Certificate, Operating Authority.<br/><br/>
+          We operate dry van / reefer equipment and are available<br/>
+          in the [region] area from [date]. Happy to discuss any available loads.<br/><br/>
+          Best regards,<br/>
+          [Your Name] | [Company] | [US Phone] | [Email]
+        </div>
+        <div class="sbox">
+          <strong style="color:var(--cyan)">📧 Email 2: Detention Claim</strong><br/>
+          Subject: DETENTION CLAIM — Load #[####] — [Carrier Name]<br/><br/>
+          Hi [Broker Name],<br/><br/>
+          I am writing to formally claim detention charges for Load #[####].<br/><br/>
+          Driver [Name] arrived at [Shipper/Receiver] at [Time].<br/>
+          Free time expired at [Time + 2 hours].<br/>
+          Driver was released at [Time].<br/>
+          Total detention: [X] hours [Y] minutes.<br/><br/>
+          As per Rate Confirmation, detention rate is $[XX]/hour.<br/>
+          Detention amount due: $[Total]<br/><br/>
+          POD and driver detention log attached as supporting documents.<br/><br/>
+          Please confirm addition to invoice at your earliest convenience.<br/><br/>
+          [Your Name]
+        </div>
+        <div class="kts"><span class="kt">Subject Line</span><span class="kt">Paper Trail</span><span class="kt">Carrier Packet Email</span><span class="kt">Detention Email</span></div>
+      </div>
+      <div class="chi" id="hi_9_1"><div id="text_hi_9_1">
+        <p>डिस्पैचिंग में ईमेल कानूनी रिकॉर्ड बनाते हैं। अच्छे ईमेल विवाद जीत सकते हैं।</p>
+        <div class="hbox"><strong>4 सबसे महत्वपूर्ण डिस्पैच ईमेल:</strong><br/>
+          1. नए ब्रोकर को कैरियर पैकेट<br/>2. लोड स्टेटस / ETA अपडेट<br/>3. डिटेंशन क्लेम<br/>4. इनवॉइस सबमिशन
+        </div>
+        <div class="obox"><strong>ईमेल फॉर्मेट:</strong> Subject: स्पष्ट और लोड नंबर के साथ | Body: संक्षिप्त, तथ्यात्मक, सभी विवरण | Attachments: सभी दस्तावेज़ | Sign-off: नाम, कंपनी, US फोन</div>
+      </div></div>
+      <div class="tquiz"><div class="qhdr"><span>🧠</span><h4>Quick Check — Emails</h4><span style="margin-left:auto" class="tag tag-cyan">3 Qs</span></div>
+        <div class="qbody" id="qb_9_1">
+          <div class="qi"><div class="qt">1. What should every dispatch email subject line include?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_9_1','q1',false)">A. Just the date</button>
+            <button class="qo" onclick="ans(this,'qb_9_1','q1',true)">B. The email purpose, load number, and carrier name — for easy reference</button>
+            <button class="qo" onclick="ans(this,'qb_9_1','q1',false)">C. Your personal mobile number</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. What documents must be attached to a detention claim email?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_9_1','q2',false)">A. Nothing — verbal is sufficient</button>
+            <button class="qo" onclick="ans(this,'qb_9_1','q2',true)">B. POD and driver detention log showing exact arrival and release times</button>
+            <button class="qo" onclick="ans(this,'qb_9_1','q2',false)">C. Only the Rate Confirmation</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Why are professional emails important for a dispatcher?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_9_1','q3',false)">A. They are not important — phone calls are enough</button>
+            <button class="qo" onclick="ans(this,'qb_9_1','q3',true)">B. They create a legal paper trail that can win payment disputes</button>
+            <button class="qo" onclick="ans(this,'qb_9_1','q3',false)">C. Brokers prefer email over phone</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_9_1"><div class="qscore" id="qs_9_1"></div><div id="qm_9_1" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_9_1','qr_9_1','qs_9_1','qm_9_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tc" id="tc_9_2">
+    <button class="tt" onclick="openTopic('tc_9_2',this)"><div class="tnum">B</div><div class="tt-titles"><div class="t-en">Detention, TONU & Layover Claims</div><div class="t-hi">डिटेंशन, TONU और लेओवर क्लेम</div></div><span class="tarr">›</span></button>
+    <div class="tbody" id="body_9_2">
+      <div class="abar"><span class="albl">🔊 Listen:</span><button class="ab ab-en" onclick="speak('text_en_9_2',this,'en-US')">▶ English</button><button class="ab ab-hi" onclick="speak('text_hi_9_2',this,'hi-IN')">▶ हिंदी</button><button class="ab ab-stop" onclick="stopSpeak()">⏹ Stop</button><button class="ab ab-tog" onclick="toggleHi('hi_9_2')">हिं Toggle</button></div>
+      <div class="cen" id="text_en_9_2">
+        <div class="hbox"><strong style="color:var(--cyan)">Detention:</strong> When a driver waits more than 2 hours at a shipper or receiver, the carrier earns detention pay. Industry standard: $25–75/hour after 2 free hours. This must be written in the RC before the load is booked.<br/><br/>
+          <strong>How to track it:</strong> Driver records exact arrival time and release time. Sends a photo of the detention log or warehouse stamp to you. You then claim with the broker within 24 hours of delivery.</div>
+        <div class="obox"><strong style="color:var(--orange)">TONU (Truck Ordered Not Used):</strong> When a broker cancels a load AFTER the truck has already departed for pickup, the carrier earns TONU pay. Industry rate: $150–250. Must be written in the RC. Without this clause in the RC — you cannot legally claim it.<br/><br/>
+          Example: Driver leaves yard heading to Chicago pickup. Broker cancels 1 hour later. Driver is already 60 miles in — that fuel and time must be compensated.</div>
+        <div class="hbox" style="border-left-color:var(--gold)"><strong style="color:var(--gold)">Layover:</strong> When a driver must stop overnight because delivery is closed until next day. Layover pay: typically $150–250/night. Must also be in RC. Common in reefer loads with strict delivery windows.</div>
+        <div class="gbox"><strong>🎯 Claims Success Rate Tips:</strong><br/>
+          • Have detention/TONU clause written in RC BEFORE load moves<br/>
+          • Get driver to document ALL wait times with photos of timestamps<br/>
+          • Submit claim email within 24 hours of delivery — not weeks later<br/>
+          • Attach: POD + Detention Log + RC showing your clause<br/>
+          • Be professional in your email — aggressive tone rarely helps
+        </div>
+        <div class="kts"><span class="kt">Detention</span><span class="kt">TONU</span><span class="kt">Layover</span><span class="kt">Free Time</span><span class="kt">Detention Log</span></div>
+      </div>
+      <div class="chi" id="hi_9_2"><div id="text_hi_9_2">
+        <div class="hbox"><strong>डिटेंशन:</strong> 2 घंटे के बाद प्रतीक्षा के लिए $25–75/घंटा। RC में लिखा होना चाहिए। ड्राइवर सटीक समय रिकॉर्ड करे — डिलीवरी के 24 घंटे के अंदर क्लेम करें।</div>
+        <div class="obox"><strong>TONU:</strong> ट्रक रवाना होने के बाद लोड कैंसिल हो तो $150–250। RC में TONU क्लॉज होना आवश्यक है।</div>
+        <div class="hbox" style="border-left-color:var(--gold)"><strong>लेओवर:</strong> ड्राइवर रात रुके तो $150–250/रात। RC में लिखा होना चाहिए।</div>
+      </div></div>
+      <div class="tquiz"><div class="qhdr"><span>🧠</span><h4>Quick Check — Detention & TONU</h4><span style="margin-left:auto" class="tag tag-cyan">4 Qs</span></div>
+        <div class="qbody" id="qb_9_2">
+          <div class="qi"><div class="qt">1. Detention pay starts after how many FREE hours at a facility?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_9_2','q1',false)">A. 30 minutes</button>
+            <button class="qo" onclick="ans(this,'qb_9_2','q1',true)">B. 2 hours</button>
+            <button class="qo" onclick="ans(this,'qb_9_2','q1',false)">C. 4 hours</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. TONU stands for:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_9_2','q2',false)">A. Total Outstanding Number Unpaid</button>
+            <button class="qo" onclick="ans(this,'qb_9_2','q2',true)">B. Truck Ordered Not Used</button>
+            <button class="qo" onclick="ans(this,'qb_9_2','q2',false)">C. Transfer of Non-Urgent goods</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Can you claim TONU if it is NOT written in the Rate Confirmation?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_9_2','q3',false)">A. Yes — it is always automatically included</button>
+            <button class="qo" onclick="ans(this,'qb_9_2','q3',true)">B. No — without the clause in the RC you have no legal basis to claim it</button>
+            <button class="qo" onclick="ans(this,'qb_9_2','q3',false)">C. Yes — if you send the email within 48 hours</button>
+          </div></div>
+          <div class="qi"><div class="qt">4. How soon after delivery should a detention claim be submitted?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_9_2','q4',true)">A. Within 24 hours</button>
+            <button class="qo" onclick="ans(this,'qb_9_2','q4',false)">B. Within 2 weeks</button>
+            <button class="qo" onclick="ans(this,'qb_9_2','q4',false)">C. Whenever convenient</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_9_2"><div class="qscore" id="qs_9_2"></div><div id="qm_9_2" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_9_2','qr_9_2','qs_9_2','qm_9_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sec-hdr"><h3>⚡ Practical</h3><div class="sec-line"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px;"><ul class="plist">
+    <li><div class="pn">1</div><div><strong>Write 3 Emails:</strong> Using the templates, write: (1) Carrier packet to new broker (2) Load ETA update (3) Detention claim for 3.5 hours at $50/hour. Instructor grades for professionalism, completeness, and accuracy.</div></li>
+    <li><div class="pn">2</div><div><strong>Detention Calculator:</strong> Driver arrived at 9:00 AM, released at 1:45 PM, detention rate $60/hour. Calculate total detention pay. Practise completing the detention log form.</div></li>
+  </ul></div>
+  <div class="hwbox"><h4>📝 Homework — Day 9</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Create your own email template library in Google Docs — 4 ready-to-use templates (carrier packet, ETA update, detention claim, invoice follow-up). You will copy-paste and personalise these on every future load. Good templates save 2–3 hours per week.</p></div>
+  <div class="dnav"><button class="btn btn-ghost" onclick="showDay(8,document.querySelectorAll('.day-tab')[2])">← Day 8</button><button class="btn btn-primary" style="background:linear-gradient(135deg,var(--cyan),#0284c7)" onclick="doneDay(9);showDay(10,document.querySelectorAll('.day-tab')[4])">Day 10 →</button></div>
+</div>
+
+<!-- ═══════════ DAY 10: Safety, Claims & Week 2 Review ═══════════ -->
+<div class="day-panel" id="day10">
+  <div class="day-hero fade-up"><div class="day-num" style="font-size:20px">D10</div><div class="day-info"><h2>Safety, Cargo Claims & Week 2 Review</h2><div class="htitle">सुरक्षा, कार्गो क्लेम और सप्ताह 2 समीक्षा</div><div class="dmeta"><span class="tag tag-cyan">2hrs Theory</span><span class="tag tag-orange">2hrs Review</span><span class="tag tag-green">2 Topics</span></div></div></div>
+  <div class="vbox fade-up delay-1"><div class="vhdr"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 10 — Safety & Cargo Claims</span><span style="margin-left:auto;font-size:11px;color:var(--grey)">~12 min</span></div><div class="vph" onclick="loadVid(this,'YOUR_D10_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 10: Safety & Cargo Claims</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D10_VIDEO_ID</div></div></div><div class="vnote">💡 Replace YOUR_D10_VIDEO_ID</div></div>
+  <div class="sec-hdr"><h3>📖 Theory Topics</h3><div class="sec-line"></div></div>
+
+  <div class="tc" id="tc_10_1">
+    <button class="tt" onclick="openTopic('tc_10_1',this)"><div class="tnum">A</div><div class="tt-titles"><div class="t-en">Cargo Claims & Damage Handling</div><div class="t-hi">कार्गो क्लेम और क्षति प्रबंधन</div></div><span class="tarr">›</span></button>
+    <div class="tbody" id="body_10_1">
+      <div class="abar"><span class="albl">🔊 Listen:</span><button class="ab ab-en" onclick="speak('text_en_10_1',this,'en-US')">▶ English</button><button class="ab ab-hi" onclick="speak('text_hi_10_1',this,'hi-IN')">▶ हिंदी</button><button class="ab ab-stop" onclick="stopSpeak()">⏹ Stop</button><button class="ab ab-tog" onclick="toggleHi('hi_10_1')">हिं Toggle</button></div>
+      <div class="cen" id="text_en_10_1">
+        <p>Cargo damage is every dispatcher's nightmare. Knowing exactly what to do in the first 30 minutes of a damage report can be the difference between a resolved claim and a long legal dispute.</p>
+        <div class="wbox"><strong>⚠️ Immediate Steps When Cargo Damage is Reported:</strong><br/>
+          1. <strong>Do not move the cargo</strong> — preserve the scene exactly as found<br/>
+          2. <strong>Photograph everything immediately</strong> — the cargo, packaging, truck interior, seal numbers<br/>
+          3. <strong>Note all exceptions on the delivery receipt</strong> before the consignee signs<br/>
+          4. <strong>Call your carrier's insurance company</strong> to report the incident<br/>
+          5. <strong>Notify the broker</strong> in writing (email) within the same day<br/>
+          6. <strong>Get a written damage report</strong> from the consignee</div>
+        <div class="hbox"><strong>Cargo Claim Process:</strong><br/>
+          Damage reported → Dispatcher notified → Photos and documentation collected → Insurance claim filed → Broker notified in writing → Claim investigated (30–60 days typical) → Settlement paid by carrier's cargo insurance (up to policy limit).<br/><br/>
+          This is why <strong>cargo insurance minimum $100,000</strong> is mandatory. Without it, the carrier pays out of pocket.</div>
+        <div class="obox"><strong>Dispatcher's Role in Preventing Claims:</strong><br/>
+          • Ensure driver notes ALL pre-existing damage on BOL at pickup<br/>
+          • For reefer loads — confirm temperature logs are recording correctly before departure<br/>
+          • Never book a load requiring special handling to a driver without that training<br/>
+          • For fragile or high-value loads — confirm driver has experience
+        </div>
+        <div class="kts"><span class="kt">Cargo Claim</span><span class="kt">Damage Report</span><span class="kt">Insurance Claim</span><span class="kt">Seal Number</span><span class="kt">Consignee</span></div>
+      </div>
+      <div class="chi" id="hi_10_1"><div id="text_hi_10_1">
+        <p>कार्गो क्षति की स्थिति में पहले 30 मिनट बहुत महत्वपूर्ण हैं।</p>
+        <div class="wbox"><strong>तत्काल कदम:</strong><br/>
+          1. माल न हिलाएं — दृश्य यथावत रखें<br/>2. तुरंत फोटो लें<br/>3. रसीद पर सभी अपवाद नोट करें<br/>4. बीमा कंपनी को सूचित करें<br/>5. उसी दिन ब्रोकर को ईमेल करें<br/>6. कन्साइनी से लिखित क्षति रिपोर्ट लें</div>
+      </div></div>
+      <div class="tquiz"><div class="qhdr"><span>🧠</span><h4>Quick Check — Cargo Claims</h4><span style="margin-left:auto" class="tag tag-cyan">3 Qs</span></div>
+        <div class="qbody" id="qb_10_1">
+          <div class="qi"><div class="qt">1. First thing to do when cargo damage is reported at delivery?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_10_1','q1',false)">A. Move the cargo to a safe area</button>
+            <button class="qo" onclick="ans(this,'qb_10_1','q1',true)">B. Do NOT move cargo — photograph everything immediately and preserve the scene</button>
+            <button class="qo" onclick="ans(this,'qb_10_1','q1',false)">C. Call the shipper to complain</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. Without cargo insurance, who pays for damaged freight?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_10_1','q2',false)">A. The broker automatically covers it</button>
+            <button class="qo" onclick="ans(this,'qb_10_1','q2',true)">B. The carrier pays out of pocket — this is why minimum $100,000 insurance is mandatory</button>
+            <button class="qo" onclick="ans(this,'qb_10_1','q2',false)">C. The shipper's problem</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. How can a dispatcher prevent cargo claims at pickup?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_10_1','q3',false)">A. Accept all loads regardless of cargo type</button>
+            <button class="qo" onclick="ans(this,'qb_10_1','q3',true)">B. Ensure driver notes ALL pre-existing damage on the BOL before signing</button>
+            <button class="qo" onclick="ans(this,'qb_10_1','q3',false)">C. Ask the broker to handle it</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_10_1"><div class="qscore" id="qs_10_1"></div><div id="qm_10_1" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_10_1','qr_10_1','qs_10_1','qm_10_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tc" id="tc_10_2">
+    <button class="tt" onclick="openTopic('tc_10_2',this)"><div class="tnum">B</div><div class="tt-titles"><div class="t-en">Dispatcher's Safety Responsibilities</div><div class="t-hi">डिस्पैचर की सुरक्षा जिम्मेदारियाँ</div></div><span class="tarr">›</span></button>
+    <div class="tbody" id="body_10_2">
+      <div class="abar"><span class="albl">🔊 Listen:</span><button class="ab ab-en" onclick="speak('text_en_10_2',this,'en-US')">▶ English</button><button class="ab ab-hi" onclick="speak('text_hi_10_2',this,'hi-IN')">▶ हिंदी</button><button class="ab ab-stop" onclick="stopSpeak()">⏹ Stop</button><button class="ab ab-tog" onclick="toggleHi('hi_10_2')">हिं Toggle</button></div>
+      <div class="cen" id="text_en_10_2">
+        <p>A dispatcher holds legal responsibility for safety compliance. If you pressure a driver to violate HOS or drive in unsafe conditions, you can face federal fines. Safety is not optional.</p>
+        <div class="hbox"><strong>Your 6 Core Safety Responsibilities:</strong><br/>
+          1. <strong>Never pressure a driver to violate HOS</strong> — their safety and your legal protection<br/>
+          2. <strong>Monitor weather conditions</strong> on the route — reroute if severe weather threatens safety<br/>
+          3. <strong>Verify load securement</strong> for flatbed loads — driver must confirm tarping and strapping<br/>
+          4. <strong>Hazmat compliance</strong> — verify driver has hazmat endorsement BEFORE booking a hazmat load<br/>
+          5. <strong>Drug and alcohol</strong> — if a driver sounds impaired on a check-call, you must act immediately<br/>
+          6. <strong>Breakdown protocol</strong> — know what to do when a truck breaks down mid-load
+        </div>
+        <div class="obox"><strong>🚨 Breakdown Protocol:</strong><br/>
+          1. Driver calls 911 if safety hazard, then calls you<br/>
+          2. You call the broker immediately: "Driver has a breakdown at [location]. ETA now [revised time]."<br/>
+          3. Call a nearby repair service or roadside assistance<br/>
+          4. If load will be significantly late, call the receiver<br/>
+          5. Document everything with timestamps<br/>
+          6. Get repair receipt — carrier's insurance may cover breakdown costs
+        </div>
+        <div class="kts"><span class="kt">Safety Compliance</span><span class="kt">Hazmat Endorsement</span><span class="kt">Breakdown Protocol</span><span class="kt">Weather Monitoring</span></div>
+      </div>
+      <div class="chi" id="hi_10_2"><div id="text_hi_10_2">
+        <p>एक डिस्पैचर की कानूनी सुरक्षा जिम्मेदारी होती है। HOS उल्लंघन के लिए दबाव डालने पर आप पर भी जुर्माना हो सकता है।</p>
+        <div class="hbox"><strong>6 मुख्य सुरक्षा जिम्मेदारियाँ:</strong><br/>
+          1. HOS उल्लंघन के लिए कभी दबाव न डालें<br/>
+          2. रूट पर मौसम की निगरानी करें<br/>
+          3. फ्लैटबेड के लिए लोड सुरक्षा सुनिश्चित करें<br/>
+          4. हैज़मैट लोड से पहले एंडोर्समेंट सत्यापित करें<br/>
+          5. चेक-कॉल पर ड्राइवर नशे में लगे तो तुरंत कार्रवाई करें<br/>
+          6. ब्रेकडाउन प्रोटोकॉल जानें
+        </div>
+      </div></div>
+      <div class="tquiz"><div class="qhdr"><span>🧠</span><h4>Quick Check — Safety</h4><span style="margin-left:auto" class="tag tag-cyan">3 Qs</span></div>
+        <div class="qbody" id="qb_10_2">
+          <div class="qi"><div class="qt">1. Driver's ELD shows 0 hours remaining. Broker demands immediate departure. You should:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_10_2','q1',false)">A. Tell driver to go — broker is a good client</button>
+            <button class="qo" onclick="ans(this,'qb_10_2','q1',true)">B. Refuse — inform broker driver must rest 10 hours before driving. Offer new ETA.</button>
+            <button class="qo" onclick="ans(this,'qb_10_2','q1',false)">C. Ask driver to decide</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. First call to make when a driver has a breakdown mid-load:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_10_2','q2',false)">A. Call the shipper</button>
+            <button class="qo" onclick="ans(this,'qb_10_2','q2',true)">B. Call the broker immediately with location and revised ETA</button>
+            <button class="qo" onclick="ans(this,'qb_10_2','q2',false)">C. Wait for driver to fix it before telling anyone</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Before booking a hazmat load, you must verify:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_10_2','q3',false)">A. Driver's lunch preference</button>
+            <button class="qo" onclick="ans(this,'qb_10_2','q3',true)">B. Driver holds a hazmat endorsement on their CDL</button>
+            <button class="qo" onclick="ans(this,'qb_10_2','q3',false)">C. Hazmat loads do not need any special licence</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_10_2"><div class="qscore" id="qs_10_2"></div><div id="qm_10_2" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_10_2','qr_10_2','qs_10_2','qm_10_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Week 2 Complete -->
+  <div style="background:linear-gradient(135deg,rgba(6,182,212,0.12),rgba(30,27,139,0.3));border:1px solid rgba(6,182,212,0.3);border-radius:var(--radius-xl);padding:28px;margin:24px 0;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;"><span style="font-size:28px;">🏆</span>
+      <div><div style="font-size:18px;font-weight:800;">Week 2 Complete!</div><div style="font-size:13px;color:var(--cyan);font-family:var(--font-hindi);">सप्ताह 2 पूरा! शानदार काम! अब आप एक पेशेवर डिस्पैचर की तरह सोच सकते हैं।</div></div>
+    </div>
+    <p style="font-size:14px;color:rgba(255,255,255,0.8);line-height:1.8;margin-bottom:16px;">You can now make professional broker calls using ICAR, negotiate using 5 proven techniques, handle all dispatch documents (BOL, RC, W-9, COI), use TMS and GPS systems, write professional emails, claim detention and TONU, and handle cargo damage correctly.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="week3.html" class="btn btn-primary" style="background:linear-gradient(135deg,var(--cyan),#0284c7)">Continue to Week 3 →</a>
+      <a href="tools.html" class="btn btn-secondary">🧮 Practice Tools</a>
+      <a href="madam-ji.html" class="btn btn-ghost">🎓 Ask Madam JI</a>
+    </div>
+  </div>
+
+  <div class="hwbox"><h4>📝 Week 2 Final Homework</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Review all 5 days. Create your Week 2 Cheat Sheet: ICAR script, 5 negotiation techniques, BOL vs RC vs W-9 vs COI definitions, detention formula, TONU definition, breakdown protocol. Week 3 test covers all Week 2 content.</p></div>
+  <div class="dnav"><button class="btn btn-ghost" onclick="showDay(9,document.querySelectorAll('.day-tab')[3])">← Day 9</button><a href="week3.html" class="btn btn-primary" style="background:linear-gradient(135deg,var(--cyan),#0284c7)">Week 3 →</a></div>
+</div>
+
+</main>
+
+<footer style="border-top:1px solid rgba(6,182,212,0.15);padding:20px 24px;text-align:center;margin-top:40px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px;">
+      <img src="assets/logo.png" style="height:32px;background:white;padding:2px;border-radius:6px;" onerror="this.style.display='none'"/>
+      <span style="font-weight:900;font-size:15px;letter-spacing:1px;">EAGLE ACADEMY</span>
+    </div>
+    <div style="font-size:12px;color:var(--grey);">International Freight Dispatcher Certification — Week 2 of 4</div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+<script>
+let answers={}, currentLang='en';
+function showDay(n,btn){
+  document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
+  const p=document.getElementById('day'+n);
+  if(p)p.classList.add('active');
+  if(btn)btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function doneDay(n){
+  const c=document.getElementById('d'+n+'_check');
+  if(c)c.style.display='inline';
+  updateProg();
+  try{const s=JSON.parse(localStorage.getItem('ea_w2')||'{}');s['d'+n]=true;localStorage.setItem('ea_w2',JSON.stringify(s));}catch(e){}
+}
+function updateProg(){
+  const done=document.querySelectorAll('.check[style*="inline"]').length;
+  const p=Math.round(done/5*100);
+  const b=document.getElementById('week_prog'),l=document.getElementById('week_pct');
+  if(b)b.style.width=p+'%';if(l)l.textContent=p+'%';
+}
+function openTopic(id,btn){
+  const bodyId='body_'+id.replace('tc_','');
+  const b=document.getElementById(bodyId);
+  if(!b)return;
+  const wasOpen=b.classList.contains('open');
+  document.querySelectorAll('.tbody').forEach(x=>x.classList.remove('open'));
+  document.querySelectorAll('.tt').forEach(x=>x.classList.remove('open'));
+  if(!wasOpen){b.classList.add('open');btn.classList.add('open');}
+}
+function setLang(lang,btn){
+  currentLang=lang;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.chi').forEach(el=>el.classList.toggle('show',lang==='hi'));
+}
+function toggleHi(id){const el=document.getElementById(id);if(el)el.classList.toggle('show');}
+let synth=window.speechSynthesis, utterance=null;
+function speak(textId,btn,lang){
+  if(synth)synth.cancel();
+  document.querySelectorAll('.ab.on').forEach(b=>b.classList.remove('on'));
+  const el=document.getElementById(textId);
+  if(!el||!synth)return;
+  const u=new SpeechSynthesisUtterance((el.innerText||el.textContent).replace(/\s+/g,' ').trim());
+  u.lang=lang;u.rate=0.88;
+  const vs=synth.getVoices(),m=vs.find(v=>v.lang.startsWith(lang.substring(0,2)));
+  if(m)u.voice=m;
+  btn.classList.add('on');
+  u.onend=()=>btn.classList.remove('on');
+  u.onerror=()=>btn.classList.remove('on');
+  synth.speak(u);
+}
+function stopSpeak(){if(synth)synth.cancel();document.querySelectorAll('.ab.on').forEach(b=>b.classList.remove('on'));}
+function loadVid(el,id){
+  if(!id||id.includes('YOUR')){alert('📹 Instructor: Replace the video ID in the HTML file with your YouTube video ID to enable this player.');return;}
+  el.outerHTML=`<div style="position:relative;padding-bottom:56.25%"><iframe src="https://www.youtube.com/embed/${id}?autoplay=1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="autoplay;fullscreen" allowfullscreen></iframe></div>`;
+}
+function alertVideo(day){alert('📹 Instructor: Find YOUR_'+day+'_VIDEO_ID in this HTML file and replace with your YouTube video ID.');}
+function ans(btn,qbId,qKey,correct){
+  if(!answers[qbId])answers[qbId]={};
+  if(answers[qbId][qKey])return;
+  answers[qbId][qKey]=correct;
+  btn.closest('.qi').querySelectorAll('.qo').forEach(b=>{b.disabled=true;});
+  btn.classList.add(correct?'correct':'wrong');
+  if(!correct)btn.closest('.qi').querySelectorAll('.qo').forEach(b=>{if(b.onclick&&b.onclick.toString().includes(',true'))b.classList.add('correct');});
+  const total=document.getElementById(qbId).querySelectorAll('.qi').length;
+  if(Object.keys(answers[qbId]).length>=total)showResult(qbId);
+}
+function showResult(qbId){
+  const a=answers[qbId]||{},total=Object.keys(a).length,correct=Object.values(a).filter(v=>v).length,pct=Math.round(correct/total*100);
+  const rid=qbId.replace('qb_','qr_'),sid=qbId.replace('qb_','qs_'),mid=qbId.replace('qb_','qm_');
+  const re=document.getElementById(rid),se=document.getElementById(sid),me=document.getElementById(mid);
+  if(re)re.classList.add('show');
+  if(se){se.textContent=correct+'/'+total+' — '+pct+'%';se.style.color=pct>=70?'var(--green)':pct>=50?'var(--gold)':'var(--red)';}
+  if(me)me.textContent=pct>=90?'🏆 Excellent!':pct>=70?'✅ Good work!':pct>=50?'📚 Review the topic.':'⚠️ Please re-read and retake.';
+}
+function retake(qbId,rId,sId,mId){
+  answers[qbId]={};
+  document.getElementById(qbId).querySelectorAll('.qo').forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong');});
+  const r=document.getElementById(rId);if(r)r.classList.remove('show');
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  try{const s=JSON.parse(localStorage.getItem('ea_w2')||'{}');for(let d=6;d<=10;d++)if(s['d'+d]){const c=document.getElementById('d'+d+'_check');if(c)c.style.display='inline';}updateProg();}catch(e){}
+  if(window.speechSynthesis)window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+});
+</script>
+</body>
+</html>
