@@ -1,0 +1,2290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Week 1 — Dispatch Foundation | Eagle Academy</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<style>
+/* ── Page-specific styles ── */
+body { background: var(--navy-deep); }
+
+.week-hero {
+  background: linear-gradient(135deg, var(--navy-dark) 0%, var(--navy) 60%, rgba(249,115,22,0.12) 100%);
+  border-bottom: 1px solid rgba(249,115,22,0.2);
+  padding: 40px 24px 32px;
+  position: relative;
+  overflow: hidden;
+}
+.week-hero::before {
+  content: '1';
+  position: absolute;
+  right: 5%;
+  top: -20px;
+  font-size: 220px;
+  font-weight: 900;
+  color: rgba(249,115,22,0.04);
+  line-height: 1;
+  pointer-events: none;
+}
+.week-hero-inner { max-width: 1200px; margin: 0 auto; }
+
+.week-progress-bar { margin-top: 20px; }
+.week-progress-bar .label { display: flex; justify-content: space-between; font-size: 12px; color: var(--grey); margin-bottom: 6px; }
+
+/* Day Tabs */
+.day-tabs-wrap {
+  background: rgba(8,7,48,0.8);
+  border-bottom: 1px solid rgba(249,115,22,0.15);
+  position: sticky;
+  top: 68px;
+  z-index: 100;
+  backdrop-filter: blur(12px);
+}
+.day-tabs {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.day-tabs::-webkit-scrollbar { display: none; }
+.day-tab {
+  padding: 14px 22px;
+  border: none;
+  background: transparent;
+  color: var(--grey);
+  font-family: var(--font-main);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  border-bottom: 3px solid transparent;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.day-tab:hover { color: var(--white); }
+.day-tab.active { color: var(--orange); border-bottom-color: var(--orange); }
+.day-tab .check { color: var(--green); margin-left: 5px; }
+
+/* Main content */
+.main-wrap { max-width: 1200px; margin: 0 auto; padding: 32px 24px; }
+
+/* Day panel */
+.day-panel { display: none; }
+.day-panel.active { display: block; animation: fadeUp 0.4s ease; }
+
+.day-hero {
+  background: linear-gradient(135deg, rgba(249,115,22,0.1), rgba(30,27,139,0.3));
+  border: 1px solid rgba(249,115,22,0.25);
+  border-radius: var(--radius-xl);
+  padding: 28px 32px;
+  margin-bottom: 28px;
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+.day-num-big {
+  width: 64px; height: 64px;
+  border-radius: 16px;
+  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 26px; font-weight: 900;
+  flex-shrink: 0;
+  box-shadow: var(--shadow-orange);
+}
+.day-info h2 { font-size: 24px; font-weight: 800; margin-bottom: 4px; }
+.day-info .hindi-title { color: var(--orange); font-family: var(--font-hindi); font-size: 15px; }
+.day-info .day-meta { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+
+/* Section headers */
+.section-header {
+  display: flex; align-items: center; gap: 12px;
+  margin: 28px 0 18px;
+}
+.section-header h3 { font-size: 18px; font-weight: 800; }
+.section-line { flex: 1; height: 1px; background: rgba(249,115,22,0.2); }
+
+/* Video box */
+.video-box {
+  margin-bottom: 28px;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 2px solid rgba(249,115,22,0.25);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+}
+.video-header {
+  background: linear-gradient(90deg, var(--navy-dark), var(--navy));
+  padding: 12px 18px;
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid rgba(249,115,22,0.2);
+}
+.video-header .dot { width: 10px; height: 10px; border-radius: 50%; }
+.video-iframe-wrap { position: relative; padding-bottom: 56.25%; background: #000; }
+.video-iframe-wrap iframe { position: absolute; top:0; left:0; width:100%; height:100%; border:none; }
+.video-placeholder-box {
+  aspect-ratio: 16/9;
+  background: linear-gradient(135deg, var(--navy-dark), rgba(30,27,139,0.6));
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px;
+  cursor: pointer;
+  transition: var(--transition);
+}
+.video-placeholder-box:hover { background: rgba(249,115,22,0.08); }
+.play-circle {
+  width: 80px; height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 32px;
+  box-shadow: 0 0 40px rgba(249,115,22,0.4);
+  animation: pulseOrange 2.5s ease infinite;
+}
+.video-info { text-align: center; }
+.video-info .title { font-size: 16px; font-weight: 700; margin-bottom: 6px; }
+.video-info .meta  { font-size: 12px; color: var(--grey); font-family: var(--font-mono); }
+.video-add-note {
+  padding: 10px 18px;
+  background: rgba(249,115,22,0.07);
+  border-top: 1px solid rgba(249,115,22,0.15);
+  font-size: 12px; color: var(--orange);
+  display: flex; align-items: center; gap: 8px;
+}
+
+/* Topic cards */
+.topic-card {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(249,115,22,0.15);
+  border-radius: var(--radius-lg);
+  margin-bottom: 18px;
+  overflow: hidden;
+  transition: var(--transition);
+}
+.topic-card.done { border-color: rgba(34,197,94,0.35); }
+.topic-toggle {
+  width: 100%;
+  background: none; border: none;
+  padding: 18px 22px;
+  cursor: pointer;
+  display: flex; align-items: center; gap: 14px;
+  transition: var(--transition);
+  text-align: left;
+}
+.topic-toggle:hover { background: rgba(249,115,22,0.05); }
+.t-num {
+  width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0;
+  background: linear-gradient(135deg, var(--orange), var(--orange-dark));
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; font-weight: 900; color: white;
+}
+.t-num.done-num { background: linear-gradient(135deg, var(--green), #16a34a); }
+.t-titles { flex: 1; }
+.t-en { font-size: 15px; font-weight: 700; color: var(--white); }
+.t-hi { font-size: 12px; color: var(--orange); font-family: var(--font-hindi); margin-top: 2px; }
+.t-arrow { font-size: 18px; color: var(--grey); transition: transform 0.3s; }
+.topic-toggle.open .t-arrow { transform: rotate(90deg); color: var(--orange); }
+
+.topic-content { display: none; padding: 0 22px 22px; }
+.topic-content.open { display: block; animation: fadeUp 0.3s ease; }
+
+/* Audio bar */
+.audio-bar {
+  display: flex; align-items: center; gap: 8px; flex-wrap: wrap;
+  padding: 10px 14px;
+  background: rgba(30,27,139,0.5);
+  border: 1px solid rgba(249,115,22,0.2);
+  border-radius: var(--radius-md);
+  margin-bottom: 16px;
+}
+.audio-label { font-size: 11px; color: var(--grey); text-transform: uppercase; letter-spacing: 1px; font-weight: 600; margin-right: 4px; }
+.a-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 6px 14px; border-radius: 999px; border: none; cursor: pointer;
+  font-size: 12px; font-weight: 600; font-family: var(--font-main);
+  transition: var(--transition);
+}
+.a-en { background: rgba(249,115,22,0.15); color: var(--orange); border: 1px solid rgba(249,115,22,0.3); }
+.a-en:hover, .a-en.on { background: var(--orange); color: white; }
+.a-hi { background: rgba(251,191,36,0.15); color: var(--gold); border: 1px solid rgba(251,191,36,0.3); font-family: var(--font-hindi); }
+.a-hi:hover, .a-hi.on { background: var(--gold); color: var(--navy-deep); }
+.a-stop { background: rgba(239,68,68,0.12); color: var(--red); border: 1px solid rgba(239,68,68,0.3); }
+.a-stop:hover { background: var(--red); color: white; }
+
+/* Content blocks */
+.content-en-block {
+  font-size: 14px; line-height: 1.9; color: rgba(255,255,255,0.85);
+}
+.content-hi-block {
+  font-size: 15px; line-height: 2; color: rgba(255,220,120,0.92);
+  font-family: var(--font-hindi); display: none;
+}
+.content-hi-block.show { display: block; animation: fadeIn 0.3s ease; }
+
+.highlight-box {
+  background: rgba(249,115,22,0.08);
+  border-left: 3px solid var(--orange);
+  padding: 14px 18px; border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  margin: 12px 0; font-size: 13px; color: rgba(255,255,255,0.8);
+  line-height: 1.8;
+}
+.info-box {
+  background: rgba(6,182,212,0.08);
+  border: 1px solid rgba(6,182,212,0.25);
+  border-radius: var(--radius-md);
+  padding: 14px 18px; margin: 12px 0;
+  font-size: 13px; line-height: 1.8;
+}
+.example-box {
+  background: rgba(34,197,94,0.07);
+  border: 1px solid rgba(34,197,94,0.25);
+  border-radius: var(--radius-md);
+  padding: 14px 18px; margin: 12px 0;
+  font-size: 13px; line-height: 1.8;
+}
+.warning-box {
+  background: rgba(239,68,68,0.08);
+  border: 1px solid rgba(239,68,68,0.25);
+  border-radius: var(--radius-md);
+  padding: 14px 18px; margin: 12px 0;
+  font-size: 13px; line-height: 1.8;
+}
+
+/* Key terms */
+.key-terms { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0; }
+.key-term {
+  background: rgba(30,27,139,0.6);
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: var(--radius-full);
+  padding: 4px 14px;
+  font-size: 12px; font-weight: 600; color: #a5b4fc;
+  font-family: var(--font-mono);
+}
+
+/* Practical activities */
+.practical-list { list-style: none; padding: 0; margin: 0; }
+.practical-list li {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  font-size: 13px; line-height: 1.7;
+}
+.practical-list li:last-child { border-bottom: none; }
+.p-num {
+  width: 26px; height: 26px; border-radius: 50%;
+  background: rgba(249,115,22,0.2); color: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px;
+}
+
+/* Homework box */
+.hw-box {
+  background: linear-gradient(135deg, rgba(30,27,139,0.5), rgba(249,115,22,0.08));
+  border: 1px solid rgba(249,115,22,0.25);
+  border-radius: var(--radius-lg); padding: 22px 24px;
+}
+.hw-box h4 { font-size: 16px; font-weight: 800; margin-bottom: 8px; display: flex; align-items: center; gap: 10px; }
+.hw-text { font-size: 14px; line-height: 1.8; color: rgba(255,255,255,0.82); }
+
+/* Topic Quiz */
+.topic-quiz {
+  margin-top: 24px;
+  background: rgba(30,27,139,0.4);
+  border: 1px solid rgba(99,102,241,0.3);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.quiz-header {
+  padding: 14px 20px;
+  background: rgba(30,27,139,0.6);
+  display: flex; align-items: center; gap: 10px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.quiz-header h4 { font-size: 15px; font-weight: 700; }
+.quiz-body { padding: 20px; }
+
+.q-item { margin-bottom: 22px; }
+.q-item:last-child { margin-bottom: 0; }
+.q-text { font-size: 14px; font-weight: 600; margin-bottom: 10px; line-height: 1.6; }
+.q-opts { display: flex; flex-direction: column; gap: 8px; }
+.q-opt {
+  width: 100%; padding: 10px 16px; text-align: left;
+  background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--radius-md); cursor: pointer; font-size: 13px;
+  color: var(--white); font-family: var(--font-main);
+  transition: var(--transition);
+}
+.q-opt:hover { border-color: var(--orange); background: rgba(249,115,22,0.08); }
+.q-opt.correct { border-color: var(--green) !important; background: rgba(34,197,94,0.15) !important; color: var(--green); }
+.q-opt.wrong   { border-color: var(--red)   !important; background: rgba(239,68,68,0.15)   !important; color: var(--red); }
+.q-opt:disabled { cursor: default; }
+
+.quiz-result {
+  display: none; padding: 16px 20px;
+  background: rgba(255,255,255,0.04);
+  border-top: 1px solid rgba(255,255,255,0.08);
+  text-align: center;
+}
+.quiz-result.show { display: block; animation: fadeUp 0.3s ease; }
+.quiz-score { font-size: 32px; font-weight: 900; }
+.quiz-retake { margin-top: 12px; }
+
+/* Nav between days */
+.day-nav {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 40px; padding-top: 24px;
+  border-top: 1px solid rgba(249,115,22,0.15);
+}
+
+/* Responsive */
+@media(max-width: 640px) {
+  .day-hero { flex-direction: column; padding: 20px; }
+  .main-wrap { padding: 20px 16px; }
+  .week-hero { padding: 24px 16px 20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══════════════ HEADER ═══════════════ -->
+<header class="ea-header">
+  <div class="ea-header-inner">
+    <a href="index.html" class="ea-logo">
+      <img src="assets/logo.png" alt="Eagle Academy" onerror="this.style.display='none';this.nextElementSibling.textContent='🦅'"/>
+      <div class="ea-logo-text">
+        <div class="brand">EAGLE ACADEMY</div>
+        <div class="sub">Freight Dispatcher Certification</div>
+      </div>
+    </a>
+    <nav class="ea-nav">
+      <a href="index.html"    class="ea-nav-btn">🏠 Home</a>
+      <a href="week1.html"    class="ea-nav-btn active">Week 1</a>
+      <a href="week2.html"    class="ea-nav-btn">Week 2</a>
+      <a href="week3.html"    class="ea-nav-btn">Week 3</a>
+      <a href="week4.html"    class="ea-nav-btn">Week 4</a>
+      <a href="tools.html"    class="ea-nav-btn">🧮 Tools</a>
+      <a href="madam-ji.html" class="ea-nav-btn">🎓 Madam JI</a>
+      <a href="exam.html"     class="ea-nav-btn">📝 Final Exam</a>
+    </nav>
+    <div class="lang-toggle">
+      <button class="lang-btn active" data-lang="en" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" data-lang="hi" onclick="setLang('hi',this)">हिं</button>
+    </div>
+  </div>
+</header>
+
+<!-- ═══════════════ TICKER ═══════════════ -->
+<div class="ticker-wrap">
+  <div class="ticker-inner" id="ticker_inner">
+    <span>🚛 Week 1: Dispatch Foundations</span><span>⚡ RPM Target: $2.50+ per mile</span>
+    <span>📞 ICAR Broker Call Method</span><span>📄 BOL = Most Important Document</span>
+    <span>🎯 Always check DAT Broker Credit Score</span><span>⏰ USA HOS: 11 hrs max driving/day</span>
+    <span>🌍 IST = EST + 10 hours 30 minutes</span><span>💰 8 Trucks = $25,000/month potential</span>
+    <span>🏆 Eagle Academy Certified Dispatcher</span><span>📊 Keep Deadhead Miles under 15%</span>
+    <span>🚛 Week 1: Dispatch Foundations</span><span>⚡ RPM Target: $2.50+ per mile</span>
+    <span>📞 ICAR Broker Call Method</span><span>📄 BOL = Most Important Document</span>
+    <span>🎯 Always check DAT Broker Credit Score</span><span>⏰ USA HOS: 11 hrs max driving/day</span>
+    <span>🌍 IST = EST + 10 hours 30 minutes</span><span>💰 8 Trucks = $25,000/month potential</span>
+  </div>
+</div>
+
+<!-- ═══════════════ WEEK HERO ═══════════════ -->
+<section class="week-hero">
+  <div class="week-hero-inner">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px;">
+      <span class="tag tag-orange">Week 1 of 4</span>
+      <span class="tag tag-cyan">40 Hours</span>
+      <span class="tag tag-green">5 Days</span>
+    </div>
+    <h1 style="font-size:clamp(24px,4vw,42px);font-weight:900;margin-bottom:8px;">
+      Dispatch Foundation
+    </h1>
+    <p style="font-size:15px;color:var(--grey);margin-bottom:4px;">
+      Master freight types, geography, load boards, RPM calculation and Hours of Service rules
+    </p>
+    <p style="font-size:14px;color:var(--orange);font-family:var(--font-hindi);">
+      डिस्पैच की नींव — माल ढुलाई के प्रकार, भूगोल, लोड बोर्ड, RPM गणना और HOS नियम
+    </p>
+    <div class="week-progress-bar" style="margin-top:20px;max-width:500px;">
+      <div class="label"><span>Week Progress</span><span id="week_pct">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="week_prog" style="width:0%"></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ DAY TABS ═══════════════ -->
+<div class="day-tabs-wrap">
+  <div class="day-tabs">
+    <button class="day-tab active" onclick="showDay(1,this)">
+      Day 1 <span id="d1_check" class="check" style="display:none">✓</span>
+    </button>
+    <button class="day-tab" onclick="showDay(2,this)">
+      Day 2 <span id="d2_check" class="check" style="display:none">✓</span>
+    </button>
+    <button class="day-tab" onclick="showDay(3,this)">
+      Day 3 <span id="d3_check" class="check" style="display:none">✓</span>
+    </button>
+    <button class="day-tab" onclick="showDay(4,this)">
+      Day 4 <span id="d4_check" class="check" style="display:none">✓</span>
+    </button>
+    <button class="day-tab" onclick="showDay(5,this)">
+      Day 5 <span id="d5_check" class="check" style="display:none">✓</span>
+    </button>
+  </div>
+</div>
+
+<!-- ═══════════════ MAIN CONTENT ═══════════════ -->
+<main class="main-wrap">
+
+<!-- ╔══════════════════════════════════════════╗ -->
+<!-- ║  DAY 1 — Welcome to Dispatch World       ║ -->
+<!-- ╚══════════════════════════════════════════╝ -->
+<div class="day-panel active" id="day1">
+
+  <!-- Day Hero -->
+  <div class="day-hero fade-up">
+    <div class="day-num-big">D1</div>
+    <div class="day-info">
+      <h2>Welcome to Dispatch World</h2>
+      <div class="hindi-title">डिस्पैच की दुनिया में आपका स्वागत</div>
+      <div class="day-meta">
+        <span class="tag tag-orange">2hrs Theory</span>
+        <span class="tag tag-cyan">2hrs Practical</span>
+        <span class="tag tag-green">3 Topics</span>
+        <span class="tag tag-gold">Foundation Day</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIDEO -->
+  <div class="video-box fade-up delay-1">
+    <div class="video-header">
+      <div class="dot" style="background:#ef4444"></div>
+      <div class="dot" style="background:#fbbf24;margin:0 4px"></div>
+      <div class="dot" style="background:#22c55e"></div>
+      <span style="font-size:13px;font-weight:600;margin-left:10px;">📹 Day 1 — Introduction Video</span>
+      <span style="margin-left:auto;font-size:11px;color:var(--grey);font-family:var(--font-mono);">~10 min</span>
+    </div>
+    <!-- Replace src below with your YouTube embed URL -->
+    <div class="video-placeholder-box" id="video_d1" onclick="loadVideo('d1','https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE')">
+      <div class="play-circle">▶</div>
+      <div class="video-info">
+        <div class="title">Day 1: Welcome to Dispatch World</div>
+        <div class="meta">🎬 Add your YouTube video ID to see this video</div>
+      </div>
+    </div>
+    <div class="video-add-note">
+      💡 Instructor: Replace <code>YOUR_VIDEO_ID_HERE</code> in the HTML with your YouTube video ID to activate this player
+    </div>
+  </div>
+
+  <!-- TOPICS -->
+  <div class="section-header">
+    <h3>📖 Theory Topics</h3>
+    <div class="section-line"></div>
+    <span class="tag tag-orange">3 Topics</span>
+  </div>
+
+  <!-- ── TOPIC 1 ── -->
+  <div class="topic-card" id="tc_1_1">
+    <button class="topic-toggle" onclick="toggleTopic('tc_1_1',this)">
+      <div class="t-num" id="tn_1_1">A</div>
+      <div class="t-titles">
+        <div class="t-en">What is Freight Dispatch?</div>
+        <div class="t-hi">माल ढुलाई संचालन (Freight Dispatch) क्या है?</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_1_1">
+
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_1_1" onclick="speakTopic('en','text_en_1_1','btn_en_1_1')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_1_1" onclick="speakTopic('hi','text_hi_1_1','btn_hi_1_1')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_1_1','btn_hi_1_1')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_1_1')">हिं Toggle</button>
+      </div>
+
+      <div class="content-en-block" id="text_en_1_1">
+        <p>A <strong style="color:var(--orange)">freight dispatcher</strong> is the person who acts as the brain behind truck movement in the logistics industry. Think of yourself as a highly skilled matchmaker — you connect <em>shippers</em> (companies that have cargo to move) with <em>carriers</em> (truck owners and drivers).</p>
+
+        <div class="highlight-box">
+          💡 <strong>Simple way to understand it:</strong> A shipper in Chicago has 20 pallets of electronics that need to reach Atlanta by tomorrow. You find the right truck, negotiate the rate, handle all the paperwork, and track the load until it is delivered. For this service, you earn a <strong>5–10% commission</strong> on the load value.
+        </div>
+
+        <p style="margin-top:12px;">As a dispatcher working from India, you manage the entire operation remotely. You make phone calls to US brokers, use load boards like <strong>DAT</strong> to find loads, and use communication tools like Google Voice and WhatsApp to stay connected with drivers. You are effectively running a part of the American trucking industry — from your desk in India.</p>
+
+        <div class="example-box">
+          <strong style="color:var(--green)">🎯 Real Example:</strong><br/>
+          Load: Chicago, IL → Atlanta, GA<br/>
+          Rate: $2,800<br/>
+          Your Commission at 8%: <strong>$224 for one load</strong><br/>
+          If you manage 5 trucks doing 3 loads/week = <strong>$224 × 15 = $3,360/week</strong> from India!
+        </div>
+
+        <p style="margin-top:12px;">The US trucking industry moves <strong>70% of all freight</strong> in America — worth over $700 billion per year. This massive industry needs thousands of dispatchers, and thanks to technology, you can provide this service from anywhere in the world.</p>
+
+        <div class="key-terms">
+          <span class="key-term">Shipper</span>
+          <span class="key-term">Carrier</span>
+          <span class="key-term">Dispatcher</span>
+          <span class="key-term">Commission</span>
+          <span class="key-term">Load Board</span>
+          <span class="key-term">DAT</span>
+          <span class="key-term">OTR Trucking</span>
+        </div>
+      </div>
+
+      <div class="content-hi-block" id="text_hi_1_1">
+        <p>एक <strong style="color:var(--orange)">फ्रेट डिस्पैचर</strong> वह व्यक्ति होता है जो लॉजिस्टिक्स उद्योग में ट्रक की आवाजाही का पूरा प्रबंधन करता है। इसे आसान भाषा में समझें — आप एक बहुत कुशल <em>मध्यस्थ</em> हैं। आप उन कंपनियों को जोड़ते हैं जिनके पास माल है (<em>शिपर</em>) और उन ट्रक मालिकों को (<em>कैरियर</em>) जो माल पहुँचाते हैं।</p>
+
+        <div class="highlight-box">
+          💡 <strong>आसान उदाहरण:</strong> शिकागो में एक कंपनी के पास 20 पैलेट इलेक्ट्रॉनिक्स सामान है जो कल तक अटलांटा पहुँचना चाहिए। आप सही ट्रक ढूँढते हैं, रेट तय करते हैं, सारे कागजात संभालते हैं, और जब तक सामान पहुँच न जाए, ट्रैक करते हैं। इसके बदले आपको <strong>5–10% कमीशन</strong> मिलता है।
+        </div>
+
+        <p style="margin-top:12px;">भारत से काम करने वाले डिस्पैचर के रूप में, आप पूरा काम दूर से करते हैं। आप अमेरिकी ब्रोकरों को फोन करते हैं, DAT जैसे लोड बोर्ड पर लोड खोजते हैं, और Google Voice तथा WhatsApp से ड्राइवरों से जुड़े रहते हैं।</p>
+
+        <div class="example-box">
+          <strong style="color:var(--green)">🎯 वास्तविक उदाहरण:</strong><br/>
+          लोड: शिकागो से अटलांटा<br/>
+          रेट: $2,800<br/>
+          8% कमीशन: <strong>$224 एक लोड पर</strong><br/>
+          5 ट्रक, हर हफ्ते 3 लोड = <strong>$3,360 प्रति सप्ताह भारत से!</strong>
+        </div>
+      </div>
+
+      <!-- Mini Quiz for Topic 1 -->
+      <div class="topic-quiz" id="quiz_1_1">
+        <div class="quiz-header">
+          <span>🧠</span>
+          <h4>Quick Check — Topic A</h4>
+          <span style="margin-left:auto;" class="tag tag-orange">3 Questions</span>
+        </div>
+        <div class="quiz-body" id="qb_1_1">
+          <!-- Q1 -->
+          <div class="q-item">
+            <div class="q-text">1. What is the main role of a freight dispatcher?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_1_1','q1',false)">A. Drive trucks across America</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_1','q1',true)">B. Connect shippers with carriers and manage loads remotely</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_1','q1',false)">C. Pack cargo at warehouses</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_1','q1',false)">D. Issue truck licences</button>
+            </div>
+          </div>
+          <!-- Q2 -->
+          <div class="q-item">
+            <div class="q-text">2. A load pays $3,000. Your commission is 8%. How much do you earn?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_1_1','q2',false)">A. $30</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_1','q2',false)">B. $150</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_1','q2',true)">C. $240</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_1','q2',false)">D. $380</button>
+            </div>
+          </div>
+          <!-- Q3 -->
+          <div class="q-item">
+            <div class="q-text">3. What percentage of US freight moves by truck?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_1_1','q3',false)">A. 30%</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_1','q3',false)">B. 50%</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_1','q3',true)">C. 70%</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_1','q3',false)">D. 90%</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_1_1">
+          <div class="quiz-score" id="qs_1_1"></div>
+          <div id="qmsg_1_1" style="font-size:14px;color:var(--grey);margin:6px 0;"></div>
+          <button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_1_1','qr_1_1','qs_1_1','qmsg_1_1')">↩ Retake</button>
+        </div>
+      </div>
+
+    </div>
+  </div><!-- end topic 1 -->
+
+  <!-- ── TOPIC 2 ── -->
+  <div class="topic-card" id="tc_1_2">
+    <button class="topic-toggle" onclick="toggleTopic('tc_1_2',this)">
+      <div class="t-num" id="tn_1_2">B</div>
+      <div class="t-titles">
+        <div class="t-en">Logistics Industry Structure</div>
+        <div class="t-hi">लॉजिस्टिक्स उद्योग की संरचना</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_1_2">
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_1_2" onclick="speakTopic('en','text_en_1_2','btn_en_1_2')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_1_2" onclick="speakTopic('hi','text_hi_1_2','btn_hi_1_2')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_1_2','btn_hi_1_2')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_1_2')">हिं Toggle</button>
+      </div>
+
+      <div class="content-en-block" id="text_en_1_2">
+        <p>The logistics industry has a clear chain of players. Understanding where YOU fit in this chain is critical to doing your job well and speaking professionally with all parties.</p>
+
+        <div class="highlight-box">
+          <strong>The Chain:</strong><br/>
+          <strong style="color:var(--orange)">Shipper</strong> → needs cargo moved<br/>
+          <strong style="color:var(--cyan)">Freight Broker</strong> → licensed middleman, posts loads on DAT<br/>
+          <strong style="color:var(--gold)">Dispatcher (YOU)</strong> → works FOR the carrier, finds loads, negotiates rates<br/>
+          <strong style="color:var(--green)">Carrier</strong> → owns the truck, drives or has drivers<br/>
+          <strong style="color:#a5b4fc">3PL</strong> → manages the entire supply chain for big companies
+        </div>
+
+        <p style="margin-top:12px;"><strong style="color:var(--orange)">Carrier:</strong> A carrier is a company or individual (owner-operator) that physically owns and operates trucks. They have an MC number and DOT number issued by FMCSA. You work FOR the carrier — you represent their interests.</p>
+
+        <p style="margin-top:10px;"><strong style="color:var(--cyan)">Freight Broker:</strong> A broker holds a broker authority licence from FMCSA. They have loads to move and post them on DAT or other load boards. They pay the carrier. You negotiate with brokers on the carrier's behalf. Always check their DAT credit score before booking — never book with a broker scoring below 70.</p>
+
+        <div class="info-box">
+          <strong style="color:var(--cyan)">🔑 Critical Distinction:</strong> You are a DISPATCHER working for the CARRIER. You are NOT a broker. A broker works for the shipper. A dispatcher works for the carrier. This affects everything — your conversations, your legal position, and who pays you.
+        </div>
+
+        <p style="margin-top:10px;"><strong style="color:#a5b4fc">3PL (Third-Party Logistics):</strong> Large companies like Amazon, Walmart, and Target use 3PLs to manage their entire supply chain — warehousing, last-mile delivery, customs, tracking. As you grow in the industry, you may work with 3PLs who have very high volume loads.</p>
+
+        <div class="key-terms">
+          <span class="key-term">Shipper</span><span class="key-term">Broker</span><span class="key-term">Carrier</span>
+          <span class="key-term">3PL</span><span class="key-term">MC Number</span><span class="key-term">DOT Number</span>
+          <span class="key-term">FMCSA</span><span class="key-term">Owner-Operator</span>
+        </div>
+      </div>
+
+      <div class="content-hi-block" id="text_hi_1_2">
+        <p>लॉजिस्टिक्स उद्योग में कई खिलाड़ी होते हैं। यह समझना बहुत ज़रूरी है कि इस चेन में आपकी जगह कहाँ है।</p>
+        <div class="highlight-box">
+          <strong>चेन इस प्रकार है:</strong><br/>
+          <strong style="color:var(--orange)">शिपर (Shipper)</strong> → जिसके पास माल है<br/>
+          <strong style="color:var(--cyan)">फ्रेट ब्रोकर</strong> → लाइसेंसधारी मध्यस्थ, DAT पर लोड पोस्ट करता है<br/>
+          <strong style="color:var(--gold)">डिस्पैचर (आप)</strong> → कैरियर के लिए काम करते हैं, लोड खोजते हैं<br/>
+          <strong style="color:var(--green)">कैरियर</strong> → ट्रक का मालिक और चालक<br/>
+          <strong style="color:#a5b4fc">3PL</strong> → पूरी सप्लाई चेन को मैनेज करता है
+        </div>
+        <p style="margin-top:12px;">याद रखें: आप <strong>कैरियर के लिए</strong> काम करते हैं, ब्रोकर के लिए नहीं। यह सबसे महत्वपूर्ण बात है।</p>
+      </div>
+
+      <div class="topic-quiz" id="quiz_1_2">
+        <div class="quiz-header">
+          <span>🧠</span><h4>Quick Check — Topic B</h4>
+          <span style="margin-left:auto;" class="tag tag-orange">3 Questions</span>
+        </div>
+        <div class="quiz-body" id="qb_1_2">
+          <div class="q-item">
+            <div class="q-text">1. A dispatcher works FOR whom?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_1_2','q1',false)">A. The shipper</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_2','q1',false)">B. The freight broker</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_2','q1',true)">C. The carrier</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_2','q1',false)">D. The 3PL company</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">2. What is the minimum DAT credit score you should accept from a broker?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_1_2','q2',false)">A. 50</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_2','q2',false)">B. 60</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_2','q2',true)">C. 70</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_2','q2',false)">D. 80</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">3. Which organisation issues MC numbers and DOT numbers to carriers?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_1_2','q3',false)">A. Department of Transport (DOT) only</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_2','q3',true)">B. FMCSA (Federal Motor Carrier Safety Administration)</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_2','q3',false)">C. DAT Load Board</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_2','q3',false)">D. The carrier's state government</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_1_2">
+          <div class="quiz-score" id="qs_1_2"></div>
+          <div id="qmsg_1_2" style="font-size:14px;color:var(--grey);margin:6px 0;"></div>
+          <button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_1_2','qr_1_2','qs_1_2','qmsg_1_2')">↩ Retake</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- end topic 2 -->
+
+  <!-- ── TOPIC 3 ── -->
+  <div class="topic-card" id="tc_1_3">
+    <button class="topic-toggle" onclick="toggleTopic('tc_1_3',this)">
+      <div class="t-num" id="tn_1_3">C</div>
+      <div class="t-titles">
+        <div class="t-en">Carrier vs Broker vs 3PL — Key Differences</div>
+        <div class="t-hi">कैरियर, ब्रोकर और 3PL के बीच मुख्य अंतर</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_1_3">
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_1_3" onclick="speakTopic('en','text_en_1_3','btn_en_1_3')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_1_3" onclick="speakTopic('hi','text_hi_1_3','btn_hi_1_3')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_1_3','btn_hi_1_3')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_1_3')">हिं Toggle</button>
+      </div>
+      <div class="content-en-block" id="text_en_1_3">
+        <p>Knowing the difference between these three roles is essential — you will be asked this in every interview and you need to speak about it confidently on every broker call.</p>
+
+        <div class="highlight-box">
+          <strong style="color:var(--orange)">CARRIER (कैरियर)</strong><br/>
+          • Owns and operates the physical trucks<br/>
+          • Has MC Authority + DOT Number from FMCSA<br/>
+          • Has cargo insurance (minimum $100,000) and liability insurance (minimum $1,000,000)<br/>
+          • Gets paid by the broker after delivery<br/>
+          • YOU work for the carrier — you find their loads and manage operations
+        </div>
+        <div class="highlight-box" style="border-left-color:var(--cyan);margin-top:10px;">
+          <strong style="color:var(--cyan)">FREIGHT BROKER (फ्रेट ब्रोकर)</strong><br/>
+          • Licensed middleman — holds Broker Authority (separate from Carrier Authority)<br/>
+          • Posts available loads on DAT, Transcore, 123Loadboard<br/>
+          • Earns a spread between what the shipper pays and what they pay the carrier<br/>
+          • Has a DAT credit score — ALWAYS check this before booking<br/>
+          • YOU negotiate with brokers every single day
+        </div>
+        <div class="highlight-box" style="border-left-color:#a5b4fc;margin-top:10px;">
+          <strong style="color:#a5b4fc">3PL — THIRD PARTY LOGISTICS</strong><br/>
+          • Manages entire supply chain for large shippers (Amazon, Walmart, etc.)<br/>
+          • Handles warehousing, transportation, customs, last-mile delivery<br/>
+          • Often has very high-volume, consistent loads<br/>
+          • Pays better but has stricter requirements<br/>
+          • As your business grows, 3PL clients are very valuable
+        </div>
+        <div class="warning-box">
+          <strong>⚠️ Never Confuse:</strong> A dispatcher cannot legally hold broker authority and act as a broker. If you find loads and charge shippers directly, you are acting as a broker without a licence — this is illegal. You MUST work through the carrier.
+        </div>
+        <div class="key-terms">
+          <span class="key-term">Carrier Authority</span><span class="key-term">Broker Authority</span>
+          <span class="key-term">MC Number</span><span class="key-term">Cargo Insurance</span>
+          <span class="key-term">Liability Insurance</span><span class="key-term">DAT Credit Score</span>
+        </div>
+      </div>
+      <div class="content-hi-block" id="text_hi_1_3">
+        <p>इन तीनों की भूमिकाओं का अंतर जानना बेहद ज़रूरी है — हर इंटरव्यू और हर ब्रोकर कॉल में यह पूछा जाता है।</p>
+        <div class="highlight-box">
+          <strong style="color:var(--orange)">कैरियर:</strong> ट्रक का असली मालिक। FMCSA से MC नंबर और DOT नंबर मिला होता है। आप उनके लिए काम करते हैं।
+        </div>
+        <div class="highlight-box" style="border-left-color:var(--cyan);margin-top:10px;">
+          <strong style="color:var(--cyan)">फ्रेट ब्रोकर:</strong> DAT पर लोड पोस्ट करता है। शिपर और कैरियर के बीच मध्यस्थ। हमेशा DAT क्रेडिट स्कोर चेक करें — 70 से नीचे कभी न बुक करें।
+        </div>
+        <div class="warning-box">
+          <strong>⚠️ ध्यान रखें:</strong> डिस्पैचर के रूप में आप ब्रोकर नहीं हैं। शिपर से सीधे पैसे लेना गैरकानूनी है। हमेशा कैरियर के माध्यम से काम करें।
+        </div>
+      </div>
+
+      <div class="topic-quiz" id="quiz_1_3">
+        <div class="quiz-header">
+          <span>🧠</span><h4>Quick Check — Topic C</h4>
+          <span style="margin-left:auto;" class="tag tag-orange">3 Questions</span>
+        </div>
+        <div class="quiz-body" id="qb_1_3">
+          <div class="q-item">
+            <div class="q-text">1. Who posts loads on DAT load board?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_1_3','q1',false)">A. Carriers</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_3','q1',true)">B. Freight Brokers</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_3','q1',false)">C. Dispatchers</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_3','q1',false)">D. FMCSA</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">2. What is the minimum cargo insurance a carrier must have?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_1_3','q2',false)">A. $50,000</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_3','q2',true)">B. $100,000</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_3','q2',false)">C. $500,000</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_3','q2',false)">D. $1,000,000</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">3. Can a dispatcher legally act as a broker without a licence?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_1_3','q3',false)">A. Yes, if the carrier agrees</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_3','q3',false)">B. Yes, for loads under $10,000</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_3','q3',true)">C. No — it is illegal</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_1_3','q3',false)">D. Yes, if working internationally</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_1_3">
+          <div class="quiz-score" id="qs_1_3"></div>
+          <div id="qmsg_1_3" style="font-size:14px;color:var(--grey);margin:6px 0;"></div>
+          <button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_1_3','qr_1_3','qs_1_3','qmsg_1_3')">↩ Retake</button>
+        </div>
+      </div>
+    </div>
+  </div><!-- end topic 3 -->
+
+  <!-- PRACTICAL -->
+  <div class="section-header" style="margin-top:32px;">
+    <h3>⚡ Practical Activities</h3>
+    <div class="section-line"></div>
+    <span class="tag tag-cyan">2 Hours</span>
+  </div>
+  <div class="card" style="padding:24px;margin-bottom:20px;">
+    <ul class="practical-list">
+      <li><div class="p-num">1</div><div><strong>Logistics Chain Drawing</strong> — Draw the full chain on paper: Shipper → Broker → Dispatcher → Carrier → Delivery. Label each player's role and payment direction. Then explain it to a partner in 60 seconds.</div></li>
+      <li><div class="p-num">2</div><div><strong>Role-Play</strong> — Student A is a broker, Student B is a dispatcher. B must introduce themselves and confirm a load using the structure: "Hi, this is [Name] dispatching for [Carrier Name], MC# [number]…"</div></li>
+      <li><div class="p-num">3</div><div><strong>Commission Calculator</strong> — Given 5 loads ($1,800 / $2,400 / $3,200 / $4,000 / $2,750), calculate your commission at 7%, 8%, and 10% for each. Which commission rate would you choose and why?</div></li>
+      <li><div class="p-num">4</div><div><strong>Madam JI Quiz</strong> — Open the Madam JI chatbot and ask: "What is a freight dispatcher?" Compare her answer to your notes.</div></li>
+    </ul>
+  </div>
+
+  <!-- HOMEWORK -->
+  <div class="hw-box fade-up">
+    <h4>📝 Tonight's Homework <span class="tag tag-gold" style="font-size:10px;">Due Tomorrow</span></h4>
+    <p class="hw-text">Research 3 real US trucking companies online using FMCSA's website (safer.fmcsa.dot.gov). For each company note: Company name, MC number, DOT number, Equipment type, Safety rating. Bring your findings to class tomorrow. This teaches you how to verify a carrier's authority before working with them.</p>
+    <div style="margin-top:14px;padding:10px 14px;background:rgba(249,115,22,0.1);border-radius:var(--radius-md);font-size:12px;color:var(--orange);">
+      💡 Tip from Madam JI: The FMCSA website is free — bookmark it. You will use it every single day as a dispatcher to verify carrier authority!
+    </div>
+  </div>
+
+  <div class="day-nav">
+    <div></div>
+    <button class="btn btn-primary" onclick="markDayDone(1);showDay(2,document.querySelectorAll('.day-tab')[1])">
+      Day 2 →
+    </button>
+  </div>
+</div>
+<!-- END DAY 1 -->
+
+
+<!-- ╔══════════════════════════════════════════╗ -->
+<!-- ║  DAY 2 — Freight Types & Trailer Types  ║ -->
+<!-- ╚══════════════════════════════════════════╝ -->
+<div class="day-panel" id="day2">
+  <div class="day-hero fade-up">
+    <div class="day-num-big">D2</div>
+    <div class="day-info">
+      <h2>Freight Types & Trailer Types</h2>
+      <div class="hindi-title">माल के प्रकार और ट्रेलर के प्रकार</div>
+      <div class="day-meta">
+        <span class="tag tag-orange">2hrs Theory</span>
+        <span class="tag tag-cyan">2hrs Practical</span>
+        <span class="tag tag-green">3 Topics</span>
+        <span class="tag tag-gold">Equipment Day</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="video-box fade-up delay-1">
+    <div class="video-header">
+      <div class="dot" style="background:#ef4444"></div>
+      <div class="dot" style="background:#fbbf24;margin:0 4px"></div>
+      <div class="dot" style="background:#22c55e"></div>
+      <span style="font-size:13px;font-weight:600;margin-left:10px;">📹 Day 2 — Freight & Trailer Types</span>
+      <span style="margin-left:auto;font-size:11px;color:var(--grey);font-family:var(--font-mono);">~12 min</span>
+    </div>
+    <div class="video-placeholder-box" id="video_d2" onclick="loadVideo('d2','https://www.youtube.com/embed/YOUR_VIDEO_D2_ID')">
+      <div class="play-circle">▶</div>
+      <div class="video-info">
+        <div class="title">Day 2: Freight & Trailer Types</div>
+        <div class="meta">🎬 Add your YouTube video ID to activate</div>
+      </div>
+    </div>
+    <div class="video-add-note">💡 Replace <code>YOUR_VIDEO_D2_ID</code> with your YouTube video ID</div>
+  </div>
+
+  <div class="section-header">
+    <h3>📖 Theory Topics</h3>
+    <div class="section-line"></div>
+    <span class="tag tag-orange">3 Topics</span>
+  </div>
+
+  <!-- TOPIC D2-A: FTL vs LTL -->
+  <div class="topic-card" id="tc_2_1">
+    <button class="topic-toggle" onclick="toggleTopic('tc_2_1',this)">
+      <div class="t-num">A</div>
+      <div class="t-titles">
+        <div class="t-en">FTL vs LTL — Full Truckload vs Less Than Truckload</div>
+        <div class="t-hi">FTL बनाम LTL — पूरा ट्रक बनाम आंशिक ट्रक</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_2_1">
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_2_1" onclick="speakTopic('en','text_en_2_1','btn_en_2_1')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_2_1" onclick="speakTopic('hi','text_hi_2_1','btn_hi_2_1')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_2_1','btn_hi_2_1')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_2_1')">हिं Toggle</button>
+      </div>
+      <div class="content-en-block" id="text_en_2_1">
+        <p><strong style="color:var(--orange)">FTL (Full Truckload)</strong> means one shipper fills the entire trailer. The truck goes directly from pickup to delivery with no stops. This is the most common type of load dispatchers handle.</p>
+        <div class="highlight-box">
+          <strong>FTL Advantages:</strong><br/>
+          • Higher pay per load ($2,000–$5,000+ depending on lane)<br/>
+          • Simple — one pickup, one delivery<br/>
+          • Faster delivery (no multiple stops)<br/>
+          • Less cargo handling = less damage<br/>
+          • Best for new dispatchers to start with
+        </div>
+        <p style="margin-top:12px;"><strong style="color:var(--cyan)">LTL (Less Than Truckload)</strong> means multiple shippers share one truck. Each shipper pays for their portion of space. The truck makes multiple pickups and deliveries.</p>
+        <div class="highlight-box" style="border-left-color:var(--cyan);">
+          <strong>LTL Characteristics:</strong><br/>
+          • Lower rate per shipper (they only pay for their space)<br/>
+          • Complex routing — multiple stops<br/>
+          • Freight is palletised and measured by weight and cubic feet<br/>
+          • Usually handled by LTL-specialist carriers (Old Dominion, XPO, FedEx Freight)<br/>
+          • More complex for new dispatchers — focus on FTL first!
+        </div>
+        <div class="example-box">
+          <strong>🎯 Real Example:</strong><br/>
+          FTL: Walmart needs 26 pallets of clothing from Dallas to New York. One truck, one trailer, no stops. Rate: $4,200.<br/><br/>
+          LTL: 4 different small companies each have 3–5 pallets going to cities in the same direction. They share one truck. Each pays their proportion.
+        </div>
+        <div class="key-terms">
+          <span class="key-term">FTL</span><span class="key-term">LTL</span><span class="key-term">Pallet</span>
+          <span class="key-term">Cubic Feet</span><span class="key-term">Direct Load</span><span class="key-term">Multi-Stop</span>
+        </div>
+      </div>
+      <div class="content-hi-block" id="text_hi_2_1">
+        <p><strong style="color:var(--orange)">FTL (फुल ट्रकलोड):</strong> एक शिपर पूरा ट्रेलर भर देता है। सीधे पिकअप से डिलीवरी। यह नए डिस्पैचर के लिए सबसे अच्छा शुरुआती विकल्प है।</p>
+        <div class="highlight-box">FTL में: अधिक पैसे, सरल ऑपरेशन, एक पिकअप, एक डिलीवरी। $2,000–$5,000+ प्रति लोड।</div>
+        <p style="margin-top:12px;"><strong style="color:var(--cyan)">LTL (लेस दैन ट्रकलोड):</strong> कई शिपर एक ट्रक शेयर करते हैं। यह जटिल होता है। नए डिस्पैचर को पहले FTL पर ध्यान देना चाहिए।</p>
+      </div>
+      <div class="topic-quiz" id="quiz_2_1">
+        <div class="quiz-header"><span>🧠</span><h4>Quick Check — FTL vs LTL</h4><span style="margin-left:auto;" class="tag tag-orange">3 Questions</span></div>
+        <div class="quiz-body" id="qb_2_1">
+          <div class="q-item">
+            <div class="q-text">1. Which type of load is best for a new dispatcher to start with?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_2_1','q1',true)">A. FTL — Full Truckload</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_1','q1',false)">B. LTL — Less Than Truckload</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_1','q1',false)">C. Both equally</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_1','q1',false)">D. Neither — start with air freight</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">2. In FTL, how many shippers fill one trailer?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_2_1','q2',false)">A. Multiple shippers</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_1','q2',true)">B. One shipper</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_1','q2',false)">C. Depends on weight</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_1','q2',false)">D. Three shippers maximum</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">3. Which of these is an LTL specialist carrier in the USA?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_2_1','q3',false)">A. J.B. Hunt</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_1','q3',true)">B. Old Dominion Freight Line</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_1','q3',false)">C. Werner Enterprises</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_1','q3',false)">D. Schneider National</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_2_1"><div class="quiz-score" id="qs_2_1"></div><div id="qmsg_2_1" style="font-size:14px;color:var(--grey);margin:6px 0;"></div><button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_2_1','qr_2_1','qs_2_1','qmsg_2_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC D2-B: USA Trailer Types -->
+  <div class="topic-card" id="tc_2_2">
+    <button class="topic-toggle" onclick="toggleTopic('tc_2_2',this)">
+      <div class="t-num">B</div>
+      <div class="t-titles">
+        <div class="t-en">USA Trailer Types — Dry Van, Reefer, Flatbed & More</div>
+        <div class="t-hi">USA ट्रेलर के प्रकार — ड्राय वैन, रीफर, फ्लैटबेड और अधिक</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_2_2">
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_2_2" onclick="speakTopic('en','text_en_2_2','btn_en_2_2')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_2_2" onclick="speakTopic('hi','text_hi_2_2','btn_hi_2_2')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_2_2','btn_hi_2_2')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_2_2')">हिं Toggle</button>
+      </div>
+      <div class="content-en-block" id="text_en_2_2">
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:16px;">
+          <div class="highlight-box" style="margin:0;">
+            <strong style="color:var(--orange)">📦 Dry Van (53ft)</strong><br/>
+            Most common trailer. Fully enclosed. Used for general, non-perishable freight — electronics, clothing, household goods, automotive parts.<br/>
+            <strong>RPM Target: $2.50–3.50</strong>
+          </div>
+          <div class="highlight-box" style="margin:0;border-left-color:var(--cyan);">
+            <strong style="color:var(--cyan)">❄️ Reefer (Refrigerated)</strong><br/>
+            Temperature-controlled from -20°F to +70°F. Used for food, produce, pharmaceuticals, frozen goods. Requires monitoring of temperature logs.<br/>
+            <strong>RPM Target: $3.00–4.50</strong>
+          </div>
+          <div class="highlight-box" style="margin:0;border-left-color:var(--gold);">
+            <strong style="color:var(--gold)">🏗️ Flatbed</strong><br/>
+            Open platform with no sides or roof. Used for machinery, steel coils, lumber, construction equipment, oversized loads. Requires tarping and load securement knowledge.<br/>
+            <strong>RPM Target: $3.00–5.00</strong>
+          </div>
+          <div class="highlight-box" style="margin:0;border-left-color:#a5b4fc;">
+            <strong style="color:#a5b4fc">📐 Step Deck</strong><br/>
+            Two-level deck — lower level for taller cargo that would exceed flatbed height restrictions. Used for heavy machinery, vehicles, tall equipment.<br/>
+            <strong>RPM Target: $3.50–5.50</strong>
+          </div>
+          <div class="highlight-box" style="margin:0;border-left-color:var(--green);">
+            <strong style="color:var(--green)">💧 Tanker</strong><br/>
+            Cylindrical tank for liquid cargo — fuel, chemicals, food-grade liquids. Driver needs special CDL-X endorsement. Complex but high-paying.<br/>
+            <strong>RPM Target: $2.80–4.00</strong>
+          </div>
+          <div class="highlight-box" style="margin:0;border-left-color:var(--red);">
+            <strong style="color:var(--orange-light)">⚡ Hotshot</strong><br/>
+            Small loads using pickup trucks + small trailers. Fast, time-sensitive, smaller LTL loads. Lower RPM but quick turnaround. Good for rural areas.<br/>
+            <strong>RPM Target: $2.00–3.50</strong>
+          </div>
+        </div>
+        <div class="key-terms">
+          <span class="key-term">Dry Van</span><span class="key-term">Reefer</span><span class="key-term">Flatbed</span>
+          <span class="key-term">Step Deck</span><span class="key-term">Tanker</span><span class="key-term">Hotshot</span>
+          <span class="key-term">CDL-X</span><span class="key-term">Tarping</span>
+        </div>
+      </div>
+      <div class="content-hi-block" id="text_hi_2_2">
+        <p><strong style="color:var(--orange)">📦 ड्राय वैन:</strong> सबसे सामान्य ट्रेलर। बंद डिब्बा। सामान्य माल के लिए। RPM: $2.50–3.50</p>
+        <p style="margin-top:8px;"><strong style="color:var(--cyan)">❄️ रीफर:</strong> तापमान-नियंत्रित। खाना, दवाई, फल-सब्जी। -20°F से +70°F। RPM: $3.00–4.50</p>
+        <p style="margin-top:8px;"><strong style="color:var(--gold)">🏗️ फ्लैटबेड:</strong> खुला मंच। मशीनरी, स्टील, लकड़ी के लिए। RPM: $3.00–5.00</p>
+        <p style="margin-top:8px;"><strong style="color:#a5b4fc">📐 स्टेप डेक:</strong> दो स्तरीय। ऊँचे माल के लिए। RPM: $3.50–5.50</p>
+        <p style="margin-top:8px;"><strong style="color:var(--green)">💧 टैंकर:</strong> तरल माल। CDL-X लाइसेंस ज़रूरी। RPM: $2.80–4.00</p>
+        <p style="margin-top:8px;"><strong style="color:var(--orange-light)">⚡ हॉटशॉट:</strong> छोटे लोड, जल्दी। RPM: $2.00–3.50</p>
+      </div>
+      <div class="topic-quiz" id="quiz_2_2">
+        <div class="quiz-header"><span>🧠</span><h4>Quick Check — Trailer Types</h4><span style="margin-left:auto;" class="tag tag-orange">4 Questions</span></div>
+        <div class="quiz-body" id="qb_2_2">
+          <div class="q-item">
+            <div class="q-text">1. Which trailer type would you use to transport frozen ice cream across the USA?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q1',false)">A. Dry Van</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q1',true)">B. Reefer</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q1',false)">C. Flatbed</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q1',false)">D. Tanker</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">2. What RPM range should you target for a Flatbed load?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q2',false)">A. $1.00–1.50</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q2',false)">B. $2.00–2.50</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q2',true)">C. $3.00–5.00</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q2',false)">D. $6.00–8.00</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">3. Which special licence endorsement does a tanker driver need?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q3',false)">A. CDL-A only</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q3',true)">B. CDL-X (Tanker + Hazmat)</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q3',false)">C. CDL-B</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q3',false)">D. No special licence needed</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">4. A Step Deck trailer is best for:</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q4',false)">A. Frozen foods</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q4',false)">B. Liquid chemicals</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q4',true)">C. Tall cargo exceeding flatbed height</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_2','q4',false)">D. Small parcels under 500 lbs</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_2_2"><div class="quiz-score" id="qs_2_2"></div><div id="qmsg_2_2" style="font-size:14px;color:var(--grey);margin:6px 0;"></div><button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_2_2','qr_2_2','qs_2_2','qmsg_2_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOPIC D2-C: Intermodal + UK Trailers -->
+  <div class="topic-card" id="tc_2_3">
+    <button class="topic-toggle" onclick="toggleTopic('tc_2_3',this)">
+      <div class="t-num">C</div>
+      <div class="t-titles">
+        <div class="t-en">Intermodal, Drayage & UK/EU Trailers</div>
+        <div class="t-hi">इंटरमोडल, ड्रेयेज और UK/EU ट्रेलर</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_2_3">
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_2_3" onclick="speakTopic('en','text_en_2_3','btn_en_2_3')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_2_3" onclick="speakTopic('hi','text_hi_2_3','btn_hi_2_3')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_2_3','btn_hi_2_3')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_2_3')">हिं Toggle</button>
+      </div>
+      <div class="content-en-block" id="text_en_2_3">
+        <p><strong style="color:var(--orange)">Intermodal</strong> freight uses multiple transport modes — typically truck + rail + ship. A container is loaded onto a truck for the first mile, transferred to a train for the long haul, then a truck again for last-mile delivery.</p>
+        <div class="highlight-box">
+          <strong>Intermodal benefits:</strong> 30–40% cheaper than OTR trucking for long distances. More environmentally friendly. Rail is very efficient for Chicago → West Coast lanes. As a dispatcher, intermodal loads typically use TOFC (Trailer On Flat Car) or COFC (Container On Flat Car) equipment.
+        </div>
+        <p style="margin-top:12px;"><strong style="color:var(--cyan)">Drayage</strong> is short-distance moves — typically port-to-warehouse or rail yard-to-warehouse. These are high-volume, lower-rate loads. Common in Los Angeles (Port of LA, Port of Long Beach) and New York/New Jersey ports.</p>
+        <p style="margin-top:12px;"><strong style="color:var(--gold)">UK/EU Trailer Types</strong> you should know for UK market:</p>
+        <div class="highlight-box" style="border-left-color:var(--gold);">
+          • <strong>Curtainsider:</strong> Flexible curtain sides for easy side-loading. Most common in UK/EU. Perfect for palletised goods.<br/>
+          • <strong>Box Trailer:</strong> Enclosed — similar to US Dry Van but to EU dimensions (13.6m long)<br/>
+          • <strong>Low Loader:</strong> For very heavy construction machinery, abnormal loads<br/>
+          • <strong>Mega Trailer:</strong> Higher capacity EU trailer — 100 cubic metres<br/>
+          • <strong>Skeletal Trailer:</strong> For shipping containers — very common at UK ports
+        </div>
+        <div class="key-terms">
+          <span class="key-term">Intermodal</span><span class="key-term">Drayage</span><span class="key-term">TOFC</span>
+          <span class="key-term">Curtainsider</span><span class="key-term">Mega Trailer</span><span class="key-term">Skeletal</span>
+        </div>
+      </div>
+      <div class="content-hi-block" id="text_hi_2_3">
+        <p><strong style="color:var(--orange)">इंटरमोडल:</strong> ट्रक + ट्रेन + जहाज — कई परिवहन माध्यमों का उपयोग। लंबी दूरी के लिए 30-40% सस्ता।</p>
+        <p style="margin-top:8px;"><strong style="color:var(--cyan)">ड्रेयेज:</strong> बंदरगाह से गोदाम तक की छोटी दूरी। लॉस एंजिलिस और न्यू यॉर्क में बहुत आम।</p>
+        <p style="margin-top:8px;"><strong style="color:var(--gold)">UK/EU ट्रेलर:</strong> कर्टनसाइडर (UK में सबसे आम), बॉक्स ट्रेलर, लो लोडर, मेगा ट्रेलर।</p>
+      </div>
+      <div class="topic-quiz" id="quiz_2_3">
+        <div class="quiz-header"><span>🧠</span><h4>Quick Check — Intermodal & UK</h4><span style="margin-left:auto;" class="tag tag-orange">3 Questions</span></div>
+        <div class="quiz-body" id="qb_2_3">
+          <div class="q-item">
+            <div class="q-text">1. What is drayage?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_2_3','q1',false)">A. Long-haul cross-country trucking</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_3','q1',true)">B. Short-distance port or rail yard to warehouse moves</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_3','q1',false)">C. Air freight from airports</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_3','q1',false)">D. Overnight express delivery</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">2. What is the most common trailer type in the UK and EU?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_2_3','q2',false)">A. Dry Van</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_3','q2',true)">B. Curtainsider</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_3','q2',false)">C. Step Deck</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_3','q2',false)">D. Hotshot</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">3. Intermodal freight uses truck + rail. How much cheaper is it than pure trucking on long distances?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_2_3','q3',false)">A. 5–10% cheaper</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_3','q3',false)">B. 15–20% cheaper</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_3','q3',true)">C. 30–40% cheaper</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_2_3','q3',false)">D. 60–70% cheaper</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_2_3"><div class="quiz-score" id="qs_2_3"></div><div id="qmsg_2_3" style="font-size:14px;color:var(--grey);margin:6px 0;"></div><button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_2_3','qr_2_3','qs_2_3','qmsg_2_3')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top:32px;"><h3>⚡ Practical Activities</h3><div class="section-line"></div><span class="tag tag-cyan">2 Hours</span></div>
+  <div class="card" style="padding:24px;margin-bottom:20px;">
+    <ul class="practical-list">
+      <li><div class="p-num">1</div><div><strong>Trailer Matching Game</strong> — 20 cargo items listed (e.g., frozen pizza, steel beams, clothing, chemicals). Match each to the correct trailer type. Mark ✓ or ✗.</div></li>
+      <li><div class="p-num">2</div><div><strong>RPM Calculation Drill</strong> — Calculate RPM for these 5 loads: (1) $2,400 for 800mi (2) $3,800 for 1,100mi (3) $1,900 for 600mi (4) $4,500 for 1,400mi (5) $2,100 for 750mi. Which is below target?</div></li>
+      <li><div class="p-num">3</div><div><strong>FTL vs LTL Identification</strong> — 8 load descriptions given. Identify each as FTL or LTL and explain why.</div></li>
+    </ul>
+  </div>
+  <div class="hw-box">
+    <h4>📝 Tonight's Homework <span class="tag tag-gold" style="font-size:10px;">Due Tomorrow</span></h4>
+    <p class="hw-text">Draw all 6 USA trailer types from memory with labels and one example cargo for each. Write the RPM target range next to each trailer. Then research: What is a "refer breakdown" and why is it critical for a dispatcher to respond immediately?</p>
+  </div>
+  <div class="day-nav">
+    <button class="btn btn-ghost" onclick="showDay(1,document.querySelectorAll('.day-tab')[0])">← Day 1</button>
+    <button class="btn btn-primary" onclick="markDayDone(2);showDay(3,document.querySelectorAll('.day-tab')[2])">Day 3 →</button>
+  </div>
+</div>
+<!-- END DAY 2 -->
+
+
+<!-- ╔══════════════════════════════════════════╗ -->
+<!-- ║  DAY 3 — Geography & Time Zones         ║ -->
+<!-- ╚══════════════════════════════════════════╝ -->
+<div class="day-panel" id="day3">
+  <div class="day-hero fade-up">
+    <div class="day-num-big">D3</div>
+    <div class="day-info">
+      <h2>USA Geography & Time Zones</h2>
+      <div class="hindi-title">अमेरिका का भूगोल और समय क्षेत्र</div>
+      <div class="day-meta">
+        <span class="tag tag-orange">2hrs Theory</span>
+        <span class="tag tag-cyan">2hrs Practical</span>
+        <span class="tag tag-green">2 Topics</span>
+        <span class="tag tag-gold">Geography Day</span>
+      </div>
+    </div>
+  </div>
+  <div class="video-box fade-up delay-1">
+    <div class="video-header">
+      <div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div>
+      <span style="font-size:13px;font-weight:600;margin-left:10px;">📹 Day 3 — Geography & Time Zones</span>
+      <span style="margin-left:auto;font-size:11px;color:var(--grey);font-family:var(--font-mono);">~10 min</span>
+    </div>
+    <div class="video-placeholder-box" onclick="loadVideo('d3','https://www.youtube.com/embed/YOUR_VIDEO_D3_ID')">
+      <div class="play-circle">▶</div>
+      <div class="video-info"><div class="title">Day 3: USA Geography & Time Zones</div><div class="meta">🎬 Add your YouTube video ID</div></div>
+    </div>
+    <div class="video-add-note">💡 Replace <code>YOUR_VIDEO_D3_ID</code> with your YouTube video ID</div>
+  </div>
+
+  <div class="section-header"><h3>📖 Theory Topics</h3><div class="section-line"></div><span class="tag tag-orange">2 Topics</span></div>
+
+  <div class="topic-card" id="tc_3_1">
+    <button class="topic-toggle" onclick="toggleTopic('tc_3_1',this)">
+      <div class="t-num">A</div>
+      <div class="t-titles">
+        <div class="t-en">USA Major Freight Lanes & Key Cities</div>
+        <div class="t-hi">अमेरिका के प्रमुख माल मार्ग और शहर</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_3_1">
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_3_1" onclick="speakTopic('en','text_en_3_1','btn_en_3_1')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_3_1" onclick="speakTopic('hi','text_hi_3_1','btn_hi_3_1')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_3_1','btn_hi_3_1')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_3_1')">हिं Toggle</button>
+      </div>
+      <div class="content-en-block" id="text_en_3_1">
+        <p>Knowing US geography is not about memorising maps — it is about knowing which freight lanes pay well, which routes are in high demand, and how long a load should realistically take.</p>
+        <div class="highlight-box">
+          <strong>🔥 Top Freight Corridors (Memorise These!):</strong><br/>
+          • <strong style="color:var(--orange)">Chicago (IL) ↔ Los Angeles (CA)</strong> — Most active lane in USA. 2,000+ miles. Always has loads.<br/>
+          • <strong style="color:var(--cyan)">Dallas (TX) ↔ Atlanta (GA)</strong> — Southern freight belt. High volume manufacturing.<br/>
+          • <strong style="color:var(--gold)">New York (NY) ↔ Miami (FL)</strong> — East Coast corridor. Retail + food supply chain.<br/>
+          • <strong style="color:var(--green)">Chicago (IL) ↔ Atlanta (GA)</strong> — Midwest to Southeast. Very consistent loads.<br/>
+          • <strong style="color:#a5b4fc">Seattle (WA) ↔ Phoenix (AZ)</strong> — Western lane. Tech + automotive freight.
+        </div>
+        <div class="example-box">
+          <strong>🎯 Triangle Routing Example:</strong><br/>
+          Instead of Chicago → LA → (empty back) → Chicago<br/>
+          Find: Chicago → LA → Phoenix → Dallas → Chicago<br/>
+          Result: 3 loaded legs instead of 1 loaded + 1 empty = <strong>much higher monthly revenue!</strong>
+        </div>
+        <div class="highlight-box" style="border-left-color:var(--cyan);">
+          <strong>Key Hub Cities to Know:</strong><br/>
+          Chicago IL — Midwest hub. America's freight crossroads.<br/>
+          Los Angeles CA — Largest port. West Coast gateway.<br/>
+          Atlanta GA — Southeast distribution centre.<br/>
+          Dallas TX — South-Central hub. Oil, manufacturing, retail.<br/>
+          Memphis TN — FedEx hub. Major overnight freight centre.<br/>
+          Louisville KY — UPS WorldPort. Amazon distribution.<br/>
+          Columbus OH — Retail distribution (Limited Brands, Victoria's Secret).<br/>
+          Newark NJ — East Coast port. New York area freight.
+        </div>
+        <div class="key-terms">
+          <span class="key-term">Freight Lane</span><span class="key-term">Deadhead</span><span class="key-term">Triangle Route</span>
+          <span class="key-term">Hub City</span><span class="key-term">Origin/Destination</span>
+        </div>
+      </div>
+      <div class="content-hi-block" id="text_hi_3_1">
+        <p>अमेरिकी भूगोल जानना इसलिए ज़रूरी है ताकि आप जान सकें कि कौन से रूट पर अधिक पैसे मिलते हैं और कौन से लेन में माल की माँग अधिक है।</p>
+        <div class="highlight-box">
+          <strong>🔥 मुख्य माल मार्ग:</strong><br/>
+          • शिकागो ↔ लॉस एंजिलिस — अमेरिका का सबसे व्यस्त मार्ग<br/>
+          • डलास ↔ अटलांटा — दक्षिणी माल पट्टी<br/>
+          • न्यू यॉर्क ↔ मायामी — पूर्वी तट<br/>
+          • शिकागो ↔ अटलांटा — मध्य-पश्चिम से दक्षिण-पूर्व
+        </div>
+        <div class="example-box">
+          <strong>🎯 त्रिकोण मार्ग उदाहरण:</strong><br/>
+          शिकागो → LA → फीनिक्स → डलास → शिकागो<br/>
+          तीन लोडेड लेग = खाली माइल कम, आय अधिक!
+        </div>
+      </div>
+      <div class="topic-quiz" id="quiz_3_1">
+        <div class="quiz-header"><span>🧠</span><h4>Quick Check — Freight Lanes</h4><span style="margin-left:auto;" class="tag tag-orange">3 Questions</span></div>
+        <div class="quiz-body" id="qb_3_1">
+          <div class="q-item">
+            <div class="q-text">1. Which is the most active freight lane in the entire USA?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_3_1','q1',false)">A. Dallas TX ↔ Atlanta GA</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_1','q1',true)">B. Chicago IL ↔ Los Angeles CA</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_1','q1',false)">C. New York NY ↔ Miami FL</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_1','q1',false)">D. Seattle WA ↔ Phoenix AZ</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">2. What is "deadhead" in trucking?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_3_1','q2',false)">A. A damaged shipment</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_1','q2',true)">B. Miles driven with no cargo (empty truck)</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_1','q2',false)">C. Night-time driving</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_1','q2',false)">D. A late delivery</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">3. Which city is known as "America's freight crossroads"?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_3_1','q3',true)">A. Chicago, Illinois</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_1','q3',false)">B. Atlanta, Georgia</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_1','q3',false)">C. Dallas, Texas</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_1','q3',false)">D. Los Angeles, California</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_3_1"><div class="quiz-score" id="qs_3_1"></div><div id="qmsg_3_1" style="font-size:14px;color:var(--grey);margin:6px 0;"></div><button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_3_1','qr_3_1','qs_3_1','qmsg_3_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="tc_3_2">
+    <button class="topic-toggle" onclick="toggleTopic('tc_3_2',this)">
+      <div class="t-num">B</div>
+      <div class="t-titles">
+        <div class="t-en">USA Time Zones & IST Conversion — Critical for Dispatch</div>
+        <div class="t-hi">अमेरिका के समय क्षेत्र और IST — डिस्पैच के लिए अत्यंत महत्वपूर्ण</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_3_2">
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_3_2" onclick="speakTopic('en','text_en_3_2','btn_en_3_2')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_3_2" onclick="speakTopic('hi','text_hi_3_2','btn_hi_3_2')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_3_2','btn_hi_3_2')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_3_2')">हिं Toggle</button>
+      </div>
+      <div class="content-en-block" id="text_en_3_2">
+        <p>This is one of the most practically important topics for a remote dispatcher. You are in India — your clients and drivers are in America. Calling at the wrong time means missed deals and missed emergencies.</p>
+        <div class="highlight-box">
+          <strong>USA Time Zones (IST Offset):</strong><br/>
+          <span style="font-family:var(--font-mono)">EST (Eastern)  — New York, Miami, Atlanta, Boston → IST + 10h 30m (or IST - 10h 30m for EST→IST)</span><br/>
+          <span style="font-family:var(--font-mono)">CST (Central)  — Chicago, Dallas, Houston        → IST + 11h 30m</span><br/>
+          <span style="font-family:var(--font-mono)">MST (Mountain) — Denver, Phoenix, Salt Lake City  → IST + 12h 30m</span><br/>
+          <span style="font-family:var(--font-mono)">PST (Pacific)  — Los Angeles, Seattle, Vegas      → IST + 13h 30m</span><br/>
+          <span style="font-family:var(--font-mono)">GMT (London)   — UK clients                       → IST - 5h 30m</span>
+        </div>
+        <div class="example-box">
+          <strong>🕐 Practical Examples:</strong><br/>
+          If it is 7:30 PM IST in India:<br/>
+          → It is 9:00 AM EST in New York ✅ Call Eastern brokers NOW<br/>
+          → It is 8:00 AM CST in Chicago ✅ Call Central brokers NOW<br/>
+          → It is 7:00 AM MST in Denver ✅ Just opening<br/>
+          → It is 6:00 AM PST in LA ⚠️ Too early — wait 1 hour<br/><br/>
+          <strong>Best IST hours for broker calls: 6:30 PM – 11:30 PM IST</strong><br/>
+          (covers 8 AM – 1 PM EST — prime broker hours)
+        </div>
+        <div class="warning-box">
+          <strong>⚠️ USA Daylight Saving Time (DST):</strong> USA clocks change in March (spring forward) and November (fall back). This shifts the offset by 1 hour for about 7 months of the year. Always verify current time using Google: "Current time in Chicago" before calling.
+        </div>
+        <div class="key-terms">
+          <span class="key-term">EST</span><span class="key-term">CST</span><span class="key-term">MST</span>
+          <span class="key-term">PST</span><span class="key-term">IST</span><span class="key-term">DST</span><span class="key-term">GMT</span>
+        </div>
+      </div>
+      <div class="content-hi-block" id="text_hi_3_2">
+        <p>यह विषय रिमोट डिस्पैचर के लिए सबसे व्यावहारिक है। गलत समय पर कॉल करना = डील मिस = नुकसान।</p>
+        <div class="highlight-box">
+          <strong>भारत (IST) से अमेरिकी समय:</strong><br/>
+          EST (न्यू यॉर्क) = IST में से 10 घंटे 30 मिनट घटाएं<br/>
+          CST (शिकागो) = IST में से 11 घंटे 30 मिनट घटाएं<br/>
+          PST (LA) = IST में से 13 घंटे 30 मिनट घटाएं
+        </div>
+        <div class="example-box">
+          <strong>🕐 उदाहरण:</strong> अगर भारत में शाम 7:30 बजे हैं:<br/>
+          → न्यू यॉर्क में सुबह 9:00 बजे हैं ✅ अभी कॉल करें!<br/>
+          <strong>ब्रोकर कॉल के लिए सबसे अच्छा समय IST: शाम 6:30 – रात 11:30</strong>
+        </div>
+      </div>
+      <div class="topic-quiz" id="quiz_3_2">
+        <div class="quiz-header"><span>🧠</span><h4>Quick Check — Time Zones</h4><span style="margin-left:auto;" class="tag tag-orange">4 Questions</span></div>
+        <div class="quiz-body" id="qb_3_2">
+          <div class="q-item">
+            <div class="q-text">1. It is 8:00 PM IST in India. What time is it in Chicago (CST)?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q1',false)">A. 6:30 AM CST</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q1',true)">B. 8:30 AM CST</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q1',false)">C. 9:30 AM CST</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q1',false)">D. 10:00 AM CST</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">2. What are the best IST hours to call US Eastern brokers?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q2',false)">A. 8:00 AM – 12:00 PM IST</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q2',false)">B. 2:00 PM – 5:00 PM IST</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q2',true)">C. 6:30 PM – 11:30 PM IST</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q2',false)">D. 12:00 AM – 4:00 AM IST</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">3. Dallas, Texas is in which US time zone?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q3',false)">A. Eastern (EST)</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q3',true)">B. Central (CST)</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q3',false)">C. Mountain (MST)</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q3',false)">D. Pacific (PST)</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">4. Why must a dispatcher check current US time on Google before calling?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q4',false)">A. To check the weather</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q4',true)">B. Because of Daylight Saving Time — the offset changes twice a year</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q4',false)">C. Because India changes its time zone</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_3_2','q4',false)">D. It is not necessary — the offset is always the same</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_3_2"><div class="quiz-score" id="qs_3_2"></div><div id="qmsg_3_2" style="font-size:14px;color:var(--grey);margin:6px 0;"></div><button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_3_2','qr_3_2','qs_3_2','qmsg_3_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top:32px;"><h3>⚡ Practical Activities</h3><div class="section-line"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px;">
+    <ul class="practical-list">
+      <li><div class="p-num">1</div><div><strong>USA Map Activity</strong> — Mark 10 US states and their major freight hub cities. Draw arrows showing the 5 key freight corridors. Colour-code by volume.</div></li>
+      <li><div class="p-num">2</div><div><strong>Time Zone Drill</strong> — Given 8 IST times, calculate EST, CST, MST and PST for each. Use the Tools page on your course website to verify your answers.</div></li>
+      <li><div class="p-num">3</div><div><strong>Route Planning Exercise</strong> — Plan a triangle route starting from Chicago. Find 3 connected lanes that create a loop with under 15% deadhead. Calculate estimated RPM for each leg.</div></li>
+    </ul>
+  </div>
+  <div class="hw-box">
+    <h4>📝 Tonight's Homework</h4>
+    <p class="hw-text">Create your personal Time Zone Cheat Sheet — a printed A5 card showing IST to all 4 US time zones with 5 example conversions each. Pin this above your workstation. You will reference it every single working day.</p>
+  </div>
+  <div class="day-nav">
+    <button class="btn btn-ghost" onclick="showDay(2,document.querySelectorAll('.day-tab')[1])">← Day 2</button>
+    <button class="btn btn-primary" onclick="markDayDone(3);showDay(4,document.querySelectorAll('.day-tab')[3])">Day 4 →</button>
+  </div>
+</div>
+<!-- END DAY 3 -->
+
+
+<!-- ╔══════════════════════════════════════════╗ -->
+<!-- ║  DAY 4 — Hours of Service               ║ -->
+<!-- ╚══════════════════════════════════════════╝ -->
+<div class="day-panel" id="day4">
+  <div class="day-hero fade-up">
+    <div class="day-num-big">D4</div>
+    <div class="day-info">
+      <h2>Hours of Service & Tachograph Rules</h2>
+      <div class="hindi-title">सेवा के घंटे और टेकोग्राफ नियम</div>
+      <div class="day-meta">
+        <span class="tag tag-orange">2hrs Theory</span>
+        <span class="tag tag-cyan">2hrs Practical</span>
+        <span class="tag tag-green">2 Topics</span>
+        <span class="tag tag-red">Compliance Day</span>
+      </div>
+    </div>
+  </div>
+  <div class="video-box fade-up delay-1">
+    <div class="video-header">
+      <div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div>
+      <span style="font-size:13px;font-weight:600;margin-left:10px;">📹 Day 4 — HOS & Compliance</span>
+      <span style="margin-left:auto;font-size:11px;color:var(--grey);font-family:var(--font-mono);">~14 min</span>
+    </div>
+    <div class="video-placeholder-box" onclick="loadVideo('d4','https://www.youtube.com/embed/YOUR_VIDEO_D4_ID')">
+      <div class="play-circle">▶</div>
+      <div class="video-info"><div class="title">Day 4: Hours of Service & Compliance</div><div class="meta">🎬 Add your YouTube video ID</div></div>
+    </div>
+    <div class="video-add-note">💡 Replace <code>YOUR_VIDEO_D4_ID</code></div>
+  </div>
+
+  <div class="section-header"><h3>📖 Theory Topics</h3><div class="section-line"></div><span class="tag tag-orange">2 Topics</span></div>
+
+  <div class="topic-card" id="tc_4_1">
+    <button class="topic-toggle" onclick="toggleTopic('tc_4_1',this)">
+      <div class="t-num">A</div>
+      <div class="t-titles">
+        <div class="t-en">USA Hours of Service (HOS) — FMCSA Rules</div>
+        <div class="t-hi">अमेरिका में सेवा के घंटे — FMCSA नियम</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_4_1">
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_4_1" onclick="speakTopic('en','text_en_4_1','btn_en_4_1')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_4_1" onclick="speakTopic('hi','text_hi_4_1','btn_hi_4_1')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_4_1','btn_hi_4_1')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_4_1')">हिं Toggle</button>
+      </div>
+      <div class="content-en-block" id="text_en_4_1">
+        <p>HOS rules exist to prevent driver fatigue accidents. As a dispatcher, you MUST know these rules — if you pressure a driver to violate HOS, you can face federal fines. The ELD (Electronic Logging Device) automatically records all driving time — there is no hiding violations.</p>
+        <div class="highlight-box">
+          <strong>Core USA HOS Rules (Memorise All 5):</strong><br/>
+          <br/>
+          <strong style="color:var(--orange)">1. 11-Hour Driving Rule:</strong> A driver may drive a maximum of 11 hours after 10 consecutive hours off duty.<br/>
+          <br/>
+          <strong style="color:var(--cyan)">2. 14-Hour Window Rule:</strong> A driver may not drive beyond the 14th hour after coming on duty. Once the 14-hour window starts, it cannot be paused — even if the driver takes breaks.<br/>
+          <br/>
+          <strong style="color:var(--gold)">3. 30-Minute Break Rule:</strong> After 8 cumulative hours of driving, a 30-minute break is mandatory before continuing to drive.<br/>
+          <br/>
+          <strong style="color:var(--green)">4. 60/70-Hour Rule:</strong> A driver may not drive after accumulating 60 hours on duty in 7 consecutive days (or 70 hours in 8 days for carriers operating 7 days/week).<br/>
+          <br/>
+          <strong style="color:#a5b4fc">5. 10-Hour Off Duty:</strong> After the driving shift ends, the driver must have 10 consecutive hours off duty before driving again. This resets the 11-hour and 14-hour clocks.
+        </div>
+        <div class="warning-box">
+          <strong>⚠️ ELD Mandate:</strong> All commercial vehicles over 10,000 lbs must have an ELD (Electronic Logging Device). Popular systems: Samsara, KeepTruckin (Motive), Omnitracs. The ELD automatically stops recording when HOS limits are reached. NEVER ask a driver to drive when their ELD shows 0 hours remaining.
+        </div>
+        <div class="example-box">
+          <strong>🎯 HOS Scenario:</strong><br/>
+          Driver starts at 6:00 AM. Drives 4 hours → Picks up load → Drives 4.5 hours → Mandatory 30-min break (8hrs driving reached) → Drives 2.5 more hours → Stops at 9:00 PM (15 hrs after start — but only 11 hrs driving ✅)<br/>
+          <strong>Is driver in compliance?</strong> YES — 11 hrs driving, 14-hr window not exceeded (6AM + 14hrs = 8PM... wait — 9PM exceeds 14hr window! ❌ This driver is actually OUT of compliance!)
+        </div>
+        <div class="key-terms">
+          <span class="key-term">HOS</span><span class="key-term">ELD</span><span class="key-term">11-Hour Rule</span>
+          <span class="key-term">14-Hour Window</span><span class="key-term">30-Min Break</span><span class="key-term">60/70-Hour Rule</span>
+          <span class="key-term">FMCSA</span><span class="key-term">Off Duty</span>
+        </div>
+      </div>
+      <div class="content-hi-block" id="text_hi_4_1">
+        <p>HOS नियम ड्राइवर की थकान से होने वाले हादसों को रोकने के लिए हैं। एक डिस्पैचर के रूप में आपको ये सभी नियम याद होने चाहिए।</p>
+        <div class="highlight-box">
+          <strong>USA HOS के 5 मुख्य नियम:</strong><br/>
+          1. <strong style="color:var(--orange)">11 घंटे ड्राइविंग:</strong> 10 घंटे आराम के बाद अधिकतम 11 घंटे ड्राइव कर सकते हैं।<br/>
+          2. <strong style="color:var(--cyan)">14 घंटे की विंडो:</strong> ड्यूटी शुरू होने से 14 घंटे के अंदर सभी ड्राइविंग पूरी होनी चाहिए।<br/>
+          3. <strong style="color:var(--gold)">30 मिनट ब्रेक:</strong> 8 घंटे ड्राइविंग के बाद 30 मिनट का अनिवार्य ब्रेक।<br/>
+          4. <strong style="color:var(--green)">60/70 घंटे नियम:</strong> 7 दिनों में 60 घंटे से अधिक ड्राइव नहीं कर सकते।<br/>
+          5. <strong style="color:#a5b4fc">10 घंटे का आराम:</strong> शिफ्ट खत्म होने के बाद 10 लगातार घंटे का आराम अनिवार्य है।
+        </div>
+        <div class="warning-box">
+          <strong>⚠️ ELD मैंडेट:</strong> सभी 10,000 पाउंड से अधिक के वाहनों में ELD अनिवार्य है। कभी भी ऐसे ड्राइवर को चलाने के लिए न कहें जिसका ELD 0 घंटे दिखाए।
+        </div>
+      </div>
+      <div class="topic-quiz" id="quiz_4_1">
+        <div class="quiz-header"><span>🧠</span><h4>Quick Check — USA HOS Rules</h4><span style="margin-left:auto;" class="tag tag-orange">5 Questions</span></div>
+        <div class="quiz-body" id="qb_4_1">
+          <div class="q-item">
+            <div class="q-text">1. How many maximum driving hours does a US driver get after 10 hours off?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q1',false)">A. 8 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q1',false)">B. 10 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q1',true)">C. 11 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q1',false)">D. 14 hours</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">2. After how many cumulative driving hours must a driver take a 30-minute break?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q2',false)">A. 4 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q2',false)">B. 6 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q2',true)">C. 8 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q2',false)">D. 10 hours</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">3. The 14-hour window rule means:</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q3',false)">A. Driver can drive for 14 hours straight</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q3',true)">B. All driving must be completed within 14 hours of coming on duty</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q3',false)">C. Driver must rest every 14 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q3',false)">D. Driver gets a 14-hour break after each trip</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">4. What does ELD stand for?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q4',false)">A. Electronic Load Document</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q4',true)">B. Electronic Logging Device</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q4',false)">C. Engine Limit Device</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q4',false)">D. Emergency Lane Detector</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">5. How many hours of consecutive off-duty time resets the 11-hour driving clock?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q5',false)">A. 6 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q5',false)">B. 8 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q5',true)">C. 10 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_1','q5',false)">D. 12 hours</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_4_1"><div class="quiz-score" id="qs_4_1"></div><div id="qmsg_4_1" style="font-size:14px;color:var(--grey);margin:6px 0;"></div><button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_4_1','qr_4_1','qs_4_1','qmsg_4_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="tc_4_2">
+    <button class="topic-toggle" onclick="toggleTopic('tc_4_2',this)">
+      <div class="t-num">B</div>
+      <div class="t-titles">
+        <div class="t-en">UK/EU Tachograph & Drivers' Hours Rules</div>
+        <div class="t-hi">UK/EU टेकोग्राफ और ड्राइवर के घंटे के नियम</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_4_2">
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_4_2" onclick="speakTopic('en','text_en_4_2','btn_en_4_2')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_4_2" onclick="speakTopic('hi','text_hi_4_2','btn_hi_4_2')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_4_2','btn_hi_4_2')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_4_2')">हिं Toggle</button>
+      </div>
+      <div class="content-en-block" id="text_en_4_2">
+        <p>If you are dispatching for UK or European carriers, the tachograph system applies instead of ELD. A tachograph automatically records speed, distance, driving time and rest periods. Tampering with a tachograph is a criminal offence in the UK.</p>
+        <div class="highlight-box">
+          <strong>UK/EU HGV Drivers' Hours Rules:</strong><br/>
+          <strong style="color:var(--orange)">4.5-Hour Rule:</strong> Driver must take a 45-minute break (or 15+30 split) after every 4.5 hours of driving. This is the most frequently tested rule.<br/><br/>
+          <strong style="color:var(--cyan)">Daily Driving:</strong> Maximum 9 hours per day. Can extend to 10 hours TWICE per week.<br/><br/>
+          <strong style="color:var(--gold)">Weekly Driving:</strong> Maximum 56 hours in one week.<br/><br/>
+          <strong style="color:var(--green)">Daily Rest:</strong> Minimum 11 hours off between shifts (can be reduced to 9 hours up to 3 times per week).<br/><br/>
+          <strong style="color:#a5b4fc">Weekly Rest:</strong> Minimum 45 consecutive hours off every week (can be reduced to 24 hours every other week).
+        </div>
+        <div class="info-box">
+          <strong style="color:var(--cyan)">Tachograph Modes — Know All 4:</strong><br/>
+          🚗 <strong>Driving (D):</strong> Vehicle in motion<br/>
+          🔧 <strong>Other Work (H):</strong> Loading, paperwork, waiting<br/>
+          ⏰ <strong>Availability (A):</strong> On-call but not working<br/>
+          🛏️ <strong>Rest (X):</strong> Full rest period
+        </div>
+        <div class="key-terms">
+          <span class="key-term">Tachograph</span><span class="key-term">4.5-Hour Rule</span><span class="key-term">HGV</span>
+          <span class="key-term">Daily Rest 11hr</span><span class="key-term">Weekly 56hr</span><span class="key-term">DVSA</span>
+        </div>
+      </div>
+      <div class="content-hi-block" id="text_hi_4_2">
+        <p>UK और यूरोप में ELD की जगह टेकोग्राफ उपयोग होता है। यह गति, दूरी और ड्राइविंग समय स्वचालित रूप से दर्ज करता है। इसके साथ छेड़छाड़ UK में आपराधिक अपराध है।</p>
+        <div class="highlight-box">
+          <strong>UK/EU HGV के मुख्य नियम:</strong><br/>
+          <strong style="color:var(--orange)">4.5 घंटे का नियम:</strong> हर 4.5 घंटे ड्राइविंग के बाद 45 मिनट का ब्रेक अनिवार्य।<br/>
+          <strong style="color:var(--cyan)">प्रतिदिन ड्राइविंग:</strong> अधिकतम 9 घंटे (सप्ताह में दो बार 10 घंटे तक)।<br/>
+          <strong style="color:var(--gold)">साप्ताहिक ड्राइविंग:</strong> अधिकतम 56 घंटे।<br/>
+          <strong style="color:var(--green)">दैनिक आराम:</strong> न्यूनतम 11 घंटे।
+        </div>
+      </div>
+      <div class="topic-quiz" id="quiz_4_2">
+        <div class="quiz-header"><span>🧠</span><h4>Quick Check — UK Tachograph</h4><span style="margin-left:auto;" class="tag tag-orange">3 Questions</span></div>
+        <div class="quiz-body" id="qb_4_2">
+          <div class="q-item">
+            <div class="q-text">1. In UK/EU, how long must a driver break after 4.5 hours of driving?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_4_2','q1',false)">A. 30 minutes</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_2','q1',true)">B. 45 minutes (or 15+30 split)</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_2','q1',false)">C. 1 hour</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_2','q1',false)">D. 2 hours</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">2. What is the maximum weekly driving hours for UK/EU HGV drivers?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_4_2','q2',false)">A. 40 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_2','q2',false)">B. 48 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_2','q2',true)">C. 56 hours</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_2','q2',false)">D. 70 hours</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">3. Tampering with a tachograph in the UK is:</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_4_2','q3',false)">A. A minor infringement with a small fine</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_2','q3',false)">B. Allowed if the driver is running late</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_2','q3',true)">C. A criminal offence</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_4_2','q3',false)">D. Not regulated</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_4_2"><div class="quiz-score" id="qs_4_2"></div><div id="qmsg_4_2" style="font-size:14px;color:var(--grey);margin:6px 0;"></div><button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_4_2','qr_4_2','qs_4_2','qmsg_4_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top:32px;"><h3>⚡ Practical Activities</h3><div class="section-line"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px;">
+    <ul class="practical-list">
+      <li><div class="p-num">1</div><div><strong>HOS Compliance Drill</strong> — 8 driving scenarios with start times, driving hours, breaks. For each: Is the driver in compliance? What HOS rule applies?</div></li>
+      <li><div class="p-num">2</div><div><strong>Tachograph Symbol Quiz</strong> — 12 tachograph symbols shown. Identify each mode: Driving / Other Work / Availability / Rest.</div></li>
+      <li><div class="p-num">3</div><div><strong>ELD Check Simulation</strong> — Given a driver's ELD log showing 9 hours driven, calculate: How many hours remain? What time must they stop? Can they make this pickup in 2 hours?</div></li>
+    </ul>
+  </div>
+  <div class="hw-box">
+    <h4>📝 Tonight's Homework</h4>
+    <p class="hw-text">Write a 1-page summary answering: Why is HOS compliance critical for a dispatcher, not just the driver? What are the consequences of HOS violations for carriers and dispatchers? Research one real case where a dispatcher faced consequences for HOS violations. This helps you understand the legal responsibility you carry as a dispatcher.</p>
+  </div>
+  <div class="day-nav">
+    <button class="btn btn-ghost" onclick="showDay(3,document.querySelectorAll('.day-tab')[2])">← Day 3</button>
+    <button class="btn btn-primary" onclick="markDayDone(4);showDay(5,document.querySelectorAll('.day-tab')[4])">Day 5 →</button>
+  </div>
+</div>
+<!-- END DAY 4 -->
+
+
+<!-- ╔══════════════════════════════════════════╗ -->
+<!-- ║  DAY 5 — Load Boards, RPM & Red Flags   ║ -->
+<!-- ╚══════════════════════════════════════════╝ -->
+<div class="day-panel" id="day5">
+  <div class="day-hero fade-up">
+    <div class="day-num-big">D5</div>
+    <div class="day-info">
+      <h2>Load Boards, RPM & Load Red Flags</h2>
+      <div class="hindi-title">लोड बोर्ड, RPM और लोड रेड फ्लैग्स</div>
+      <div class="day-meta">
+        <span class="tag tag-orange">2hrs Theory</span>
+        <span class="tag tag-cyan">2hrs Practical</span>
+        <span class="tag tag-green">3 Topics</span>
+        <span class="tag tag-gold">Operations Day</span>
+      </div>
+    </div>
+  </div>
+  <div class="video-box fade-up delay-1">
+    <div class="video-header">
+      <div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div>
+      <span style="font-size:13px;font-weight:600;margin-left:10px;">📹 Day 5 — Load Boards & RPM</span>
+      <span style="margin-left:auto;font-size:11px;color:var(--grey);font-family:var(--font-mono);">~12 min</span>
+    </div>
+    <div class="video-placeholder-box" onclick="loadVideo('d5','https://www.youtube.com/embed/YOUR_VIDEO_D5_ID')">
+      <div class="play-circle">▶</div>
+      <div class="video-info"><div class="title">Day 5: Load Boards, RPM & Red Flags</div><div class="meta">🎬 Add your YouTube video ID</div></div>
+    </div>
+    <div class="video-add-note">💡 Replace <code>YOUR_VIDEO_D5_ID</code></div>
+  </div>
+
+  <div class="section-header"><h3>📖 Theory Topics</h3><div class="section-line"></div><span class="tag tag-orange">3 Topics</span></div>
+
+  <div class="topic-card" id="tc_5_1">
+    <button class="topic-toggle" onclick="toggleTopic('tc_5_1',this)">
+      <div class="t-num">A</div>
+      <div class="t-titles">
+        <div class="t-en">DAT Load Board — America's #1 Load Board</div>
+        <div class="t-hi">DAT लोड बोर्ड — अमेरिका का नंबर 1 लोड बोर्ड</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_5_1">
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_5_1" onclick="speakTopic('en','text_en_5_1','btn_en_5_1')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_5_1" onclick="speakTopic('hi','text_hi_5_1','btn_hi_5_1')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_5_1','btn_hi_5_1')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_5_1')">हिं Toggle</button>
+      </div>
+      <div class="content-en-block" id="text_en_5_1">
+        <p><strong style="color:var(--orange)">DAT Solutions</strong> is the number one freight matching marketplace in North America with over 500 million loads posted annually. As a dispatcher, DAT is your most important tool — you will use it every single working day.</p>
+        <div class="highlight-box">
+          <strong>What DAT gives you:</strong><br/>
+          • Real-time load postings — search by origin, destination, trailer type, date<br/>
+          • <strong>Rate history per lane</strong> — see what loads paid last week, last month (use this to negotiate!)<br/>
+          • <strong>Broker credit scores</strong> — the single most important safety tool<br/>
+          • Carrier reviews and load history<br/>
+          • Mileage calculator<br/>
+          • Market conditions — is this lane hot or slow right now?
+        </div>
+        <div class="example-box">
+          <strong>🎯 How to search on DAT:</strong><br/>
+          1. Enter: Origin city/state (e.g., Chicago, IL)<br/>
+          2. Enter: Destination city/state (e.g., Atlanta, GA)<br/>
+          3. Select: Equipment type (Dry Van)<br/>
+          4. Enter: Date available<br/>
+          5. DAT shows all loads → Sort by pay → Check broker credit → Call the highest-paying broker first
+        </div>
+        <div class="highlight-box" style="border-left-color:var(--cyan);">
+          <strong>DAT Subscription Options:</strong><br/>
+          DAT TruckersEdge: ~$45/month — for carriers and dispatchers<br/>
+          DAT Broker: For licensed freight brokers<br/>
+          <strong>Pro tip:</strong> Start with the free trial. Then TruckersEdge is essential at $45/month — treat it as a business investment. One well-negotiated load covers the monthly cost in commission.
+        </div>
+        <div class="key-terms">
+          <span class="key-term">DAT Solutions</span><span class="key-term">Load Board</span><span class="key-term">Rate History</span>
+          <span class="key-term">Broker Credit</span><span class="key-term">TruckersEdge</span><span class="key-term">Lane Rate</span>
+        </div>
+      </div>
+      <div class="content-hi-block" id="text_hi_5_1">
+        <p><strong style="color:var(--orange)">DAT Solutions</strong> उत्तरी अमेरिका का नंबर 1 फ्रेट मार्केटप्लेस है — सालाना 50 करोड़ से अधिक लोड पोस्ट होते हैं। DAT आपका सबसे महत्वपूर्ण दैनिक उपकरण है।</p>
+        <div class="highlight-box">
+          <strong>DAT आपको क्या देता है:</strong><br/>
+          • रियल-टाइम लोड पोस्टिंग — शहर, ट्रेलर, तारीख से खोज<br/>
+          • लेन रेट इतिहास — बातचीत के लिए उपयोग करें<br/>
+          • ब्रोकर क्रेडिट स्कोर — सबसे महत्वपूर्ण सुरक्षा उपकरण
+        </div>
+        <div class="example-box">
+          <strong>🎯 DAT पर खोज कैसे करें:</strong><br/>
+          1. मूल शहर दर्ज करें (जैसे शिकागो, IL)<br/>
+          2. गंतव्य शहर दर्ज करें (जैसे अटलांटा, GA)<br/>
+          3. उपकरण प्रकार चुनें (ड्राय वैन)<br/>
+          4. उपलब्ध तारीख दर्ज करें<br/>
+          5. सर्वोच्च भुगतान वाले ब्रोकर को पहले कॉल करें
+        </div>
+      </div>
+      <div class="topic-quiz" id="quiz_5_1">
+        <div class="quiz-header"><span>🧠</span><h4>Quick Check — DAT Load Board</h4><span style="margin-left:auto;" class="tag tag-orange">3 Questions</span></div>
+        <div class="quiz-body" id="qb_5_1">
+          <div class="q-item">
+            <div class="q-text">1. What is the #1 load board in the USA?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_5_1','q1',false)">A. Courier Exchange</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_1','q1',true)">B. DAT Solutions</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_1','q1',false)">C. Transcore 360</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_1','q1',false)">D. 123LoadBoard</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">2. On DAT, what is the most important safety check BEFORE booking a load?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_5_1','q2',false)">A. Check the weather forecast</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_1','q2',false)">B. Check the carrier's truck age</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_1','q2',true)">C. Check the broker's DAT credit score</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_1','q2',false)">D. Check the distance on Google Maps</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">3. Approximately how much does DAT TruckersEdge cost per month?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_5_1','q3',false)">A. Free forever</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_1','q3',true)">B. ~$45/month</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_1','q3',false)">C. ~$200/month</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_1','q3',false)">D. ~$500/month</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_5_1"><div class="quiz-score" id="qs_5_1"></div><div id="qmsg_5_1" style="font-size:14px;color:var(--grey);margin:6px 0;"></div><button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_5_1','qr_5_1','qs_5_1','qmsg_5_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="tc_5_2">
+    <button class="topic-toggle" onclick="toggleTopic('tc_5_2',this)">
+      <div class="t-num">B</div>
+      <div class="t-titles">
+        <div class="t-en">RPM Calculation & Targets — Your Profitability Formula</div>
+        <div class="t-hi">RPM गणना और लक्ष्य — आपकी लाभप्रदता का सूत्र</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_5_2">
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_5_2" onclick="speakTopic('en','text_en_5_2','btn_en_5_2')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_5_2" onclick="speakTopic('hi','text_hi_5_2','btn_hi_5_2')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_5_2','btn_hi_5_2')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_5_2')">हिं Toggle</button>
+      </div>
+      <div class="content-en-block" id="text_en_5_2">
+        <p><strong style="color:var(--orange)">RPM (Revenue Per Mile)</strong> is the single most important metric in dispatching. It tells you whether a load is profitable for the carrier — and therefore worth booking.</p>
+        <div class="highlight-box">
+          <strong>RPM Formula:</strong><br/>
+          <span style="font-family:var(--font-mono);font-size:16px;color:var(--orange)">RPM = Total Load Rate ÷ Total Miles (Loaded + Deadhead)</span><br/><br/>
+          <strong>Example:</strong> Load pays $2,400. Loaded miles: 750. Deadhead miles: 50. Total: 800 miles.<br/>
+          RPM = $2,400 ÷ 800 = <strong style="color:var(--green)">$3.00 — GOOD! ✅</strong>
+        </div>
+        <div class="highlight-box" style="border-left-color:var(--cyan);">
+          <strong>RPM Targets by Trailer Type:</strong><br/>
+          📦 Dry Van:   <strong>$2.50–3.50</strong> (minimum: $2.50, aim for $3.00+)<br/>
+          ❄️ Reefer:    <strong>$3.00–4.50</strong> (higher due to equipment cost)<br/>
+          🏗️ Flatbed:   <strong>$3.00–5.00</strong> (higher due to complexity)<br/>
+          📐 Step Deck: <strong>$3.50–5.50</strong><br/>
+          💧 Tanker:    <strong>$2.80–4.00</strong><br/>
+          ⚡ Hotshot:   <strong>$2.00–3.50</strong>
+        </div>
+        <div class="warning-box">
+          <strong>⚠️ Always include deadhead in RPM!</strong> A load that pays $2,800 for 900 loaded miles looks like $3.11 RPM. But if the truck is 100 miles away, total miles = 1,000. RPM = $2.80 — still good, but you need the accurate number to negotiate properly.
+        </div>
+        <div class="example-box">
+          <strong>🎯 RPM Drill — Classify each load:</strong><br/>
+          Load A: $1,800 ÷ 700mi = $2.57 RPM — ✅ Just above minimum<br/>
+          Load B: $3,500 ÷ 900mi = $3.89 RPM — 🏆 Excellent<br/>
+          Load C: $1,400 ÷ 600mi = $2.33 RPM — ❌ Below target — negotiate up or pass<br/>
+          Load D: $4,200 ÷ 1,200mi = $3.50 RPM — ✅ Good
+        </div>
+        <div class="key-terms">
+          <span class="key-term">RPM</span><span class="key-term">Revenue Per Mile</span><span class="key-term">Deadhead Miles</span>
+          <span class="key-term">Loaded Miles</span><span class="key-term">Profitability</span><span class="key-term">Negotiation Floor</span>
+        </div>
+      </div>
+      <div class="content-hi-block" id="text_hi_5_2">
+        <p><strong style="color:var(--orange)">RPM (Revenue Per Mile)</strong> — प्रति मील आय — डिस्पैचिंग में सबसे महत्वपूर्ण मेट्रिक है। यह बताता है कि कोई लोड कैरियर के लिए लाभदायक है या नहीं।</p>
+        <div class="highlight-box">
+          <strong>RPM फॉर्मूला:</strong><br/>
+          <span style="font-family:var(--font-mono);color:var(--orange)">RPM = कुल लोड रेट ÷ कुल मील (लोडेड + डेडहेड)</span><br/><br/>
+          उदाहरण: लोड रेट $2,400 | 750 लोडेड मील + 50 डेडहेड मील = 800 कुल मील<br/>
+          RPM = $2,400 ÷ 800 = <strong style="color:var(--green)">$3.00 — अच्छा है! ✅</strong>
+        </div>
+        <div class="highlight-box" style="border-left-color:var(--cyan);">
+          <strong>ट्रेलर के अनुसार RPM लक्ष्य:</strong><br/>
+          ड्राय वैन: $2.50–3.50 | रीफर: $3.00–4.50 | फ्लैटबेड: $3.00–5.00
+        </div>
+      </div>
+      <div class="topic-quiz" id="quiz_5_2">
+        <div class="quiz-header"><span>🧠</span><h4>Quick Check — RPM Calculation</h4><span style="margin-left:auto;" class="tag tag-orange">4 Questions</span></div>
+        <div class="quiz-body" id="qb_5_2">
+          <div class="q-item">
+            <div class="q-text">1. What does RPM stand for?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q1',false)">A. Rate Per Month</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q1',true)">B. Revenue Per Mile</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q1',false)">C. Revenue Per Move</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q1',false)">D. Rate Per Mile</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">2. A dry van load pays $2,750 for 1,100 miles total. What is the RPM?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q2',false)">A. $2.25</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q2',true)">B. $2.50</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q2',false)">C. $2.75</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q2',false)">D. $3.00</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">3. A reefer load offers $2.20 RPM. What should you do?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q3',false)">A. Book it immediately</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q3',true)">B. Negotiate up — $2.20 is below the $3.00 reefer minimum</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q3',false)">C. $2.20 is fine for reefer</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q3',false)">D. Ask the driver to decide</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">4. Why must deadhead miles be included in RPM calculation?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q4',false)">A. They are not needed — only loaded miles count</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q4',true)">B. The carrier pays for deadhead fuel — it reduces actual profitability</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q4',false)">C. DAT requires it for load posting</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_2','q4',false)">D. Only for flatbed loads</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_5_2"><div class="quiz-score" id="qs_5_2"></div><div id="qmsg_5_2" style="font-size:14px;color:var(--grey);margin:6px 0;"></div><button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_5_2','qr_5_2','qs_5_2','qmsg_5_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="topic-card" id="tc_5_3">
+    <button class="topic-toggle" onclick="toggleTopic('tc_5_3',this)">
+      <div class="t-num">C</div>
+      <div class="t-titles">
+        <div class="t-en">🚩 Load Red Flags — Never Book These Loads</div>
+        <div class="t-hi">🚩 लोड रेड फ्लैग्स — इन लोड को कभी बुक न करें</div>
+      </div>
+      <span class="t-arrow">›</span>
+    </button>
+    <div class="topic-content" id="body_5_3">
+      <div class="audio-bar">
+        <span class="audio-label">🔊 Listen:</span>
+        <button class="a-btn a-en" id="btn_en_5_3" onclick="speakTopic('en','text_en_5_3','btn_en_5_3')">▶ English</button>
+        <button class="a-btn a-hi" id="btn_hi_5_3" onclick="speakTopic('hi','text_hi_5_3','btn_hi_5_3')">▶ हिंदी</button>
+        <button class="a-btn a-stop" onclick="stopAudio('btn_en_5_3','btn_hi_5_3')">⏹ Stop</button>
+        <button class="a-btn" style="background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3);" onclick="toggleHindi('text_hi_5_3')">हिं Toggle</button>
+      </div>
+      <div class="content-en-block" id="text_en_5_3">
+        <p>Red flags are warning signs that a load or broker may cause non-payment, disputes, or legal issues. Learning to identify these will save your carrier from serious financial loss.</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:14px 0;">
+          <div class="warning-box" style="margin:0;">🚩 <strong>Broker DAT credit below 70</strong><br/><span style="font-size:12px;">High non-payment risk. Always check before calling.</span></div>
+          <div class="warning-box" style="margin:0;">🚩 <strong>Payment terms over 30 days</strong><br/><span style="font-size:12px;">Carrier can't wait 45-60 days. Use factoring or avoid.</span></div>
+          <div class="warning-box" style="margin:0;">🚩 <strong>Rate far below market</strong><br/><span style="font-size:12px;">If lane pays $3.00 avg and they offer $1.80 — something is wrong.</span></div>
+          <div class="warning-box" style="margin:0;">🚩 <strong>Pickup in under 2 hours</strong><br/><span style="font-size:12px;">Driver cannot legally make it. Sets up failure from the start.</span></div>
+          <div class="warning-box" style="margin:0;">🚩 <strong>No TONU clause in RC</strong><br/><span style="font-size:12px;">If load cancels after truck departs, carrier gets nothing.</span></div>
+          <div class="warning-box" style="margin:0;">🚩 <strong>Broker refuses to sign RC</strong><br/><span style="font-size:12px;">No signed Rate Confirmation = no legal contract. Never move a truck without it.</span></div>
+          <div class="warning-box" style="margin:0;">🚩 <strong>Rural delivery with no dock</strong><br/><span style="font-size:12px;">Driver may get stuck. Verify delivery address has a receiving dock.</span></div>
+          <div class="warning-box" style="margin:0;">🚩 <strong>New broker, zero history</strong><br/><span style="font-size:12px;">No DAT history, no reviews — very high fraud risk. Verify on Carrier411 too.</span></div>
+        </div>
+        <div class="info-box">
+          <strong>✅ Before Every Load — Your Safety Checklist:</strong><br/>
+          □ Broker DAT credit score ≥ 70?<br/>
+          □ Payment terms 30 days or less?<br/>
+          □ Rate at or above market RPM?<br/>
+          □ Pickup time realistic for driver location?<br/>
+          □ TONU clause written in RC?<br/>
+          □ RC signed by BOTH parties?<br/>
+          □ MC number verified on FMCSA?
+        </div>
+        <div class="key-terms">
+          <span class="key-term">Red Flag</span><span class="key-term">TONU</span><span class="key-term">Rate Confirmation</span>
+          <span class="key-term">Carrier411</span><span class="key-term">Payment Terms</span><span class="key-term">Fraud Prevention</span>
+        </div>
+      </div>
+      <div class="content-hi-block" id="text_hi_5_3">
+        <p>रेड फ्लैग्स ऐसे चेतावनी संकेत हैं जो बताते हैं कि कोई लोड या ब्रोकर समस्या पैदा कर सकता है।</p>
+        <div class="warning-box">
+          <strong>8 मुख्य रेड फ्लैग्स:</strong><br/>
+          🚩 DAT क्रेडिट स्कोर 70 से कम<br/>
+          🚩 30 दिन से अधिक भुगतान की शर्त<br/>
+          🚩 बाज़ार रेट से बहुत कम दर<br/>
+          🚩 2 घंटे से कम में पिकअप<br/>
+          🚩 RC में TONU क्लॉज नहीं<br/>
+          🚩 ब्रोकर RC पर हस्ताक्षर नहीं कर रहा<br/>
+          🚩 ग्रामीण डिलीवरी पते पर डॉक नहीं<br/>
+          🚩 नया ब्रोकर, कोई इतिहास नहीं
+        </div>
+      </div>
+      <div class="topic-quiz" id="quiz_5_3">
+        <div class="quiz-header"><span>🧠</span><h4>Quick Check — Red Flags</h4><span style="margin-left:auto;" class="tag tag-orange">4 Questions</span></div>
+        <div class="quiz-body" id="qb_5_3">
+          <div class="q-item">
+            <div class="q-text">1. A broker's DAT credit score is 65. Should you book the load?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q1',false)">A. Yes — 65 is close enough to 70</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q1',false)">B. Yes — if the rate is good</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q1',true)">C. No — below 70 is a red flag. Do not book.</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q1',false)">D. Only if the broker agrees to quick pay</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">2. What is TONU?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q2',false)">A. Type Of Normal Use</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q2',true)">B. Truck Ordered Not Used — compensation when load is cancelled after truck departs</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q2',false)">C. Time Of Normal Unloading</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q2',false)">D. Transfer Of Non-Urgent freight</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">3. A broker refuses to sign the Rate Confirmation. What should you do?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q3',false)">A. Move the truck anyway — verbal agreement is fine</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q3',false)">B. Ask the driver to decide</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q3',true)">C. Do NOT move the truck — no signed RC means no legal protection</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q3',false)">D. Send the truck but add extra charges later</button>
+            </div>
+          </div>
+          <div class="q-item">
+            <div class="q-text">4. Which website can you use alongside DAT to verify broker payment history?</div>
+            <div class="q-opts">
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q4',false)">A. LinkedIn</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q4',true)">B. Carrier411</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q4',false)">C. Yelp</button>
+              <button class="q-opt" onclick="checkAns(this,'qb_5_3','q4',false)">D. Google Maps</button>
+            </div>
+          </div>
+        </div>
+        <div class="quiz-result" id="qr_5_3"><div class="quiz-score" id="qs_5_3"></div><div id="qmsg_5_3" style="font-size:14px;color:var(--grey);margin:6px 0;"></div><button class="btn btn-outline btn-sm quiz-retake" onclick="retakeQuiz('qb_5_3','qr_5_3','qs_5_3','qmsg_5_3')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-header" style="margin-top:32px;"><h3>⚡ Practical Activities</h3><div class="section-line"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px;">
+    <ul class="practical-list">
+      <li><div class="p-num">1</div><div><strong>RPM Calculation Race</strong> — 10 loads given. Calculate RPM for each. Rank them from best to worst. Who finishes fastest with all correct? 10 minutes on the clock!</div></li>
+      <li><div class="p-num">2</div><div><strong>Red Flag Hunt</strong> — 8 load postings shown with broker details. Identify every red flag in each. How many did you spot? Compare with your partner.</div></li>
+      <li><div class="p-num">3</div><div><strong>DAT Free Trial</strong> — Create a free DAT account. Search Chicago → Atlanta dry van loads. Find the top 3 by RPM. Check each broker's credit score. Report back to class.</div></li>
+    </ul>
+  </div>
+
+  <!-- WEEK 1 FINAL REVIEW -->
+  <div style="background:linear-gradient(135deg,rgba(249,115,22,0.12),rgba(30,27,139,0.3));border:1px solid rgba(249,115,22,0.3);border-radius:var(--radius-xl);padding:28px;margin:24px 0;">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
+      <span style="font-size:28px;">🏆</span>
+      <div>
+        <div style="font-size:18px;font-weight:800;">Week 1 Complete!</div>
+        <div style="font-size:13px;color:var(--orange);font-family:var(--font-hindi);">सप्ताह 1 पूरा हुआ! बहुत अच्छा काम किया!</div>
+      </div>
+    </div>
+    <p style="font-size:14px;color:rgba(255,255,255,0.8);line-height:1.8;margin-bottom:16px;">
+      You have covered all 5 days of Week 1 Foundation. You now understand the industry structure, trailer types, US geography, time zones, HOS rules, DAT load boards, RPM calculation, and red flag identification. This is the foundation everything else builds on.
+    </p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="week2.html" class="btn btn-primary btn-lg">Continue to Week 2 →</a>
+      <a href="tools.html" class="btn btn-secondary">🧮 Practice with Tools</a>
+      <a href="madam-ji.html" class="btn btn-ghost">🎓 Ask Madam JI</a>
+    </div>
+  </div>
+
+  <div class="hw-box">
+    <h4>📝 Week 1 Final Homework</h4>
+    <p class="hw-text">Review all 5 days of notes tonight. Create a one-page "Week 1 Cheat Sheet" covering: 5 trailer types + RPM, 5 HOS rules, 5 key US freight cities, 5 load red flags, DAT credit minimum, RPM formula. You will be tested on Week 1 content at the start of Week 2, Day 6.</p>
+    <div style="margin-top:14px;padding:10px 14px;background:rgba(34,197,94,0.1);border-radius:var(--radius-md);font-size:12px;color:var(--green);">
+      🎓 Madam JI says: "Beta, you have completed Week 1! This foundation is what separates professional dispatchers from amateurs. Every topic you covered today will be used in your first real broker call. Study hard tonight — Week 2 gets more exciting! 🚛"
+    </div>
+  </div>
+
+  <div class="day-nav">
+    <button class="btn btn-ghost" onclick="showDay(4,document.querySelectorAll('.day-tab')[3])">← Day 4</button>
+    <a href="week2.html" class="btn btn-primary">Week 2 →</a>
+  </div>
+</div>
+<!-- END DAY 5 -->
+
+</main>
+
+<!-- FOOTER -->
+<footer style="border-top:1px solid rgba(249,115,22,0.15);padding:20px 24px;text-align:center;margin-top:40px;">
+  <div style="max-width:1200px;margin:0 auto;">
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px;">
+      <img src="assets/logo.png" style="height:32px;background:white;padding:2px;border-radius:6px;" onerror="this.style.display='none'"/>
+      <span style="font-weight:900;font-size:15px;letter-spacing:1px;">EAGLE ACADEMY</span>
+    </div>
+    <div style="font-size:12px;color:var(--grey);">International Freight Dispatcher Certification — Week 1 of 4</div>
+    <div style="font-size:11px;color:var(--grey-dark);margin-top:4px;">© Eagle Academy India. All rights reserved.</div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+<script>
+// ── Page State ──────────────────────────────────
+let currentLang = 'en';
+let quizAnswers = {}; // tracks answered questions per quiz
+
+// ── Day Navigation ──────────────────────────────
+function showDay(num, tabEl) {
+  document.querySelectorAll('.day-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.day-tab').forEach(t => t.classList.remove('active'));
+  const panel = document.getElementById('day' + num);
+  if (panel) panel.classList.add('active');
+  if (tabEl) tabEl.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+// ── Mark Day Done ────────────────────────────────
+function markDayDone(num) {
+  const check = document.getElementById('d' + num + '_check');
+  if (check) check.style.display = 'inline';
+  updateProgress();
+  try {
+    const prog = JSON.parse(localStorage.getItem('ea_w1_prog') || '{}');
+    prog['day' + num] = true;
+    localStorage.setItem('ea_w1_prog', JSON.stringify(prog));
+  } catch(e) {}
+}
+
+function updateProgress() {
+  const checks = document.querySelectorAll('.check');
+  let done = 0;
+  checks.forEach(c => { if (c.style.display !== 'none') done++; });
+  const pct = Math.round((done / 5) * 100);
+  const bar = document.getElementById('week_prog');
+  const label = document.getElementById('week_pct');
+  if (bar) bar.style.width = pct + '%';
+  if (label) label.textContent = pct + '%';
+}
+
+// ── Topic Toggle ─────────────────────────────────
+function toggleTopic(cardId, toggleBtn) {
+  const card = document.getElementById(cardId);
+  const bodyId = cardId.replace('tc_', 'body_');
+  const body = document.getElementById(bodyId);
+  if (!body) return;
+  const isOpen = body.classList.contains('open');
+  // Close all in same day
+  document.querySelectorAll('.topic-content').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.topic-toggle').forEach(t => t.classList.remove('open'));
+  if (!isOpen) {
+    body.classList.add('open');
+    toggleBtn.classList.add('open');
+  }
+}
+
+// ── Language Toggle ──────────────────────────────
+function setLang(lang, btn) {
+  currentLang = lang;
+  document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  // Toggle all Hindi blocks
+  document.querySelectorAll('.content-hi-block').forEach(el => {
+    el.classList.toggle('show', lang === 'hi');
+  });
+}
+
+function toggleHindi(hiBlockId) {
+  const el = document.getElementById(hiBlockId);
+  if (el) el.classList.toggle('show');
+}
+
+// ── Audio / TTS ──────────────────────────────────
+let currentUtterance = null;
+
+function speakTopic(lang, textId, btnId) {
+  stopAllAudio();
+  const textEl = document.getElementById(textId);
+  if (!textEl || !window.speechSynthesis) return;
+  const text = textEl.innerText || textEl.textContent;
+  const utt = new SpeechSynthesisUtterance(text.replace(/\s+/g, ' ').trim());
+  utt.lang = lang === 'hi' ? 'hi-IN' : 'en-US';
+  utt.rate = 0.88;
+  utt.pitch = 1;
+  const voices = window.speechSynthesis.getVoices();
+  const match = voices.find(v => v.lang.startsWith(lang === 'hi' ? 'hi' : 'en'));
+  if (match) utt.voice = match;
+  const btn = document.getElementById(btnId);
+  if (btn) btn.classList.add('on');
+  utt.onend = () => { if (btn) btn.classList.remove('on'); };
+  utt.onerror = () => { if (btn) btn.classList.remove('on'); };
+  currentUtterance = utt;
+  window.speechSynthesis.speak(utt);
+}
+
+function stopAllAudio() {
+  if (window.speechSynthesis) window.speechSynthesis.cancel();
+  document.querySelectorAll('.a-btn.on').forEach(b => b.classList.remove('on'));
+}
+
+function stopAudio(btn1Id, btn2Id) {
+  stopAllAudio();
+}
+
+// ── Video Loader ─────────────────────────────────
+function loadVideo(dayId, youtubeUrl) {
+  const box = document.getElementById('video_' + dayId);
+  if (!box) return;
+  if (youtubeUrl.includes('YOUR_VIDEO')) {
+    alert('📹 Instructor: Add your YouTube video ID to the HTML to enable this video player.\n\nLook for: YOUR_VIDEO_D' + dayId.replace('d','') + '_ID\nReplace it with your actual YouTube video ID.');
+    return;
+  }
+  box.outerHTML = `<div class="video-iframe-wrap"><iframe src="${youtubeUrl}?autoplay=1" allow="autoplay; fullscreen" allowfullscreen></iframe></div>`;
+}
+
+// ── Quiz Engine ───────────────────────────────────
+function checkAns(btn, quizBodyId, qKey, isCorrect) {
+  if (!quizAnswers[quizBodyId]) quizAnswers[quizBodyId] = {};
+  if (quizAnswers[quizBodyId][qKey]) return; // already answered
+  quizAnswers[quizBodyId][qKey] = isCorrect;
+  // Disable all options in this question
+  const qItem = btn.closest('.q-item');
+  qItem.querySelectorAll('.q-opt').forEach(b => { b.disabled = true; });
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+  // If wrong, highlight correct
+  if (!isCorrect) {
+    qItem.querySelectorAll('.q-opt').forEach(b => {
+      if (b.onclick && b.onclick.toString().includes('true')) b.classList.add('correct');
+    });
+  }
+  // Check if all questions in this quiz are answered
+  const allQItems = document.getElementById(quizBodyId).querySelectorAll('.q-item');
+  const answered = Object.keys(quizAnswers[quizBodyId]).length;
+  if (answered >= allQItems.length) {
+    showQuizResult(quizBodyId);
+  }
+}
+
+function showQuizResult(quizBodyId) {
+  const answers = quizAnswers[quizBodyId] || {};
+  const total = Object.keys(answers).length;
+  const correct = Object.values(answers).filter(v => v).length;
+  const pct = Math.round((correct / total) * 100);
+  // Find result elements (replace qb_ with qr_, qs_, qmsg_)
+  const resultId = quizBodyId.replace('qb_', 'qr_');
+  const scoreId  = quizBodyId.replace('qb_', 'qs_');
+  const msgId    = quizBodyId.replace('qb_', 'qmsg_');
+  const resultEl = document.getElementById(resultId);
+  const scoreEl  = document.getElementById(scoreId);
+  const msgEl    = document.getElementById(msgId);
+  if (resultEl) resultEl.classList.add('show');
+  if (scoreEl) {
+    scoreEl.textContent = correct + '/' + total + ' — ' + pct + '%';
+    scoreEl.style.color = pct >= 70 ? 'var(--green)' : pct >= 50 ? 'var(--gold)' : 'var(--red)';
+  }
+  if (msgEl) {
+    msgEl.textContent = pct >= 90 ? '🏆 Excellent! Perfect understanding!' :
+                        pct >= 70 ? '✅ Good work! Ready for the next topic.' :
+                        pct >= 50 ? '📚 Review the topic again before moving on.' :
+                                    '⚠️ Please re-read the topic carefully and retake.';
+  }
+}
+
+function retakeQuiz(quizBodyId, resultId, scoreId, msgId) {
+  quizAnswers[quizBodyId] = {};
+  document.getElementById(quizBodyId).querySelectorAll('.q-opt').forEach(b => {
+    b.disabled = false;
+    b.classList.remove('correct', 'wrong');
+  });
+  const res = document.getElementById(resultId);
+  if (res) res.classList.remove('show');
+}
+
+// ── Init ─────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  // Restore progress from localStorage
+  try {
+    const prog = JSON.parse(localStorage.getItem('ea_w1_prog') || '{}');
+    for (let d = 1; d <= 5; d++) {
+      if (prog['day' + d]) {
+        const check = document.getElementById('d' + d + '_check');
+        if (check) check.style.display = 'inline';
+      }
+    }
+    updateProgress();
+  } catch(e) {}
+  // Load voices for TTS
+  if (window.speechSynthesis) {
+    window.speechSynthesis.onvoiceschanged = () => window.speechSynthesis.getVoices();
+  }
+});
+</script>
+</body>
+</html>
