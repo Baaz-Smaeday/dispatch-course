@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Final Exam — Eagle Academy</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<style>
+:root{--purple:#7c3aed;--purple2:#a78bfa;--purple3:rgba(139,92,246,0.15)}
+body{background:var(--navy-dark)}
+.exam-page{max-width:860px;margin:0 auto;padding:32px 24px}
+
+/* LANDING */
+.exam-landing{text-align:center;padding:60px 24px}
+.eagle-spin{font-size:72px;display:inline-block;animation:float 3s ease infinite}
+.start-card{background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(30,27,139,0.5));border:2px solid rgba(139,92,246,0.3);border-radius:24px;padding:40px;margin:32px auto;max-width:640px}
+.meta-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}
+.meta-box{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:16px;text-align:center}
+.meta-val{font-family:var(--font-head);font-size:26px;font-weight:900;color:var(--purple2)}
+.meta-lbl{font-size:11px;color:var(--grey);margin-top:4px;text-transform:uppercase;letter-spacing:.5px}
+.name-input{background:rgba(255,255,255,0.06);border:2px solid rgba(139,92,246,0.3);border-radius:12px;color:white;padding:14px 18px;font-family:var(--font-main);font-size:16px;width:100%;outline:none;margin:16px 0;transition:border-color .2s;text-align:center}
+.name-input:focus{border-color:var(--purple2)}
+.name-input::placeholder{color:var(--grey)}
+.breakdown-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:16px 0;font-size:12px}
+.bk-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:8px;padding:10px;text-align:center}
+.bk-num{font-weight:800;font-size:18px;margin-bottom:2px}
+
+/* EXAM IN PROGRESS */
+#exam_main{display:none}
+.exam-sticky{position:sticky;top:64px;z-index:50;background:rgba(3,4,26,0.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(139,92,246,0.2);padding:12px 24px;margin:0 -24px 28px}
+.exam-sticky-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.timer-box{background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);border-radius:10px;padding:8px 18px;font-family:var(--font-mono);font-size:22px;font-weight:900;color:var(--purple2);min-width:100px;text-align:center}
+.timer-box.warn{border-color:var(--orange);color:var(--orange);background:rgba(249,115,22,0.12)}
+.timer-box.danger{border-color:var(--red);color:var(--red);background:rgba(239,68,68,0.12);animation:pulseOrange 1s ease infinite}
+.progress-text{font-size:13px;color:var(--grey)}
+.progress-text span{color:var(--purple2);font-weight:700}
+.prog-bar-exam{flex:1;height:6px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;min-width:80px}
+.prog-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--purple),var(--orange));transition:width .4s ease}
+
+/* SECTION HEADERS */
+.section-divider{display:flex;align-items:center;gap:12px;margin:32px 0 20px}
+.section-divider h3{font-size:14px;font-weight:800;white-space:nowrap;color:var(--grey);text-transform:uppercase;letter-spacing:1px}
+.section-divider .sl{flex:1;height:1px;background:rgba(255,255,255,0.06)}
+.section-tag{padding:4px 12px;border-radius:99px;font-size:11px;font-weight:700}
+
+/* QUESTION CARD */
+.eq{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:22px;margin-bottom:14px;transition:border-color .2s}
+.eq.answered{border-color:rgba(139,92,246,0.25)}
+.eq.correct-q{border-color:rgba(34,197,94,0.3)!important}
+.eq.wrong-q{border-color:rgba(239,68,68,0.2)!important}
+.eq-meta{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.q-num{width:30px;height:30px;border-radius:8px;background:rgba(139,92,246,0.2);color:var(--purple2);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;font-family:var(--font-mono);flex-shrink:0}
+.q-tag{padding:3px 10px;border-radius:99px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px}
+.eq-text{font-size:14px;font-weight:700;line-height:1.65;margin-bottom:14px;color:var(--white)}
+.eq-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:560px){.eq-opts{grid-template-columns:1fr}}
+.eo{padding:10px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.09);background:rgba(255,255,255,0.03);cursor:pointer;font-size:13px;text-align:left;color:var(--white);font-family:var(--font-main);transition:var(--transition);line-height:1.5}
+.eo:hover:not(:disabled){border-color:var(--purple2);background:rgba(139,92,246,0.08)}
+.eo.sel{border-color:var(--purple);background:rgba(139,92,246,0.15);color:var(--purple2)}
+.eo.correct{border-color:var(--green)!important;background:rgba(34,197,94,0.15)!important;color:var(--green)!important}
+.eo.wrong{border-color:var(--red)!important;background:rgba(239,68,68,0.15)!important;color:var(--red)!important}
+.eo:disabled{cursor:default}
+
+/* SUBMIT */
+.submit-area{text-align:center;margin-top:36px;padding-top:28px;border-top:1px solid rgba(139,92,246,0.2)}
+.submit-counter{font-size:28px;font-weight:900;color:var(--purple2);font-family:var(--font-head)}
+.btn-submit{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:white;border:none;padding:16px 48px;border-radius:12px;font-size:17px;font-weight:700;cursor:pointer;transition:var(--transition);margin-top:16px}
+.btn-submit:hover:not(:disabled){filter:brightness(1.1);transform:translateY(-2px)}
+.btn-submit:disabled{opacity:.4;cursor:default;transform:none}
+
+/* RESULTS */
+#exam_result{display:none}
+.result-hero{text-align:center;padding:48px 24px;background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(30,27,139,0.4));border:2px solid rgba(139,92,246,0.3);border-radius:24px;margin-bottom:28px}
+.result-icon{font-size:80px;margin-bottom:16px}
+.result-score-big{font-family:var(--font-head);font-size:72px;font-weight:900;line-height:1}
+.score-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:24px 0}
+.ss-box{border-radius:12px;padding:16px;text-align:center}
+.ss-val{font-size:22px;font-weight:900;font-family:var(--font-head)}
+.ss-lbl{font-size:11px;color:rgba(255,255,255,0.5);margin-top:3px}
+.cert-card{background:linear-gradient(135deg,rgba(30,27,139,0.6),rgba(139,92,246,0.08));border:2px solid rgba(139,92,246,0.35);border-radius:20px;padding:32px;text-align:center;margin:24px 0}
+.topic-results{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:20px 0}
+.tr-box{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:12px;padding:14px 16px}
+.tr-topic{font-size:12px;font-weight:700;margin-bottom:6px}
+.tr-bar-wrap{height:5px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;margin-bottom:4px}
+.tr-bar{height:100%;border-radius:99px;transition:width .8s ease}
+.tr-score{font-size:11px;color:var(--grey)}
+@media(max-width:560px){.topic-results{grid-template-columns:1fr}.score-strip{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<header class="ea-header">
+  <div class="ea-header-inner">
+    <a href="index.html" class="ea-logo">
+      <img src="assets/logo.png" alt="Eagle Academy" onerror="this.style.display='none'"/>
+      <div class="ea-logo-text"><div class="brand">EAGLE ACADEMY</div><div class="sub">Freight Dispatcher Certification</div></div>
+    </a>
+    <nav class="ea-nav">
+      <a href="index.html" class="ea-nav-btn">🏠 Home</a>
+      <a href="week1.html" class="ea-nav-btn">Week 1</a>
+      <a href="week2.html" class="ea-nav-btn">Week 2</a>
+      <a href="week3.html" class="ea-nav-btn">Week 3</a>
+      <a href="week4.html" class="ea-nav-btn">Week 4</a>
+      <a href="tools.html" class="ea-nav-btn">🧮 Tools</a>
+      <a href="madam-ji.html" class="ea-nav-btn">🎓 Madam JI</a>
+      <a href="exam.html" class="ea-nav-btn active">📝 Final Exam</a>
+    </nav>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('hi',this)">हिं</button>
+    </div>
+  </div>
+</header>
+
+<div class="ticker-wrap"><div class="ticker-inner" style="font-size:12px;color:var(--purple2);font-family:var(--font-mono)">
+  <span>📝 50 Questions · 60 Minutes · 70% to Pass</span><span>🇬🇧 UK Primary Focus — O-Licence · DVSA · Tachograph · CMR · Courier Exchange</span><span>🏆 85%+ = Merit · 95%+ = Distinction</span><span>💡 Answer every question — no penalty for guessing</span><span>📜 Certificate generated immediately on passing</span><span>📝 50 Questions · 60 Minutes · 70% to Pass</span><span>🇬🇧 UK Primary Focus — O-Licence · DVSA · Tachograph · CMR · Courier Exchange</span>
+</div></div>
+
+<!-- ══ LANDING ══ -->
+<div id="exam_landing" class="exam-page exam-landing">
+  <div class="eagle-spin">🦅</div>
+  <h1 style="font-size:clamp(26px,4vw,44px);font-weight:900;margin:16px 0 8px">Final Certification Exam</h1>
+  <p style="font-size:15px;color:var(--grey);margin-bottom:4px">Eagle Academy — International Freight Dispatcher</p>
+  <p style="font-size:14px;color:var(--purple2);font-family:var(--font-hindi)">अंतिम प्रमाणन परीक्षा — सभी 4 सप्ताह का परीक्षण</p>
+
+  <div class="start-card">
+    <div class="meta-grid">
+      <div class="meta-box"><div class="meta-val">50</div><div class="meta-lbl">Questions</div></div>
+      <div class="meta-box"><div class="meta-val">60</div><div class="meta-lbl">Minutes</div></div>
+      <div class="meta-box"><div class="meta-val">70%</div><div class="meta-lbl">To Pass</div></div>
+      <div class="meta-box"><div class="meta-val">🇬🇧</div><div class="meta-lbl">UK Focus</div></div>
+    </div>
+
+    <div class="breakdown-row">
+      <div class="bk-box"><div class="bk-num" style="color:var(--orange)">15</div><div style="color:var(--grey);font-size:11px">Week 1<br/>Foundations</div></div>
+      <div class="bk-box"><div class="bk-num" style="color:var(--cyan)">12</div><div style="color:var(--grey);font-size:11px">Week 2<br/>Operations</div></div>
+      <div class="bk-box"><div class="bk-num" style="color:var(--green)">15</div><div style="color:var(--grey);font-size:11px">Week 3<br/>UK Law</div></div>
+      <div class="bk-box"><div class="bk-num" style="color:var(--purple2)">8</div><div style="color:var(--grey);font-size:11px">Week 4<br/>Career</div></div>
+    </div>
+
+    <p style="font-size:13px;color:var(--grey);line-height:1.8;margin-bottom:20px">Enter your full name exactly as you want it on your certificate. Once the timer starts it cannot be paused. Answer all 50 questions — no penalty for guessing.</p>
+    <input type="text" id="student_name" class="name-input" placeholder="Enter your full name for the certificate…" maxlength="60" oninput="checkReady()"/>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn-submit" id="start_btn" onclick="startExam()" disabled style="font-size:16px">Start Exam →</button>
+    </div>
+    <div style="margin-top:16px;font-size:12px;color:var(--grey)">🏆 Pass (70%) → Certified &nbsp;|&nbsp; Merit (85%) → Certified with Merit &nbsp;|&nbsp; Distinction (95%) → Certified with Distinction</div>
+  </div>
+</div>
+
+<!-- ══ EXAM IN PROGRESS ══ -->
+<div id="exam_main">
+  <div class="exam-sticky">
+    <div class="exam-sticky-inner">
+      <div class="timer-box" id="timer_disp">60:00</div>
+      <div class="prog-bar-exam"><div class="prog-bar-fill" id="prog_bar" style="width:0%"></div></div>
+      <div class="progress-text"><span id="ans_count">0</span>/50 answered</div>
+      <button class="btn-submit" id="submit_btn" onclick="submitExam()" disabled style="padding:8px 20px;font-size:14px;margin:0">Submit</button>
+    </div>
+  </div>
+
+  <div class="exam-page" style="padding-top:0">
+
+    <!-- WEEK 1 SECTION -->
+    <div class="section-divider"><div class="sl"></div><h3>Week 1 — Foundations</h3><span class="section-tag" style="background:rgba(249,115,22,0.15);color:var(--orange);border:1px solid rgba(249,115,22,0.3)">15 Questions</span><div class="sl"></div></div>
+
+    <div class="eq" id="eq1"><div class="eq-meta"><div class="q-num">1</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Dispatch Role</span></div><div class="eq-text">A freight dispatcher works directly for:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,1,false)">A. The broker</button>
+      <button class="eo" onclick="pick(this,1,false)">B. The shipper</button>
+      <button class="eo" onclick="pick(this,1,true)">C. The carrier (truck owner)</button>
+      <button class="eo" onclick="pick(this,1,false)">D. The 3PL company</button>
+    </div></div>
+
+    <div class="eq" id="eq2"><div class="eq-meta"><div class="q-num">2</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Trailer Types</span></div><div class="eq-text">Which trailer type requires temperature control and is used for food and pharmaceuticals?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,2,false)">A. Dry Van</button>
+      <button class="eo" onclick="pick(this,2,true)">B. Reefer (Refrigerated)</button>
+      <button class="eo" onclick="pick(this,2,false)">C. Flatbed</button>
+      <button class="eo" onclick="pick(this,2,false)">D. Step Deck</button>
+    </div></div>
+
+    <div class="eq" id="eq3"><div class="eq-meta"><div class="q-num">3</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">USA HOS</span></div><div class="eq-text">Maximum daily driving hours for a USA truck driver under FMCSA rules is:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,3,false)">A. 9 hours</button>
+      <button class="eo" onclick="pick(this,3,false)">B. 10 hours</button>
+      <button class="eo" onclick="pick(this,3,true)">C. 11 hours</button>
+      <button class="eo" onclick="pick(this,3,false)">D. 14 hours</button>
+    </div></div>
+
+    <div class="eq" id="eq4"><div class="eq-meta"><div class="q-num">4</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">RPM</span></div><div class="eq-text">A load pays $2,400 for 800 miles. What is the RPM?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,4,false)">A. $2.00</button>
+      <button class="eo" onclick="pick(this,4,false)">B. $2.25</button>
+      <button class="eo" onclick="pick(this,4,true)">C. $3.00</button>
+      <button class="eo" onclick="pick(this,4,false)">D. $3.50</button>
+    </div></div>
+
+    <div class="eq" id="eq5"><div class="eq-meta"><div class="q-num">5</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Load Boards</span></div><div class="eq-text">DAT is the #1 freight load board in the USA. Approximately how many loads are posted annually?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,5,false)">A. 10 million</button>
+      <button class="eo" onclick="pick(this,5,false)">B. 100 million</button>
+      <button class="eo" onclick="pick(this,5,true)">C. 500 million+</button>
+      <button class="eo" onclick="pick(this,5,false)">D. 1 billion</button>
+    </div></div>
+
+    <div class="eq" id="eq6"><div class="eq-meta"><div class="q-num">6</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Red Flags</span></div><div class="eq-text">Which of these is a load board RED FLAG — meaning you should NOT book the load?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,6,false)">A. Broker credit score of 95</button>
+      <button class="eo" onclick="pick(this,6,true)">B. Broker credit score below 70 on DAT</button>
+      <button class="eo" onclick="pick(this,6,false)">C. Standard 30-day payment terms</button>
+      <button class="eo" onclick="pick(this,6,false)">D. FTL dry van load</button>
+    </div></div>
+
+    <div class="eq" id="eq7"><div class="eq-meta"><div class="q-num">7</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">USA Geography</span></div><div class="eq-text">The most active freight lane in the USA is:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,7,true)">A. Chicago (IL) ↔ Los Angeles (CA)</button>
+      <button class="eo" onclick="pick(this,7,false)">B. New York ↔ Seattle</button>
+      <button class="eo" onclick="pick(this,7,false)">C. Miami ↔ Denver</button>
+      <button class="eo" onclick="pick(this,7,false)">D. Dallas ↔ Phoenix</button>
+    </div></div>
+
+    <div class="eq" id="eq8"><div class="eq-meta"><div class="q-num">8</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Time Zones</span></div><div class="eq-text">IST (India Standard Time) is how many hours ahead of USA Eastern Standard Time (EST)?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,8,false)">A. +5 hours</button>
+      <button class="eo" onclick="pick(this,8,false)">B. +8 hours</button>
+      <button class="eo" onclick="pick(this,8,true)">C. +10 hours 30 minutes</button>
+      <button class="eo" onclick="pick(this,8,false)">D. +13 hours 30 minutes</button>
+    </div></div>
+
+    <div class="eq" id="eq9"><div class="eq-meta"><div class="q-num">9</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">HOS</span></div><div class="eq-text">USA 14-Hour Window Rule means:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,9,false)">A. Driver can drive for 14 consecutive hours</button>
+      <button class="eo" onclick="pick(this,9,true)">B. All driving must be completed within 14 hours of starting the shift</button>
+      <button class="eo" onclick="pick(this,9,false)">C. Driver must rest after 14 hours of on-duty time only</button>
+      <button class="eo" onclick="pick(this,9,false)">D. 14 hours applies only to flatbed drivers</button>
+    </div></div>
+
+    <div class="eq" id="eq10"><div class="eq-meta"><div class="q-num">10</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Industry Structure</span></div><div class="eq-text">What is a 3PL company?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,10,false)">A. A company that owns 3 trucks or fewer</button>
+      <button class="eo" onclick="pick(this,10,true)">B. Third-Party Logistics — a company managing the full supply chain</button>
+      <button class="eo" onclick="pick(this,10,false)">C. A government transport agency</button>
+      <button class="eo" onclick="pick(this,10,false)">D. A load board platform</button>
+    </div></div>
+
+    <div class="eq" id="eq11"><div class="eq-meta"><div class="q-num">11</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Trailer Types</span></div><div class="eq-text">Which UK trailer type has flexible curtain sides for side loading — very common on UK roads?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,11,false)">A. Dry Van</button>
+      <button class="eo" onclick="pick(this,11,true)">B. Curtainsider</button>
+      <button class="eo" onclick="pick(this,11,false)">C. Flatbed</button>
+      <button class="eo" onclick="pick(this,11,false)">D. Tanker</button>
+    </div></div>
+
+    <div class="eq" id="eq12"><div class="eq-meta"><div class="q-num">12</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">RPM Target</span></div><div class="eq-text">The minimum acceptable RPM for a dry van load in the USA is:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,12,false)">A. $1.00–1.50</button>
+      <button class="eo" onclick="pick(this,12,false)">B. $1.50–2.00</button>
+      <button class="eo" onclick="pick(this,12,true)">C. $2.50+</button>
+      <button class="eo" onclick="pick(this,12,false)">D. $5.00+</button>
+    </div></div>
+
+    <div class="eq" id="eq13"><div class="eq-meta"><div class="q-num">13</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">FTL vs LTL</span></div><div class="eq-text">FTL (Full Truckload) means:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,13,false)">A. Multiple shippers share one truck</button>
+      <button class="eo" onclick="pick(this,13,true)">B. One shipper fills the entire trailer</button>
+      <button class="eo" onclick="pick(this,13,false)">C. The truck is less than 75% full</button>
+      <button class="eo" onclick="pick(this,13,false)">D. Driver owns the freight</button>
+    </div></div>
+
+    <div class="eq" id="eq14"><div class="eq-meta"><div class="q-num">14</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">FMCSA</span></div><div class="eq-text">Before dispatching for a US carrier, you must verify their authority at:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,14,false)">A. DAT Load Board</button>
+      <button class="eo" onclick="pick(this,14,false)">B. Courier Exchange</button>
+      <button class="eo" onclick="pick(this,14,true)">C. FMCSA website (li.fmcsa.dot.gov)</button>
+      <button class="eo" onclick="pick(this,14,false)">D. Companies House</button>
+    </div></div>
+
+    <div class="eq" id="eq15"><div class="eq-meta"><div class="q-num">15</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Reefer Temp</span></div><div class="eq-text">Standard temperature for frozen food in a reefer trailer is:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,15,false)">A. 34–38°F</button>
+      <button class="eo" onclick="pick(this,15,true)">B. -10 to 0°F</button>
+      <button class="eo" onclick="pick(this,15,false)">C. 55–65°F</button>
+      <button class="eo" onclick="pick(this,15,false)">D. 70–80°F</button>
+    </div></div>
+
+    <!-- WEEK 2 SECTION -->
+    <div class="section-divider"><div class="sl"></div><h3>Week 2 — Operations</h3><span class="section-tag" style="background:rgba(6,182,212,0.12);color:var(--cyan);border:1px solid rgba(6,182,212,0.25)">12 Questions</span><div class="sl"></div></div>
+
+    <div class="eq" id="eq16"><div class="eq-meta"><div class="q-num">16</div><span class="q-tag" style="background:rgba(6,182,212,0.1);color:var(--cyan);border:1px solid rgba(6,182,212,0.2)">ICAR Method</span></div><div class="eq-text">In the ICAR broker call method, what does "C" stand for?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,16,false)">A. Calculate</button>
+      <button class="eo" onclick="pick(this,16,true)">B. Confirm — confirm the load details before negotiating</button>
+      <button class="eo" onclick="pick(this,16,false)">C. Close the deal</button>
+      <button class="eo" onclick="pick(this,16,false)">D. Credit check</button>
+    </div></div>
+
+    <div class="eq" id="eq17"><div class="eq-meta"><div class="q-num">17</div><span class="q-tag" style="background:rgba(6,182,212,0.1);color:var(--cyan);border:1px solid rgba(6,182,212,0.2)">BOL</span></div><div class="eq-text">The BOL (Bill of Lading) is signed at pickup. It becomes a POD (Proof of Delivery) when:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,17,false)">A. The dispatcher emails the invoice</button>
+      <button class="eo" onclick="pick(this,17,true)">B. The consignee signs it at delivery</button>
+      <button class="eo" onclick="pick(this,17,false)">C. The broker pays the carrier</button>
+      <button class="eo" onclick="pick(this,17,false)">D. 30 days after pickup</button>
+    </div></div>
+
+    <div class="eq" id="eq18"><div class="eq-meta"><div class="q-num">18</div><span class="q-tag" style="background:rgba(6,182,212,0.1);color:var(--cyan);border:1px solid rgba(6,182,212,0.2)">Rate Confirmation</span></div><div class="eq-text">The Rate Confirmation (RC) must be signed:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,18,false)">A. After the load is delivered</button>
+      <button class="eo" onclick="pick(this,18,true)">B. Before the truck moves — never dispatch without a signed RC</button>
+      <button class="eo" onclick="pick(this,18,false)">C. Only for loads over $5,000</button>
+      <button class="eo" onclick="pick(this,18,false)">D. Within 24 hours of delivery</button>
+    </div></div>
+
+    <div class="eq" id="eq19"><div class="eq-meta"><div class="q-num">19</div><span class="q-tag" style="background:rgba(6,182,212,0.1);color:var(--cyan);border:1px solid rgba(6,182,212,0.2)">Factoring</span></div><div class="eq-text">A $4,000 invoice is factored at 4%. How much does the carrier receive?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,19,false)">A. $4,000</button>
+      <button class="eo" onclick="pick(this,19,false)">B. $3,840</button>
+      <button class="eo" onclick="pick(this,19,true)">C. $3,840 ($4,000 minus $160 = $3,840)</button>
+      <button class="eo" onclick="pick(this,19,false)">D. $3,600</button>
+    </div></div>
+
+    <div class="eq" id="eq20"><div class="eq-meta"><div class="q-num">20</div><span class="q-tag" style="background:rgba(6,182,212,0.1);color:var(--cyan);border:1px solid rgba(6,182,212,0.2)">Negotiation</span></div><div class="eq-text">After stating your rate to a broker, they go silent. You should:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,20,false)">A. Immediately lower the rate</button>
+      <button class="eo" onclick="pick(this,20,true)">B. Stay silent — the first to speak loses bargaining power</button>
+      <button class="eo" onclick="pick(this,20,false)">C. Hang up and try again</button>
+      <button class="eo" onclick="pick(this,20,false)">D. Repeat the rate louder</button>
+    </div></div>
+
+    <div class="eq" id="eq21"><div class="eq-meta"><div class="q-num">21</div><span class="q-tag" style="background:rgba(6,182,212,0.1);color:var(--cyan);border:1px solid rgba(6,182,212,0.2)">Detention</span></div><div class="eq-text">Detention pay starts after how many FREE hours at a USA shipper/consignee?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,21,false)">A. 30 minutes</button>
+      <button class="eo" onclick="pick(this,21,false)">B. 1 hour</button>
+      <button class="eo" onclick="pick(this,21,true)">C. 2 hours</button>
+      <button class="eo" onclick="pick(this,21,false)">D. 4 hours</button>
+    </div></div>
+
+    <div class="eq" id="eq22"><div class="eq-meta"><div class="q-num">22</div><span class="q-tag" style="background:rgba(6,182,212,0.1);color:var(--cyan);border:1px solid rgba(6,182,212,0.2)">TONU</span></div><div class="eq-text">TONU (Truck Ordered Not Used) means:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,22,true)">A. Load cancelled after truck is already dispatched or at shipper</button>
+      <button class="eo" onclick="pick(this,22,false)">B. Truck arrives but refuses the load</button>
+      <button class="eo" onclick="pick(this,22,false)">C. Driver is unavailable for the load</button>
+      <button class="eo" onclick="pick(this,22,false)">D. Load picked up but not delivered</button>
+    </div></div>
+
+    <div class="eq" id="eq23"><div class="eq-meta"><div class="q-num">23</div><span class="q-tag" style="background:rgba(6,182,212,0.1);color:var(--cyan);border:1px solid rgba(6,182,212,0.2)">TMS</span></div><div class="eq-text">Best starter TMS for a 1–10 truck USA dispatch operation is approximately:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,23,false)">A. McLeod — enterprise level</button>
+      <button class="eo" onclick="pick(this,23,true)">B. Tailwind TMS (~$99/month)</button>
+      <button class="eo" onclick="pick(this,23,false)">C. Aljex — mid-size operations</button>
+      <button class="eo" onclick="pick(this,23,false)">D. No TMS needed</button>
+    </div></div>
+
+    <div class="eq" id="eq24"><div class="eq-meta"><div class="q-num">24</div><span class="q-tag" style="background:rgba(6,182,212,0.1);color:var(--cyan);border:1px solid rgba(6,182,212,0.2)">COI</span></div><div class="eq-text">Minimum cargo insurance required on a USA carrier's COI is:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,24,false)">A. $50,000</button>
+      <button class="eo" onclick="pick(this,24,true)">B. $100,000</button>
+      <button class="eo" onclick="pick(this,24,false)">C. $500,000</button>
+      <button class="eo" onclick="pick(this,24,false)">D. $1,000,000</button>
+    </div></div>
+
+    <div class="eq" id="eq25"><div class="eq-meta"><div class="q-num">25</div><span class="q-tag" style="background:rgba(6,182,212,0.1);color:var(--cyan);border:1px solid rgba(6,182,212,0.2)">Check Calls</span></div><div class="eq-text">How often should you check-call a driver on an active load?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,25,false)">A. Once per day</button>
+      <button class="eo" onclick="pick(this,25,true)">B. Every 2–4 hours</button>
+      <button class="eo" onclick="pick(this,25,false)">C. Only at pickup and delivery</button>
+      <button class="eo" onclick="pick(this,25,false)">D. Only if there's a problem</button>
+    </div></div>
+
+    <div class="eq" id="eq26"><div class="eq-meta"><div class="q-num">26</div><span class="q-tag" style="background:rgba(6,182,212,0.1);color:var(--cyan);border:1px solid rgba(6,182,212,0.2)">Invoicing</span></div><div class="eq-text">How quickly should you raise an invoice after delivery?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,26,false)">A. End of the month</button>
+      <button class="eo" onclick="pick(this,26,false)">B. Within 7 days</button>
+      <button class="eo" onclick="pick(this,26,true)">C. Within 48 hours</button>
+      <button class="eo" onclick="pick(this,26,false)">D. When the broker asks</button>
+    </div></div>
+
+    <div class="eq" id="eq27"><div class="eq-meta"><div class="q-num">27</div><span class="q-tag" style="background:rgba(6,182,212,0.1);color:var(--cyan);border:1px solid rgba(6,182,212,0.2)">Carrier Packet</span></div><div class="eq-text">The complete USA carrier packet includes:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,27,false)">A. W-9 only</button>
+      <button class="eo" onclick="pick(this,27,false)">B. W-9 and COI only</button>
+      <button class="eo" onclick="pick(this,27,true)">C. W-9 + COI + MC Authority + Operating Authority + Void cheque</button>
+      <button class="eo" onclick="pick(this,27,false)">D. Just the MC number</button>
+    </div></div>
+
+    <!-- WEEK 3 SECTION -->
+    <div class="section-divider"><div class="sl"></div><h3>Week 3 — UK Law & Operations</h3><span class="section-tag" style="background:rgba(34,197,94,0.12);color:var(--green);border:1px solid rgba(34,197,94,0.25)">15 Questions</span><div class="sl"></div></div>
+
+    <div class="eq" id="eq28"><div class="eq-meta"><div class="q-num">28</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">O-Licence</span></div><div class="eq-text">Which body issues the Operator's Licence in the UK?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,28,false)">A. FMCSA</button>
+      <button class="eo" onclick="pick(this,28,true)">B. Traffic Commissioner (regulated by DVSA)</button>
+      <button class="eo" onclick="pick(this,28,false)">C. HMRC</button>
+      <button class="eo" onclick="pick(this,28,false)">D. Companies House</button>
+    </div></div>
+
+    <div class="eq" id="eq29"><div class="eq-meta"><div class="q-num">29</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">O-Licence Types</span></div><div class="eq-text">A UK carrier wanting to carry goods for hire within the UK only needs:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,29,false)">A. Restricted Licence</button>
+      <button class="eo" onclick="pick(this,29,true)">B. Standard National Licence</button>
+      <button class="eo" onclick="pick(this,29,false)">C. Standard International Licence</button>
+      <button class="eo" onclick="pick(this,29,false)">D. No licence for domestic work</button>
+    </div></div>
+
+    <div class="eq" id="eq30"><div class="eq-meta"><div class="q-num">30</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">UK Drivers Hours</span></div><div class="eq-text">After how many hours of continuous driving must a UK HGV driver take a break?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,30,false)">A. 3 hours</button>
+      <button class="eo" onclick="pick(this,30,true)">B. 4.5 hours</button>
+      <button class="eo" onclick="pick(this,30,false)">C. 6 hours</button>
+      <button class="eo" onclick="pick(this,30,false)">D. 8 hours</button>
+    </div></div>
+
+    <div class="eq" id="eq31"><div class="eq-meta"><div class="q-num">31</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">UK Weekly Limit</span></div><div class="eq-text">The maximum weekly driving limit for a UK HGV driver is:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,31,false)">A. 40 hours</button>
+      <button class="eo" onclick="pick(this,31,false)">B. 48 hours</button>
+      <button class="eo" onclick="pick(this,31,true)">C. 56 hours</button>
+      <button class="eo" onclick="pick(this,31,false)">D. 70 hours</button>
+    </div></div>
+
+    <div class="eq" id="eq32"><div class="eq-meta"><div class="q-num">32</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">Tachograph</span></div><div class="eq-text">Tachograph mode "H" means:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,32,false)">A. Driving</button>
+      <button class="eo" onclick="pick(this,32,true)">B. Other Work (loading, paperwork, waiting at a job)</button>
+      <button class="eo" onclick="pick(this,32,false)">C. Rest</button>
+      <button class="eo" onclick="pick(this,32,false)">D. Availability (waiting at ferry)</button>
+    </div></div>
+
+    <div class="eq" id="eq33"><div class="eq-meta"><div class="q-num">33</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">CMR Note</span></div><div class="eq-text">A CMR Note is required for:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,33,false)">A. All UK domestic deliveries</button>
+      <button class="eo" onclick="pick(this,33,true)">B. International road freight — any load crossing national borders</button>
+      <button class="eo" onclick="pick(this,33,false)">C. Pallet network trunking only</button>
+      <button class="eo" onclick="pick(this,33,false)">D. Loads over 5 tonnes only</button>
+    </div></div>
+
+    <div class="eq" id="eq34"><div class="eq-meta"><div class="q-num">34</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">UK Documents</span></div><div class="eq-text">For a UK domestic delivery, the document used instead of CMR is:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,34,false)">A. Bill of Lading</button>
+      <button class="eo" onclick="pick(this,34,true)">B. Consignment Note (delivery note)</button>
+      <button class="eo" onclick="pick(this,34,false)">C. Rate Confirmation</button>
+      <button class="eo" onclick="pick(this,34,false)">D. W-9 form</button>
+    </div></div>
+
+    <div class="eq" id="eq35"><div class="eq-meta"><div class="q-num">35</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">Courier Exchange</span></div><div class="eq-text">Courier Exchange (CX) is the UK equivalent of:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,35,false)">A. Uber Freight</button>
+      <button class="eo" onclick="pick(this,35,true)">B. DAT Load Board</button>
+      <button class="eo" onclick="pick(this,35,false)">C. Shipify</button>
+      <button class="eo" onclick="pick(this,35,false)">D. Flexport</button>
+    </div></div>
+
+    <div class="eq" id="eq36"><div class="eq-meta"><div class="q-num">36</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">UK Logistics</span></div><div class="eq-text">Eddie Stobart is known as:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,36,false)">A. A UK government transport agency</button>
+      <button class="eo" onclick="pick(this,36,false)">B. A UK load board platform</button>
+      <button class="eo" onclick="pick(this,36,true)">C. An iconic UK haulier with 2,000+ vehicles that uses owner-operator subcontractors</button>
+      <button class="eo" onclick="pick(this,36,false)">D. A pallet network</button>
+    </div></div>
+
+    <div class="eq" id="eq37"><div class="eq-meta"><div class="q-num">37</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">Pallet Networks</span></div><div class="eq-text">Which pallet network is owned by the Eddie Stobart Group?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,37,true)">A. Palletforce</button>
+      <button class="eo" onclick="pick(this,37,false)">B. Pall-Ex</button>
+      <button class="eo" onclick="pick(this,37,false)">C. TPN</button>
+      <button class="eo" onclick="pick(this,37,false)">D. Palletways</button>
+    </div></div>
+
+    <div class="eq" id="eq38"><div class="eq-meta"><div class="q-num">38</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">Trunking</span></div><div class="eq-text">"Trunking" in a pallet network means:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,38,false)">A. Delivering to end customers</button>
+      <button class="eo" onclick="pick(this,38,true)">B. Moving pallets overnight from local depot to central hub</button>
+      <button class="eo" onclick="pick(this,38,false)">C. Picking up pallets from businesses</button>
+      <button class="eo" onclick="pick(this,38,false)">D. Sorting pallets at the warehouse</button>
+    </div></div>
+
+    <div class="eq" id="eq39"><div class="eq-meta"><div class="q-num">39</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">UK Time Zone</span></div><div class="eq-text">UK business starts at 8:00 AM GMT. What time is that in India (IST)?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,39,false)">A. 8:00 AM IST</button>
+      <button class="eo" onclick="pick(this,39,false)">B. 10:30 AM IST</button>
+      <button class="eo" onclick="pick(this,39,true)">C. 1:30 PM IST</button>
+      <button class="eo" onclick="pick(this,39,false)">D. 9:30 PM IST</button>
+    </div></div>
+
+    <div class="eq" id="eq40"><div class="eq-meta"><div class="q-num">40</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">O-Licence Check</span></div><div class="eq-text">Where do you verify a UK carrier's O-Licence is active?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,40,true)">A. vehicle-operator-licensing.service.gov.uk</button>
+      <button class="eo" onclick="pick(this,40,false)">B. Companies House</button>
+      <button class="eo" onclick="pick(this,40,false)">C. Courier Exchange member list</button>
+      <button class="eo" onclick="pick(this,40,false)">D. The carrier's own website</button>
+    </div></div>
+
+    <div class="eq" id="eq41"><div class="eq-meta"><div class="q-num">41</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">Post-Brexit</span></div><div class="eq-text">Since Brexit, UK–EU road freight additionally requires:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,41,false)">A. DAT credit score above 80</button>
+      <button class="eo" onclick="pick(this,41,false)">B. US MC number</button>
+      <button class="eo" onclick="pick(this,41,true)">C. EORI number + customs declarations</button>
+      <button class="eo" onclick="pick(this,41,false)">D. Additional UK insurance only</button>
+    </div></div>
+
+    <div class="eq" id="eq42"><div class="eq-meta"><div class="q-num">42</div><span class="q-tag" style="background:rgba(34,197,94,0.1);color:var(--green);border:1px solid rgba(34,197,94,0.2)">DVSA</span></div><div class="eq-text">DVSA stands for:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,42,false)">A. Driver Vehicle Safety Agency</button>
+      <button class="eo" onclick="pick(this,42,true)">B. Driver and Vehicle Standards Agency</button>
+      <button class="eo" onclick="pick(this,42,false)">C. Department of Vehicle and Safety Assessments</button>
+      <button class="eo" onclick="pick(this,42,false)">D. Drivers Verification and Standards Association</button>
+    </div></div>
+
+    <!-- WEEK 4 SECTION -->
+    <div class="section-divider"><div class="sl"></div><h3>Week 4 — Career & Business</h3><span class="section-tag" style="background:var(--purple3);color:var(--purple2);border:1px solid rgba(139,92,246,0.3)">8 Questions</span><div class="sl"></div></div>
+
+    <div class="eq" id="eq43"><div class="eq-meta"><div class="q-num">43</div><span class="q-tag" style="background:var(--purple3);color:var(--purple2);border:1px solid rgba(139,92,246,0.25)">UK CV</span></div><div class="eq-text">Which should NEVER appear on a UK dispatcher CV?</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,43,false)">A. Eagle Academy Certification</button>
+      <button class="eo" onclick="pick(this,43,false)">B. UK-specific skills (DVSA, O-Licence, CMR)</button>
+      <button class="eo" onclick="pick(this,43,true)">C. Your photograph and date of birth</button>
+      <button class="eo" onclick="pick(this,43,false)">D. Professional Summary</button>
+    </div></div>
+
+    <div class="eq" id="eq44"><div class="eq-meta"><div class="q-num">44</div><span class="q-tag" style="background:var(--purple3);color:var(--purple2);border:1px solid rgba(139,92,246,0.25)">LinkedIn</span></div><div class="eq-text">The most important line on your LinkedIn profile is:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,44,false)">A. Your current location</button>
+      <button class="eo" onclick="pick(this,44,true)">B. Your headline — it should include: UK Freight Dispatcher | DVSA | CMR | Courier Exchange | Remote</button>
+      <button class="eo" onclick="pick(this,44,false)">C. The number of connections</button>
+      <button class="eo" onclick="pick(this,44,false)">D. Your profile photo</button>
+    </div></div>
+
+    <div class="eq" id="eq45"><div class="eq-meta"><div class="q-num">45</div><span class="q-tag" style="background:var(--purple3);color:var(--purple2);border:1px solid rgba(139,92,246,0.25)">UK Jobs</span></div><div class="eq-text">Best UK-specific job boards for freight dispatcher roles are:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,45,false)">A. ZipRecruiter and Craigslist</button>
+      <button class="eo" onclick="pick(this,45,true)">B. Totaljobs.com and CV-Library.co.uk</button>
+      <button class="eo" onclick="pick(this,45,false)">C. Monster.com and CareerBuilder</button>
+      <button class="eo" onclick="pick(this,45,false)">D. Naukri and Glassdoor India</button>
+    </div></div>
+
+    <div class="eq" id="eq46"><div class="eq-meta"><div class="q-num">46</div><span class="q-tag" style="background:var(--purple3);color:var(--purple2);border:1px solid rgba(139,92,246,0.25)">Interview</span></div><div class="eq-text">In a UK transport interview: "What is your minimum rate for a UK HGV load?" Best answer starts with:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,46,false)">A. "Whatever the market offers"</button>
+      <button class="eo" onclick="pick(this,46,true)">B. "I calculate based on cost-per-mile — UK HGV costs £1.20–1.80/mile so I target minimum £2.50/mile revenue"</button>
+      <button class="eo" onclick="pick(this,46,false)">C. "I don't discuss rates in interviews"</button>
+      <button class="eo" onclick="pick(this,46,false)">D. "Same as US rates"</button>
+    </div></div>
+
+    <div class="eq" id="eq47"><div class="eq-meta"><div class="q-num">47</div><span class="q-tag" style="background:var(--purple3);color:var(--purple2);border:1px solid rgba(139,92,246,0.25)">Scaling</span></div><div class="eq-text">A dispatcher managing 10 UK vehicles at 8% (avg £1,200/load, 4 loads/week) earns monthly approximately:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,47,false)">A. £1,500/month</button>
+      <button class="eo" onclick="pick(this,47,false)">B. £5,000/month</button>
+      <button class="eo" onclick="pick(this,47,true)">C. £15,360/month gross</button>
+      <button class="eo" onclick="pick(this,47,false)">D. £50,000/month</button>
+    </div></div>
+
+    <div class="eq" id="eq48"><div class="eq-meta"><div class="q-num">48</div><span class="q-tag" style="background:var(--purple3);color:var(--purple2);border:1px solid rgba(139,92,246,0.25)">Cold Call</span></div><div class="eq-text">When cold calling a UK owner-operator, the key advantage to emphasise is:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,48,false)">A. You charge upfront fees</button>
+      <button class="eo" onclick="pick(this,48,true)">B. Commission-only — they pay nothing until you earn them money (zero risk)</button>
+      <button class="eo" onclick="pick(this,48,false)">C. You offer guaranteed loads</button>
+      <button class="eo" onclick="pick(this,48,false)">D. You are based in their city</button>
+    </div></div>
+
+    <div class="eq" id="eq49"><div class="eq-meta"><div class="q-num">49</div><span class="q-tag" style="background:var(--purple3);color:var(--purple2);border:1px solid rgba(139,92,246,0.25)">KPI</span></div><div class="eq-text">Target empty running percentage for a UK dispatcher is:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,49,true)">A. Under 15%</button>
+      <button class="eo" onclick="pick(this,49,false)">B. Under 40%</button>
+      <button class="eo" onclick="pick(this,49,false)">C. Under 60%</button>
+      <button class="eo" onclick="pick(this,49,false)">D. No target exists</button>
+    </div></div>
+
+    <div class="eq" id="eq50"><div class="eq-meta"><div class="q-num">50</div><span class="q-tag" style="background:var(--purple3);color:var(--purple2);border:1px solid rgba(139,92,246,0.25)">Certification</span></div><div class="eq-text">To be certified by Eagle Academy you must score:</div><div class="eq-opts">
+      <button class="eo" onclick="pick(this,50,false)">A. 50% (25/50)</button>
+      <button class="eo" onclick="pick(this,50,false)">B. 60% (30/50)</button>
+      <button class="eo" onclick="pick(this,50,true)">C. 70% (35/50)</button>
+      <button class="eo" onclick="pick(this,50,false)">D. 90% (45/50)</button>
+    </div></div>
+
+    <!-- SUBMIT -->
+    <div class="submit-area">
+      <div class="submit-counter"><span id="ans_count_btm">0</span>/50 Questions Answered</div>
+      <div style="font-size:13px;color:var(--grey);margin:8px 0" id="submit_hint_btm">Answer all 50 questions to unlock submit</div>
+      <button class="btn-submit" id="submit_btn_btm" onclick="submitExam()" disabled>📜 Submit & Get Certificate</button>
+    </div>
+  </div><!-- end exam-page -->
+</div><!-- end exam_main -->
+
+<!-- ══ RESULTS ══ -->
+<div id="exam_result" class="exam-page">
+  <div class="result-hero">
+    <div class="result-icon" id="ri">🏆</div>
+    <div style="font-size:13px;color:var(--grey);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;font-family:var(--font-mono)">EAGLE ACADEMY</div>
+    <div id="result_title" style="font-size:28px;font-weight:900;margin-bottom:12px"></div>
+    <div class="result-score-big" id="result_score" style="color:var(--purple2)"></div>
+    <div style="font-size:16px;color:var(--grey);margin:8px 0" id="result_pct"></div>
+    <div style="font-size:15px;margin-top:12px" id="result_msg"></div>
+  </div>
+
+  <div class="score-strip">
+    <div class="ss-box" style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2)">
+      <div class="ss-val" style="color:var(--orange)" id="ss_w1">—</div>
+      <div class="ss-lbl">Week 1<br/>/ 15</div>
+    </div>
+    <div class="ss-box" style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.2)">
+      <div class="ss-val" style="color:var(--cyan)" id="ss_w2">—</div>
+      <div class="ss-lbl">Week 2<br/>/ 12</div>
+    </div>
+    <div class="ss-box" style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.2)">
+      <div class="ss-val" style="color:var(--green)" id="ss_w3">—</div>
+      <div class="ss-lbl">Week 3 UK<br/>/ 15</div>
+    </div>
+    <div class="ss-box" style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.2)">
+      <div class="ss-val" style="color:var(--purple2)" id="ss_w4">—</div>
+      <div class="ss-lbl">Week 4<br/>/ 8</div>
+    </div>
+  </div>
+
+  <div class="cert-card" id="cert_card">
+    <div style="font-size:32px;margin-bottom:8px">🏆</div>
+    <div style="font-size:11px;text-transform:uppercase;letter-spacing:2px;color:var(--grey);font-family:var(--font-mono)">Certificate of Achievement</div>
+    <div style="font-size:22px;font-weight:900;margin:8px 0" id="cert_name_display"></div>
+    <div style="font-size:13px;color:var(--purple2);margin-bottom:16px" id="cert_grade_display"></div>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a id="cert_link" href="certificate.html" class="btn-submit" style="display:inline-block;text-decoration:none;font-size:15px;padding:14px 32px">🎓 View & Print Certificate</a>
+      <button onclick="location.reload()" class="btn-submit" style="background:rgba(255,255,255,0.08);font-size:14px;padding:14px 24px">↩ Retake Exam</button>
+    </div>
+  </div>
+</div>
+
+<script src="assets/app.js"></script>
+<script>
+const TOTAL=50;
+let answers={}, timerSec=3600, timerInt=null, examActive=false, studentName='';
+const CORRECT={1:true,2:true,3:true,4:true,5:true,6:true,7:true,8:true,9:true,10:true,11:true,12:true,13:true,14:true,15:true,16:true,17:true,18:true,19:true,20:true,21:true,22:true,23:true,24:true,25:true,26:true,27:true,28:true,29:true,30:true,31:true,32:true,33:true,34:true,35:true,36:true,37:true,38:true,39:true,40:true,41:true,42:true,43:true,44:true,45:true,46:true,47:true,48:true,49:true,50:true};
+
+function checkReady(){
+  const v=document.getElementById('student_name').value.trim();
+  document.getElementById('start_btn').disabled=v.length<2;
+}
+function setLang(lang,btn){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+
+function startExam(){
+  studentName=document.getElementById('student_name').value.trim();
+  document.getElementById('exam_landing').style.display='none';
+  document.getElementById('exam_main').style.display='block';
+  examActive=true;
+  timerInt=setInterval(tick,1000);
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function tick(){
+  timerSec--;
+  const m=String(Math.floor(timerSec/60)).padStart(2,'0');
+  const s=String(timerSec%60).padStart(2,'0');
+  const td=document.getElementById('timer_disp');
+  td.textContent=m+':'+s;
+  td.className='timer-box'+(timerSec<=600?' danger':timerSec<=900?' warn':'');
+  if(timerSec<=0){clearInterval(timerInt);submitExam();}
+}
+function pick(btn,qNum,correct){
+  if(!examActive)return;
+  const eq=document.getElementById('eq'+qNum);
+  eq.querySelectorAll('.eo').forEach(b=>{b.classList.remove('sel');b.disabled=false;});
+  answers[qNum]=correct;
+  btn.classList.add('sel');
+  eq.classList.add('answered');
+  const cnt=Object.keys(answers).length;
+  ['ans_count','ans_count_btm'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=cnt;});
+  const pct=Math.round(cnt/TOTAL*100);
+  const pb=document.getElementById('prog_bar');if(pb)pb.style.width=pct+'%';
+  const ready=cnt>=TOTAL;
+  ['submit_btn','submit_btn_btm'].forEach(id=>{const el=document.getElementById(id);if(el)el.disabled=!ready;});
+  if(ready){const h=document.getElementById('submit_hint_btm');if(h)h.textContent='All 50 answered — click Submit & Get Certificate!';}
+}
+function submitExam(){
+  clearInterval(timerInt);examActive=false;
+  document.querySelectorAll('.eo').forEach(b=>b.disabled=true);
+  // reveal correct/wrong
+  for(let q=1;q<=TOTAL;q++){
+    const eq=document.getElementById('eq'+q);
+    if(!eq)continue;
+    const opts=eq.querySelectorAll('.eo');
+    opts.forEach(b=>{
+      const isSel=b.classList.contains('sel');
+      const isCorrect=b.onclick&&b.onclick.toString().includes(',true)');
+      if(isCorrect)b.classList.add('correct');
+      else if(isSel&&!isCorrect)b.classList.add('wrong');
+    });
+    if(answers[q]===true)eq.classList.add('correct-q');
+    else if(answers[q]===false)eq.classList.add('wrong-q');
+  }
+  // score
+  const correct=Object.values(answers).filter(v=>v).length;
+  const pct=Math.round(correct/TOTAL*100);
+  const w1=Object.entries(answers).filter(([k,v])=>k>=1&&k<=15&&v).length;
+  const w2=Object.entries(answers).filter(([k,v])=>k>=16&&k<=27&&v).length;
+  const w3=Object.entries(answers).filter(([k,v])=>k>=28&&k<=42&&v).length;
+  const w4=Object.entries(answers).filter(([k,v])=>k>=43&&k<=50&&v).length;
+  let grade,icon,msg,colour;
+  if(pct>=95){grade='Distinction';icon='🏅';msg='Extraordinary! You are an exceptional Eagle Academy graduate.';colour='var(--gold)';}
+  else if(pct>=85){grade='Merit';icon='🎖️';msg='Excellent performance — Certified with Merit!';colour='var(--green)';}
+  else if(pct>=70){grade='Pass';icon='🎓';msg='Congratulations — you are Eagle Academy Certified!';colour='var(--purple2)';}
+  else{grade='Retake';icon='📚';msg='Below 70% — review your weak topics and try again. You can do this!';colour='var(--red)';}
+  document.getElementById('exam_main').style.display='none';
+  const rBox=document.getElementById('exam_result');rBox.style.display='block';
+  document.getElementById('ri').textContent=icon;
+  document.getElementById('result_title').textContent=pct>=70?'Certified — '+grade+'!':'Not Yet — Keep Going!';
+  document.getElementById('result_score').textContent=correct+' / '+TOTAL;
+  document.getElementById('result_score').style.color=colour;
+  document.getElementById('result_pct').textContent=pct+'% — '+grade;
+  document.getElementById('result_msg').textContent=msg;
+  document.getElementById('ss_w1').textContent=w1+'/15';
+  document.getElementById('ss_w2').textContent=w2+'/12';
+  document.getElementById('ss_w3').textContent=w3+'/15';
+  document.getElementById('ss_w4').textContent=w4+'/8';
+  document.getElementById('cert_name_display').textContent=studentName;
+  document.getElementById('cert_grade_display').textContent='Eagle Academy — Certified with '+grade;
+  // store for certificate page
+  const data={name:studentName,score:correct,total:TOTAL,pct,grade,w1,w2,w3,w4,date:new Date().toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric'})};
+  try{localStorage.setItem('ea_cert',JSON.stringify(data));}catch(e){}
+  document.getElementById('cert_link').href='certificate.html';
+  if(pct<70)document.getElementById('cert_card').style.display=pct>=70?'block':'none';
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>

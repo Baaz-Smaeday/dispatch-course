@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Week 3 — UK Freight Operations | Eagle Academy</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<style>
+.week-hero{background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 60%,rgba(34,197,94,0.1) 100%);border-bottom:1px solid rgba(34,197,94,0.2);padding:40px 24px 32px;position:relative;overflow:hidden}
+.week-hero::before{content:'3';position:absolute;right:5%;top:-20px;font-size:220px;font-weight:900;color:rgba(34,197,94,0.04);line-height:1;pointer-events:none}
+.week-hero-inner{max-width:1200px;margin:0 auto}
+.day-tabs-wrap{background:rgba(8,7,48,0.9);border-bottom:1px solid rgba(34,197,94,0.15);position:sticky;top:68px;z-index:100;backdrop-filter:blur(12px)}
+.day-tabs{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.day-tabs::-webkit-scrollbar{display:none}
+.day-tab{padding:14px 22px;border:none;background:transparent;color:var(--grey);font-family:var(--font-main);font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition);border-bottom:3px solid transparent;white-space:nowrap;flex-shrink:0}
+.day-tab:hover{color:var(--white)}.day-tab.active{color:var(--green);border-bottom-color:var(--green)}
+.chk{color:var(--green);margin-left:5px}
+.main-wrap{max-width:1200px;margin:0 auto;padding:32px 24px}
+.day-panel{display:none}.day-panel.active{display:block;animation:fadeUp 0.4s ease}
+.day-hero{background:linear-gradient(135deg,rgba(34,197,94,0.1),rgba(30,27,139,0.3));border:1px solid rgba(34,197,94,0.25);border-radius:var(--radius-xl);padding:28px 32px;margin-bottom:28px;display:flex;align-items:flex-start;gap:20px}
+.dnum{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--green),#16a34a);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0;box-shadow:0 8px 32px rgba(34,197,94,0.3);color:white}
+.di h2{font-size:24px;font-weight:800;margin-bottom:4px}
+.di .ht{color:var(--green);font-family:var(--font-hindi);font-size:15px}
+.di .dm{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.sh{display:flex;align-items:center;gap:12px;margin:28px 0 18px}
+.sh h3{font-size:18px;font-weight:800}
+.sl{flex:1;height:1px;background:rgba(34,197,94,0.2)}
+.vb{margin-bottom:28px;border-radius:var(--radius-lg);overflow:hidden;border:2px solid rgba(34,197,94,0.25);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.vh{background:linear-gradient(90deg,var(--navy-dark),var(--navy));padding:12px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(34,197,94,0.2);font-size:13px;font-weight:600}
+.dot{width:10px;height:10px;border-radius:50%}
+.vph{aspect-ratio:16/9;background:linear-gradient(135deg,var(--navy-dark),rgba(34,197,94,0.06));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer}
+.vph:hover{background:rgba(34,197,94,0.07)}
+.pcirc{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--green),#16a34a);display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 0 40px rgba(34,197,94,0.4);animation:pulseOrange 2.5s ease infinite}
+.vnt{padding:10px 18px;background:rgba(34,197,94,0.07);border-top:1px solid rgba(34,197,94,0.15);font-size:12px;color:var(--green)}
+.tc{background:rgba(255,255,255,0.03);border:1px solid rgba(34,197,94,0.15);border-radius:var(--radius-lg);margin-bottom:18px;overflow:hidden}
+.tt{width:100%;background:none;border:none;padding:18px 22px;cursor:pointer;display:flex;align-items:center;gap:14px;text-align:left;transition:var(--transition)}
+.tt:hover{background:rgba(34,197,94,0.05)}
+.tnum{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,var(--green),#16a34a);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:white;flex-shrink:0}
+.ttx{flex:1}.ten{font-size:15px;font-weight:700;color:var(--white)}.thi{font-size:12px;color:var(--green);font-family:var(--font-hindi);margin-top:2px}
+.tarr{font-size:18px;color:var(--grey);transition:transform 0.3s}
+.tt.open .tarr{transform:rotate(90deg);color:var(--green)}
+.tbody{display:none;padding:0 22px 22px}.tbody.open{display:block;animation:fadeUp 0.3s ease}
+.abar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;background:rgba(30,27,139,0.5);border:1px solid rgba(34,197,94,0.2);border-radius:var(--radius-md);margin-bottom:16px}
+.ab{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:999px;border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font-main);transition:var(--transition)}
+.ab-en{background:rgba(34,197,94,0.15);color:var(--green);border:1px solid rgba(34,197,94,0.3)}.ab-en:hover,.ab-en.on{background:var(--green);color:white}
+.ab-hi{background:rgba(251,191,36,0.15);color:var(--gold);border:1px solid rgba(251,191,36,0.3)}.ab-hi:hover,.ab-hi.on{background:var(--gold);color:#030418}
+.ab-stop{background:rgba(239,68,68,0.12);color:var(--red);border:1px solid rgba(239,68,68,0.3)}.ab-stop:hover{background:var(--red);color:white}
+.ab-tog{background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3)}
+.cen{font-size:14px;line-height:1.9;color:rgba(255,255,255,0.85)}
+.chi{display:none;font-size:15px;line-height:2;color:rgba(255,220,120,0.9);font-family:var(--font-hindi)}.chi.show{display:block;animation:fadeUp 0.3s ease}
+.gbox{background:rgba(34,197,94,0.08);border-left:3px solid var(--green);padding:14px 18px;border-radius:0 var(--radius-md) var(--radius-md) 0;margin:12px 0;font-size:13px;line-height:1.8}
+.obox{background:rgba(249,115,22,0.08);border-left:3px solid var(--orange);padding:14px 18px;border-radius:0 var(--radius-md) var(--radius-md) 0;margin:12px 0;font-size:13px;line-height:1.8}
+.hbox{background:rgba(6,182,212,0.08);border-left:3px solid var(--cyan);padding:14px 18px;border-radius:0 var(--radius-md) var(--radius-md) 0;margin:12px 0;font-size:13px;line-height:1.8}
+.ebox{background:rgba(34,197,94,0.07);border:1px solid rgba(34,197,94,0.25);border-radius:var(--radius-md);padding:14px 18px;margin:12px 0;font-size:13px;line-height:1.8}
+.wbox{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:var(--radius-md);padding:14px 18px;margin:12px 0;font-size:13px;line-height:1.8}
+.sbox{background:rgba(30,27,139,0.5);border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-md);padding:16px 20px;margin:12px 0;font-size:13px;line-height:1.9;font-family:var(--font-mono)}
+.kts{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.kt{background:rgba(30,27,139,0.6);border:1px solid rgba(99,102,241,0.3);border-radius:999px;padding:4px 14px;font-size:12px;font-weight:600;color:#a5b4fc;font-family:var(--font-mono)}
+.pl{list-style:none;padding:0;margin:0}
+.pl li{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px;line-height:1.7}
+.pl li:last-child{border-bottom:none}
+.pn{width:26px;height:26px;border-radius:50%;background:rgba(34,197,94,0.2);color:var(--green);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px}
+.hwbox{background:linear-gradient(135deg,rgba(30,27,139,0.5),rgba(34,197,94,0.08));border:1px solid rgba(34,197,94,0.25);border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:20px}
+.hwbox h4{font-size:16px;font-weight:800;margin-bottom:8px}
+.tquiz{margin-top:24px;background:rgba(30,27,139,0.4);border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-lg);overflow:hidden}
+.qh{padding:14px 20px;background:rgba(30,27,139,0.6);display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.qh h4{font-size:15px;font-weight:700}
+.qbody{padding:20px}
+.qi{margin-bottom:22px}.qi:last-child{margin-bottom:0}
+.qt{font-size:14px;font-weight:600;margin-bottom:10px;line-height:1.6}
+.qopts{display:flex;flex-direction:column;gap:8px}
+.qo{width:100%;padding:10px 16px;text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-md);cursor:pointer;font-size:13px;color:var(--white);font-family:var(--font-main);transition:var(--transition)}
+.qo:hover{border-color:var(--green);background:rgba(34,197,94,0.08)}
+.qo.correct{border-color:var(--green)!important;background:rgba(34,197,94,0.15)!important;color:var(--green)}
+.qo.wrong{border-color:var(--red)!important;background:rgba(239,68,68,0.15)!important;color:var(--red)}
+.qo:disabled{cursor:default}
+.qresult{display:none;padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);text-align:center}
+.qresult.show{display:block;animation:fadeUp 0.3s ease}
+.qscore{font-size:32px;font-weight:900}
+.dnav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:24px;border-top:1px solid rgba(34,197,94,0.15)}
+@media(max-width:640px){.day-hero{flex-direction:column;padding:20px}.main-wrap{padding:20px 16px}}
+</style>
+</head>
+<body>
+
+<header class="ea-header">
+  <div class="ea-header-inner">
+    <a href="index.html" class="ea-logo">
+      <img src="assets/logo.png" alt="Eagle Academy" onerror="this.style.display='none'"/>
+      <div class="ea-logo-text"><div class="brand">EAGLE ACADEMY</div><div class="sub">Freight Dispatcher Certification</div></div>
+    </a>
+    <nav class="ea-nav">
+      <a href="index.html" class="ea-nav-btn">🏠 Home</a>
+      <a href="week1.html" class="ea-nav-btn">Week 1</a>
+      <a href="week2.html" class="ea-nav-btn">Week 2</a>
+      <a href="week3.html" class="ea-nav-btn active">Week 3</a>
+      <a href="week4.html" class="ea-nav-btn">Week 4</a>
+      <a href="tools.html" class="ea-nav-btn">🧮 Tools</a>
+      <a href="madam-ji.html" class="ea-nav-btn">🎓 Madam JI</a>
+      <a href="exam.html" class="ea-nav-btn">📝 Final Exam</a>
+    </nav>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('hi',this)">हिं</button>
+    </div>
+  </div>
+</header>
+
+<div class="ticker-wrap"><div class="ticker-inner" id="tk" style="font-size:12px;color:var(--green);font-family:var(--font-mono)">
+  <span>🇬🇧 UK Focus Week</span><span>🚛 Courier Exchange = UK's #1 Load Board</span><span>📋 CMR Note = UK/EU version of BOL</span><span>⏱ Tachograph: 4.5hr rule — 45min break mandatory</span><span>🏢 Eddie Stobart, DHL UK, XPO, Wincanton</span><span>📦 UK Pallet Networks: Palletforce, Pall-Ex, TPN</span><span>🔵 O-Licence = UK Operator's Licence — required for HGV</span><span>⚖️ DVSA = UK's equivalent of FMCSA</span><span>💷 UK rates in £ per pallet or per load — not per mile</span><span>🇬🇧 UK Focus Week</span><span>🚛 Courier Exchange = UK's #1 Load Board</span><span>📋 CMR Note = UK/EU version of BOL</span>
+</div></div>
+
+<section class="week-hero">
+  <div class="week-hero-inner">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+      <span class="tag tag-green">Week 3 of 4</span><span class="tag tag-orange">🇬🇧 UK Primary Focus</span><span class="tag tag-cyan">5 Days</span>
+    </div>
+    <h1 style="font-size:clamp(24px,4vw,42px);font-weight:900;margin-bottom:8px">UK Freight Operations & Business Growth</h1>
+    <p style="font-size:15px;color:var(--grey);margin-bottom:4px">UK transport law, Operator Licencing, pallet networks, major UK logistics companies, Courier Exchange and scaling your dispatch business</p>
+    <p style="font-size:14px;color:var(--green);font-family:var(--font-hindi)">UK माल संचालन — ऑपरेटर लाइसेंस, पैलेट नेटवर्क, UK लॉजिस्टिक्स कंपनियाँ और व्यापार विकास</p>
+    <div style="margin-top:20px;max-width:500px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--grey);margin-bottom:6px"><span>Week Progress</span><span id="wpct">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="wprog" style="width:0%;background:linear-gradient(90deg,var(--green),var(--cyan))"></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="day-tabs-wrap"><div class="day-tabs">
+  <button class="day-tab active" onclick="showDay(11,this)">Day 11 <span id="c11" class="chk" style="display:none">✓</span></button>
+  <button class="day-tab" onclick="showDay(12,this)">Day 12 <span id="c12" class="chk" style="display:none">✓</span></button>
+  <button class="day-tab" onclick="showDay(13,this)">Day 13 <span id="c13" class="chk" style="display:none">✓</span></button>
+  <button class="day-tab" onclick="showDay(14,this)">Day 14 <span id="c14" class="chk" style="display:none">✓</span></button>
+  <button class="day-tab" onclick="showDay(15,this)">Day 15 <span id="c15" class="chk" style="display:none">✓</span></button>
+</div></div>
+
+<main class="main-wrap">
+
+<!-- ═══ DAY 11: UK Transport Law & O-Licence ═══ -->
+<div class="day-panel active" id="day11">
+  <div class="day-hero fade-up">
+    <div class="dnum">D11</div>
+    <div class="di">
+      <h2>UK Transport Law & Operator Licensing</h2>
+      <div class="ht">UK परिवहन कानून और ऑपरेटर लाइसेंसिंग</div>
+      <div class="dm"><span class="tag tag-green">2hrs Theory</span><span class="tag tag-orange">2hrs Practical</span><span class="tag tag-cyan">3 Topics</span></div>
+    </div>
+  </div>
+
+  <div class="vb fade-up delay-1">
+    <div class="vh"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 11 — UK Transport Law & O-Licence</span><span style="margin-left:auto;font-size:11px;color:var(--grey);font-family:var(--font-mono)">~12 min</span></div>
+    <div class="vph" onclick="loadVid(this,'YOUR_D11_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 11: UK Transport Law</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D11_VIDEO_ID in HTML</div></div></div>
+    <div class="vnt">💡 Replace YOUR_D11_VIDEO_ID with your YouTube video ID</div>
+  </div>
+
+  <div class="sh"><h3>📖 Theory Topics</h3><div class="sl"></div><span class="tag tag-green">3 Topics</span></div>
+
+  <!-- A: UK Operator Licence -->
+  <div class="tc" id="tc_11_1">
+    <button class="tt" onclick="openT('tc_11_1',this)">
+      <div class="tnum">A</div><div class="ttx"><div class="ten">UK Operator's Licence (O-Licence) — The Foundation</div><div class="thi">ऑपरेटर लाइसेंस — UK में HGV चलाने का आधार</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_11_1">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_11_1',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_11_1',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_11_1')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_11_1">
+        <p>In the UK, any business operating HGVs (Heavy Goods Vehicles) over 3.5 tonnes on public roads <strong>must</strong> hold an <strong style="color:var(--green)">Operator's Licence (O-Licence)</strong>. This is issued by the <strong>Traffic Commissioner</strong> and regulated by the <strong>DVSA (Driver and Vehicle Standards Agency)</strong> — the UK equivalent of the USA's FMCSA.</p>
+        <div class="gbox">
+          <strong>🔵 Three Types of O-Licence:</strong><br/><br/>
+          <strong>Restricted Licence:</strong> Only for own goods — cannot carry goods for hire. Example: A supermarket carrying its own stock.<br/><br/>
+          <strong>Standard National:</strong> Carry goods for hire within the UK only. Most common for UK hauliers.<br/><br/>
+          <strong>Standard International:</strong> Carry goods for hire within UK AND internationally (EU, post-Brexit requires extra documentation). Required for any cross-border work.
+        </div>
+        <div class="obox">
+          <strong>📋 O-Licence Requirements — What a Carrier Must Have:</strong><br/>
+          • <strong>Established business</strong> in the UK with a physical operating centre<br/>
+          • <strong>Good repute</strong> — no serious criminal convictions, no transport law violations<br/>
+          • <strong>Financial standing</strong> — minimum £8,000 for first vehicle + £4,500 per additional vehicle<br/>
+          • <strong>Professional competence</strong> — Transport Manager must hold CPC (Certificate of Professional Competence)<br/>
+          • <strong>Operating centre</strong> — a secure place to park vehicles when not in use
+        </div>
+        <div class="hbox">
+          <strong>🎯 As a Dispatcher — What You Must Check:</strong><br/>
+          Before working with any UK carrier, verify their O-Licence is <strong>valid and active</strong> on the DVSA public register at <strong>vehicle-operator-licensing.service.gov.uk</strong><br/>
+          Check: Licence number | Type (Standard National or International) | Authorised vehicles | Expiry date<br/>
+          <strong>A carrier without a valid O-Licence operating commercially is committing a criminal offence.</strong>
+        </div>
+        <div class="wbox"><strong>⚠️ DVSA Enforcement:</strong> DVSA enforcement officers can stop vehicles on the road at any time. If a vehicle is found without a valid O-Licence, the vehicle can be impounded, the driver prosecuted, and the carrier's licence revoked. As a dispatcher, never book a load for a carrier you cannot verify.</div>
+        <div class="kts"><span class="kt">O-Licence</span><span class="kt">DVSA</span><span class="kt">Traffic Commissioner</span><span class="kt">CPC</span><span class="kt">Standard International</span><span class="kt">Operating Centre</span></div>
+      </div>
+      <div class="chi" id="chi_11_1"><div id="th_11_1">
+        <p>UK में 3.5 टन से अधिक के HGV को सार्वजनिक सड़क पर चलाने के लिए <strong style="color:var(--green)">ऑपरेटर लाइसेंस (O-Licence)</strong> अनिवार्य है। यह DVSA द्वारा जारी किया जाता है — UK का FMCSA।</p>
+        <div class="gbox"><strong>3 प्रकार के O-Licence:</strong><br/>
+          <strong>रिस्ट्रिक्टेड:</strong> केवल अपना माल — किराये पर नहीं।<br/>
+          <strong>स्टैंडर्ड नेशनल:</strong> UK में किराये पर माल। सबसे सामान्य।<br/>
+          <strong>स्टैंडर्ड इंटरनेशनल:</strong> UK + अंतर्राष्ट्रीय। सीमा पार काम के लिए आवश्यक।
+        </div>
+        <div class="obox"><strong>जाँच करें:</strong> DVSA की वेबसाइट पर कैरियर का O-Licence सत्यापित करें। बिना लाइसेंस = आपराधिक अपराध।</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Quick Check — O-Licence</h4><span style="margin-left:auto" class="tag tag-green">4 Qs</span></div>
+        <div class="qbody" id="qb_11_1">
+          <div class="qi"><div class="qt">1. Which organisation issues the Operator's Licence in the UK?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_11_1','q1',false)">A. FMCSA</button>
+            <button class="qo" onclick="ans(this,'qb_11_1','q1',false)">B. HMRC</button>
+            <button class="qo" onclick="ans(this,'qb_11_1','q1',true)">C. Traffic Commissioner (regulated by DVSA)</button>
+            <button class="qo" onclick="ans(this,'qb_11_1','q1',false)">D. Companies House</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. A UK carrier wants to carry goods for other companies WITHIN the UK only. Which licence do they need?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_11_1','q2',false)">A. Restricted Licence</button>
+            <button class="qo" onclick="ans(this,'qb_11_1','q2',true)">B. Standard National Licence</button>
+            <button class="qo" onclick="ans(this,'qb_11_1','q2',false)">C. Standard International Licence</button>
+            <button class="qo" onclick="ans(this,'qb_11_1','q2',false)">D. No licence needed under 7.5 tonnes</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. What is the minimum financial standing required for 1 vehicle on a UK O-Licence?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_11_1','q3',false)">A. £2,000</button>
+            <button class="qo" onclick="ans(this,'qb_11_1','q3',false)">B. £5,000</button>
+            <button class="qo" onclick="ans(this,'qb_11_1','q3',true)">C. £8,000</button>
+            <button class="qo" onclick="ans(this,'qb_11_1','q3',false)">D. £15,000</button>
+          </div></div>
+          <div class="qi"><div class="qt">4. Where do you verify a UK carrier's O-Licence is active?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_11_1','q4',false)">A. Companies House website</button>
+            <button class="qo" onclick="ans(this,'qb_11_1','q4',true)">B. vehicle-operator-licensing.service.gov.uk</button>
+            <button class="qo" onclick="ans(this,'qb_11_1','q4',false)">C. DAT load board</button>
+            <button class="qo" onclick="ans(this,'qb_11_1','q4',false)">D. The carrier's website</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_11_1"><div class="qscore" id="qs_11_1"></div><div id="qm_11_1" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_11_1','qr_11_1','qs_11_1','qm_11_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B: UK Drivers Hours & Tachograph Deep Dive -->
+  <div class="tc" id="tc_11_2">
+    <button class="tt" onclick="openT('tc_11_2',this)">
+      <div class="tnum">B</div><div class="ttx"><div class="ten">UK Drivers' Hours Rules — The Complete Guide</div><div class="thi">UK ड्राइवर के घंटों के नियम — पूरी जानकारी</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_11_2">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_11_2',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_11_2',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_11_2')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_11_2">
+        <p>UK Drivers' Hours rules are <strong>strictly enforced</strong> by DVSA roadside checks and tachograph analysis. As a dispatcher, you must plan loads within legal driving windows — violating these rules can result in prosecution of <strong>both the driver AND the operator</strong>.</p>
+        <div class="gbox">
+          <strong>🕐 Daily Driving Limits:</strong><br/>
+          • Maximum 9 hours driving per day<br/>
+          • Can be extended to 10 hours — but only <strong>twice per calendar week</strong><br/>
+          • After 4.5 hours continuous driving — <strong>mandatory 45-minute break</strong> (can be split 15 min + 30 min in that order)<br/>
+          • Minimum daily rest: <strong>11 hours</strong> (can be reduced to 9 hours — maximum 3 times per week)
+        </div>
+        <div class="obox">
+          <strong>📅 Weekly & Fortnightly Limits:</strong><br/>
+          • Weekly driving limit: <strong>56 hours maximum</strong><br/>
+          • Fortnightly (2-week) limit: <strong>90 hours maximum</strong><br/>
+          • Weekly rest: <strong>45 consecutive hours</strong> minimum<br/>
+          • Reduced weekly rest (24 hours) allowed — but must be compensated within 3 weeks
+        </div>
+        <div class="hbox">
+          <strong>⏱ Tachograph Modes — What the Driver Must Select:</strong><br/>
+          🚗 <strong>D — Driving:</strong> Vehicle in motion — recorded automatically<br/>
+          🔧 <strong>H — Other Work:</strong> Loading, paperwork, waiting at a job (not rest)<br/>
+          📍 <strong>A — Availability:</strong> Waiting but not responsible for vehicle (e.g. waiting at ferry)<br/>
+          😴 <strong>X — Rest:</strong> Off duty, sleeping, genuine rest period<br/><br/>
+          <strong>Tachograph data is stored for 365 days. DVSA can request it at any time.</strong>
+        </div>
+        <div class="wbox">
+          <strong>⚠️ Dispatcher's Legal Responsibility:</strong><br/>
+          Under UK law, a dispatcher (or transport manager) who instructs a driver to exceed hours limits can be prosecuted. Common scenarios:<br/>
+          • Booking a load requiring the driver to drive 11 hours when they only have 9 hours available<br/>
+          • Not checking tachograph hours before assigning next load<br/>
+          • Pressuring driver to skip mandatory 45-minute break<br/>
+          <strong>Always ask: "How many hours do you have available today?" before booking any load.</strong>
+        </div>
+        <div class="ebox">
+          <strong>🎯 Practical Planning Example:</strong><br/>
+          Driver starts at 6:00 AM. Drive 4.5 hrs → mandatory break 45 min → drive up to 4.5 hrs more.<br/>
+          Earliest they can leave delivery = 6:00 AM + 4.5 + 0.75 + 4.5 = 3:45 PM (9.75 hrs elapsed, 9 hrs driving).<br/>
+          Daily rest must start by 9:00 PM (15 hr window from start). Plan loads within this window.
+        </div>
+        <div class="kts"><span class="kt">4.5hr Rule</span><span class="kt">56hr Weekly Limit</span><span class="kt">90hr Fortnightly</span><span class="kt">Tachograph</span><span class="kt">DVSA</span><span class="kt">Reduced Rest</span></div>
+      </div>
+      <div class="chi" id="chi_11_2"><div id="th_11_2">
+        <div class="gbox"><strong>दैनिक ड्राइविंग सीमा:</strong> अधिकतम 9 घंटे (सप्ताह में 2 बार 10 घंटे) | 4.5 घंटे के बाद 45 मिनट का अनिवार्य विराम | न्यूनतम दैनिक आराम: 11 घंटे</div>
+        <div class="obox"><strong>साप्ताहिक सीमा:</strong> 56 घंटे/सप्ताह | 90 घंटे/दो सप्ताह | 45 घंटे लगातार साप्ताहिक आराम</div>
+        <div class="wbox"><strong>डिस्पैचर की जिम्मेदारी:</strong> लोड बुक करने से पहले हमेशा पूछें: "आपके पास आज कितने घंटे उपलब्ध हैं?" घंटे से अधिक काम करवाने पर डिस्पैचर पर भी मुकदमा हो सकता है।</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Quick Check — UK Drivers' Hours</h4><span style="margin-left:auto" class="tag tag-green">4 Qs</span></div>
+        <div class="qbody" id="qb_11_2">
+          <div class="qi"><div class="qt">1. After how many hours of continuous driving must a UK HGV driver take a break?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_11_2','q1',false)">A. 3 hours</button>
+            <button class="qo" onclick="ans(this,'qb_11_2','q1',true)">B. 4.5 hours</button>
+            <button class="qo" onclick="ans(this,'qb_11_2','q1',false)">C. 6 hours</button>
+            <button class="qo" onclick="ans(this,'qb_11_2','q1',false)">D. 8 hours</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. A driver needs a 45-minute break. They take 15 minutes first, then 30 minutes later. Is this legal?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_11_2','q2',true)">A. Yes — a split break of 15 + 30 minutes in that order is allowed</button>
+            <button class="qo" onclick="ans(this,'qb_11_2','q2',false)">B. No — must always be one continuous 45-minute break</button>
+            <button class="qo" onclick="ans(this,'qb_11_2','q2',false)">C. Only allowed for night shifts</button>
+            <button class="qo" onclick="ans(this,'qb_11_2','q2',false)">D. Only on international routes</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. The maximum weekly driving limit for a UK HGV driver is:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_11_2','q3',false)">A. 40 hours</button>
+            <button class="qo" onclick="ans(this,'qb_11_2','q3',false)">B. 48 hours</button>
+            <button class="qo" onclick="ans(this,'qb_11_2','q3',true)">C. 56 hours</button>
+            <button class="qo" onclick="ans(this,'qb_11_2','q3',false)">D. 70 hours</button>
+          </div></div>
+          <div class="qi"><div class="qt">4. Tachograph mode "X" means:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_11_2','q4',false)">A. Driving</button>
+            <button class="qo" onclick="ans(this,'qb_11_2','q4',false)">B. Other work (loading, paperwork)</button>
+            <button class="qo" onclick="ans(this,'qb_11_2','q4',false)">C. Availability (waiting at ferry)</button>
+            <button class="qo" onclick="ans(this,'qb_11_2','q4',true)">D. Rest</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_11_2"><div class="qscore" id="qs_11_2"></div><div id="qm_11_2" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_11_2','qr_11_2','qs_11_2','qm_11_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: CMR Note & UK Documentation -->
+  <div class="tc" id="tc_11_3">
+    <button class="tt" onclick="openT('tc_11_3',this)">
+      <div class="tnum">C</div><div class="ttx"><div class="ten">CMR Note, Consignment Notes & UK Load Documentation</div><div class="thi">CMR नोट और UK लोड दस्तावेज़</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_11_3">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_11_3',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_11_3',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_11_3')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_11_3">
+        <div class="gbox">
+          <strong>🇬🇧 UK Domestic Loads — Consignment Note:</strong><br/>
+          For loads moving entirely within the UK, carriers use a <strong>Consignment Note</strong> (also called a delivery note or dispatch note). This is much simpler than a CMR — it typically shows: sender, receiver, description of goods, weight, reference number, driver signature at pickup and receiver signature at delivery.<br/><br/>
+          Some larger shippers use their own branded paperwork — the content is similar. The signed delivery note = your proof of delivery = triggers your invoice.
+        </div>
+        <div class="obox">
+          <strong>🌍 International Loads (UK–EU) — CMR Note:</strong><br/>
+          The <strong>CMR Note</strong> (Convention on the Contract for the International Carriage of Goods by Road) is the legally required document for all international road freight.<br/><br/>
+          Must be issued in <strong>at least 3 originals</strong>: Sender keeps one | One travels with the goods | Carrier keeps one.<br/><br/>
+          CMR liability cap: <strong>8.33 SDR per kg</strong> of lost/damaged goods (approx £9–10/kg at current rates).<br/><br/>
+          <strong>Post-Brexit requirement:</strong> UK–EU loads now also need Safety & Security declaration (ENS/EXS), EORI number, customs commodity codes, and may need an import/export licence for certain goods.
+        </div>
+        <div class="hbox">
+          <strong>📦 UK Load Documentation Checklist:</strong><br/>
+          Domestic load: ✅ Consignment note | ✅ Vehicle O-Licence | ✅ Driver CPC card | ✅ Tachograph card<br/>
+          International load: ✅ CMR Note | ✅ Standard International O-Licence | ✅ T1/T2 transit document | ✅ EORI number | ✅ Customs declarations | ✅ Certificate of Conformity (for controlled goods)
+        </div>
+        <div class="kts"><span class="kt">CMR Note</span><span class="kt">Consignment Note</span><span class="kt">EORI Number</span><span class="kt">8.33 SDR/kg</span><span class="kt">Post-Brexit</span><span class="kt">T1 Transit</span></div>
+      </div>
+      <div class="chi" id="chi_11_3"><div id="th_11_3">
+        <div class="gbox"><strong>UK घरेलू लोड:</strong> कंसाइनमेंट नोट (डिलीवरी नोट) — साधारण दस्तावेज़। साइन किया डिलीवरी नोट = POD = भुगतान का आधार।</div>
+        <div class="obox"><strong>अंतर्राष्ट्रीय लोड (UK–EU):</strong> CMR नोट अनिवार्य। 3 मूल प्रतियाँ। ब्रेक्सिट के बाद: EORI नंबर + कस्टम घोषणाएं भी आवश्यक।</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Quick Check — UK Documents</h4><span style="margin-left:auto" class="tag tag-green">3 Qs</span></div>
+        <div class="qbody" id="qb_11_3">
+          <div class="qi"><div class="qt">1. For a UK domestic delivery, what document replaces the CMR Note?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_11_3','q1',false)">A. Bill of Lading</button>
+            <button class="qo" onclick="ans(this,'qb_11_3','q1',true)">B. Consignment Note (delivery note)</button>
+            <button class="qo" onclick="ans(this,'qb_11_3','q1',false)">C. W-9 form</button>
+            <button class="qo" onclick="ans(this,'qb_11_3','q1',false)">D. Rate Confirmation</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. How many original copies must a CMR Note be issued in?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_11_3','q2',false)">A. 1</button>
+            <button class="qo" onclick="ans(this,'qb_11_3','q2',false)">B. 2</button>
+            <button class="qo" onclick="ans(this,'qb_11_3','q2',true)">C. At least 3</button>
+            <button class="qo" onclick="ans(this,'qb_11_3','q2',false)">D. 5</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Since Brexit, UK–EU loads require which additional number?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_11_3','q3',false)">A. DAT credit score</button>
+            <button class="qo" onclick="ans(this,'qb_11_3','q3',false)">B. MC number</button>
+            <button class="qo" onclick="ans(this,'qb_11_3','q3',true)">C. EORI number</button>
+            <button class="qo" onclick="ans(this,'qb_11_3','q3',false)">D. DVSA licence number</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_11_3"><div class="qscore" id="qs_11_3"></div><div id="qm_11_3" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_11_3','qr_11_3','qs_11_3','qm_11_3')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh"><h3>⚡ Practical</h3><div class="sl"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px"><ul class="pl">
+    <li><div class="pn">1</div><div><strong>O-Licence Checker:</strong> Look up 3 real UK carriers on vehicle-operator-licensing.service.gov.uk. Note: licence type, number of authorised vehicles, and traffic area. Would you dispatch for them?</div></li>
+    <li><div class="pn">2</div><div><strong>Hours Planning Exercise:</strong> Driver starts at 7:00 AM. Load is 520 miles London to Glasgow. Average speed 50mph including stops. Can they legally complete the journey in one day? Show your working.</div></li>
+    <li><div class="pn">3</div><div><strong>Document Match:</strong> Given 5 load scenarios (domestic, international, food, hazmat, abnormal load) — identify which documents are required for each.</div></li>
+  </ul></div>
+  <div class="hwbox"><h4>📝 Homework — Day 11</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Download and study the DVSA Guide to Drivers' Hours (free PDF on gov.uk). Create a one-page summary: daily driving limit, weekly limit, break rules, and 3 examples of violations a dispatcher must never cause. This will be tested tomorrow.</p></div>
+  <div class="dnav"><a href="week2.html" class="btn btn-ghost">← Week 2</a><button class="btn btn-primary" style="background:linear-gradient(135deg,var(--green),#16a34a)" onclick="markDay(11);showDay(12,document.querySelectorAll('.day-tab')[1])">Day 12 →</button></div>
+</div>
+
+<!-- ═══ DAY 12: UK Load Boards & Major Logistics Companies ═══ -->
+<div class="day-panel" id="day12">
+  <div class="day-hero fade-up">
+    <div class="dnum">D12</div>
+    <div class="di">
+      <h2>UK Load Boards & Major Logistics Companies</h2>
+      <div class="ht">UK लोड बोर्ड और प्रमुख लॉजिस्टिक्स कंपनियाँ</div>
+      <div class="dm"><span class="tag tag-green">2hrs Theory</span><span class="tag tag-orange">2hrs Practical</span><span class="tag tag-cyan">3 Topics</span></div>
+    </div>
+  </div>
+  <div class="vb fade-up delay-1"><div class="vh"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 12 — UK Load Boards & Logistics Companies</span><span style="margin-left:auto;font-size:11px;color:var(--grey)">~13 min</span></div><div class="vph" onclick="loadVid(this,'YOUR_D12_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 12: UK Load Boards</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D12_VIDEO_ID</div></div></div><div class="vnt">💡 Replace YOUR_D12_VIDEO_ID in HTML</div></div>
+  <div class="sh"><h3>📖 Theory Topics</h3><div class="sl"></div><span class="tag tag-green">3 Topics</span></div>
+
+  <!-- Courier Exchange -->
+  <div class="tc" id="tc_12_1">
+    <button class="tt" onclick="openT('tc_12_1',this)">
+      <div class="tnum">A</div><div class="ttx"><div class="ten">Courier Exchange (CX) — UK's Premier Load Board</div><div class="thi">Courier Exchange — UK का प्रमुख लोड बोर्ड</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_12_1">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_12_1',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_12_1',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_12_1')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_12_1">
+        <p><strong style="color:var(--green)">Courier Exchange (CX)</strong> is the UK's largest freight exchange with over 6,000 member companies. It is the UK equivalent of DAT in the USA — but works differently because UK freight is priced per load or per pallet, not per mile.</p>
+        <div class="gbox">
+          <strong>🖥️ What Courier Exchange Offers:</strong><br/>
+          • Real-time load and vehicle postings across UK and Europe<br/>
+          • Member credit ratings — check reliability before accepting a load<br/>
+          • In-app messaging and document sharing<br/>
+          • Track and trace integration<br/>
+          • Available work alerts by postcode area<br/>
+          • CX mobile app for drivers<br/>
+          Cost: Approximately <strong>£120–200/month</strong> membership depending on vehicle type
+        </div>
+        <div class="obox">
+          <strong>💷 How UK Freight Rates Work (Very Different from USA):</strong><br/>
+          UK rates are typically quoted as:<br/>
+          • <strong>Per pallet:</strong> Standard UK pallet (120cm × 100cm × 120cm high) — typical rate £20–80 per pallet depending on lane and urgency<br/>
+          • <strong>Per load (FTL):</strong> Full trailer/truck rate — typical 13.6m curtainsider: £600–2,500 depending on distance and lane<br/>
+          • <strong>Per mile/km:</strong> Used for courier and specialist work — typically £1.50–3.50/mile for vans, £2.50–5.00/mile for HGV<br/><br/>
+          <strong>Always convert to cost-per-mile to compare loads properly.</strong>
+        </div>
+        <div class="hbox">
+          <strong>🔄 Other UK Load Boards to Know:</strong><br/>
+          <strong>Haulage Exchange (TEG):</strong> Part of Transport Exchange Group — good for owner-operators. Lower cost than CX.<br/>
+          <strong>Palletways, Palletforce, Pall-Ex, TPN:</strong> These are UK pallet NETWORKS — not load boards. Subcontractor pallet work (covered in Day 13).<br/>
+          <strong>Direct Freight:</strong> Smaller UK load board, useful for same-day courier work.<br/>
+          <strong>Shiply:</strong> B2C and small business loads — not for professional HGV work.<br/>
+          <strong>Email/WhatsApp groups:</strong> Many UK owner-operators still find work through direct relationships and WhatsApp groups — build these over time.
+        </div>
+        <div class="kts"><span class="kt">Courier Exchange</span><span class="kt">Per Pallet Rate</span><span class="kt">FTL UK</span><span class="kt">Haulage Exchange</span><span class="kt">TEG</span></div>
+      </div>
+      <div class="chi" id="chi_12_1"><div id="th_12_1">
+        <p><strong style="color:var(--green)">Courier Exchange (CX)</strong> UK का सबसे बड़ा फ्रेट एक्सचेंज है — 6,000+ सदस्य। यह UK का DAT है।</p>
+        <div class="gbox"><strong>UK रेट:</strong> प्रति पैलेट £20–80 | FTL £600–2,500 | प्रति मील £1.50–5.00। हमेशा प्रति-मील लागत की तुलना करें।</div>
+        <div class="obox"><strong>अन्य UK लोड बोर्ड:</strong> Haulage Exchange (TEG) | Direct Freight | और सीधे WhatsApp/ईमेल ग्रुप से संबंध बनाएं।</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Quick Check — Courier Exchange</h4><span style="margin-left:auto" class="tag tag-green">3 Qs</span></div>
+        <div class="qbody" id="qb_12_1">
+          <div class="qi"><div class="qt">1. Courier Exchange is the UK equivalent of which US platform?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_12_1','q1',false)">A. Uber Freight</button>
+            <button class="qo" onclick="ans(this,'qb_12_1','q1',true)">B. DAT Load Board</button>
+            <button class="qo" onclick="ans(this,'qb_12_1','q1',false)">C. LinkedIn</button>
+            <button class="qo" onclick="ans(this,'qb_12_1','q1',false)">D. Amazon Freight</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. A standard UK full-trailer (13.6m curtainsider) load typically rates at:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_12_1','q2',false)">A. £50–100</button>
+            <button class="qo" onclick="ans(this,'qb_12_1','q2',false)">B. £200–350</button>
+            <button class="qo" onclick="ans(this,'qb_12_1','q2',true)">C. £600–2,500 depending on lane and distance</button>
+            <button class="qo" onclick="ans(this,'qb_12_1','q2',false)">D. £5,000–8,000</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Palletways, Palletforce and Pall-Ex are:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_12_1','q3',false)">A. Load boards like Courier Exchange</button>
+            <button class="qo" onclick="ans(this,'qb_12_1','q3',true)">B. UK pallet networks where carriers subcontract pallet deliveries</button>
+            <button class="qo" onclick="ans(this,'qb_12_1','q3',false)">C. DVSA inspection companies</button>
+            <button class="qo" onclick="ans(this,'qb_12_1','q3',false)">D. Government transport agencies</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_12_1"><div class="qscore" id="qs_12_1"></div><div id="qm_12_1" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_12_1','qr_12_1','qs_12_1','qm_12_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Major UK Logistics Companies -->
+  <div class="tc" id="tc_12_2">
+    <button class="tt" onclick="openT('tc_12_2',this)">
+      <div class="tnum">B</div><div class="ttx"><div class="ten">Major UK Logistics Companies — Who They Are & How to Work With Them</div><div class="thi">UK की प्रमुख लॉजिस्टिक्स कंपनियाँ</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_12_2">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_12_2',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_12_2',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_12_2')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_12_2">
+        <p>Understanding the UK logistics landscape is essential. These companies are potential clients, partners, and subcontractors you will interact with as a UK-focused dispatcher.</p>
+        <div class="gbox">
+          <strong>🏢 Tier 1 — UK's Largest Logistics Operators:</strong><br/><br/>
+          <strong>DHL Supply Chain UK:</strong> Largest 3PL in UK. Warehousing, transport, contract logistics. Huge subcontracting needs — great opportunity for owner-operators.<br/><br/>
+          <strong>XPO Logistics UK:</strong> Major freight and logistics. LTL and FTL. Strong in retail and e-commerce supply chains.<br/><br/>
+          <strong>Wincanton:</strong> UK-focused 3PL. Specialist in retail, defence, construction. Strong in Scotland and South England.<br/><br/>
+          <strong>GXO Logistics (formerly Clipper):</strong> Strong in e-commerce and reverse logistics. Amazon, ASOS, John Lewis partner.<br/><br/>
+          <strong>Kuehne + Nagel UK:</strong> Strong in freight forwarding and road transport. International reach.
+        </div>
+        <div class="obox">
+          <strong>🚛 Tier 2 — Mid-Size UK Hauliers (Subcontracting Opportunity):</strong><br/><br/>
+          <strong>Eddie Stobart:</strong> Iconic UK haulier. 2,000+ vehicles. Uses owner-operator subcontractors regularly — good route into steady work.<br/><br/>
+          <strong>Hermes/Evri:</strong> Parcel delivery — huge last-mile network. Uses self-employed courier drivers.<br/><br/>
+          <strong>Yodel:</strong> Parcel carrier. Uses owner-operator vans and small trucks.<br/><br/>
+          <strong>Howard Tenens:</strong> Specialist warehousing and distribution. Good for food and temperature-controlled work.<br/><br/>
+          <strong>Brakes / Bidvest:</strong> Food service logistics — reefer specialists. Steady lane work for temperature-controlled vehicles.
+        </div>
+        <div class="hbox">
+          <strong>🎯 How to Approach UK Logistics Companies as a Dispatcher:</strong><br/>
+          Large companies (DHL, XPO, Wincanton) have <strong>subcontractor onboarding teams</strong>. Your carrier must:<br/>
+          1. Have valid Standard National or International O-Licence<br/>
+          2. Carry minimum public liability £5M and goods in transit insurance<br/>
+          3. Pass a transport compliance audit<br/>
+          4. Complete an onboarding questionnaire and rate agreement<br/><br/>
+          Once approved, they receive regular contracted lane work — much more stable than spot loads from CX.
+        </div>
+        <div class="kts"><span class="kt">DHL Supply Chain</span><span class="kt">XPO UK</span><span class="kt">Wincanton</span><span class="kt">Eddie Stobart</span><span class="kt">GXO</span><span class="kt">Subcontractor Onboarding</span></div>
+      </div>
+      <div class="chi" id="chi_12_2"><div id="th_12_2">
+        <div class="gbox"><strong>टियर 1 — बड़ी कंपनियाँ:</strong> DHL Supply Chain UK | XPO Logistics | Wincanton | GXO Logistics | Kuehne+Nagel — सबसे बड़े UK 3PL ऑपरेटर।</div>
+        <div class="obox"><strong>टियर 2 — मध्यम आकार:</strong> Eddie Stobart (2,000+ वाहन) | Evri/Hermes | Yodel | Howard Tenens | Brakes/Bidvest।</div>
+        <div class="hbox"><strong>संपर्क कैसे करें:</strong> बड़ी कंपनियों में सब-कॉन्ट्रैक्टर ऑनबोर्डिंग टीम होती है। O-Licence + बीमा + ऑडिट पास करें — फिर नियमित लेन काम मिलता है।</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Quick Check — UK Logistics</h4><span style="margin-left:auto" class="tag tag-green">3 Qs</span></div>
+        <div class="qbody" id="qb_12_2">
+          <div class="qi"><div class="qt">1. Which is the largest third-party logistics (3PL) company in the UK?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_12_2','q1',true)">A. DHL Supply Chain UK</button>
+            <button class="qo" onclick="ans(this,'qb_12_2','q1',false)">B. Eddie Stobart</button>
+            <button class="qo" onclick="ans(this,'qb_12_2','q1',false)">C. Royal Mail</button>
+            <button class="qo" onclick="ans(this,'qb_12_2','q1',false)">D. Tesco Logistics</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. Eddie Stobart is best known as:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_12_2','q2',false)">A. A UK load board platform</button>
+            <button class="qo" onclick="ans(this,'qb_12_2','q2',true)">B. An iconic UK haulier with 2,000+ vehicles that uses owner-operator subcontractors</button>
+            <button class="qo" onclick="ans(this,'qb_12_2','q2',false)">C. A DVSA enforcement body</button>
+            <button class="qo" onclick="ans(this,'qb_12_2','q2',false)">D. A parcel courier service</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. To become a subcontractor for a large UK logistics company, your carrier MUST have:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_12_2','q3',false)">A. 10+ years experience</button>
+            <button class="qo" onclick="ans(this,'qb_12_2','q3',false)">B. A US MC number</button>
+            <button class="qo" onclick="ans(this,'qb_12_2','q3',true)">C. Valid O-Licence, minimum £5M liability insurance, and pass a transport compliance audit</button>
+            <button class="qo" onclick="ans(this,'qb_12_2','q3',false)">D. A fleet of at least 10 vehicles</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_12_2"><div class="qscore" id="qs_12_2"></div><div id="qm_12_2" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_12_2','qr_12_2','qs_12_2','qm_12_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UK Pallet Networks -->
+  <div class="tc" id="tc_12_3">
+    <button class="tt" onclick="openT('tc_12_3',this)">
+      <div class="tnum">C</div><div class="ttx"><div class="ten">UK Pallet Networks — Palletforce, Pall-Ex, TPN, Palletways</div><div class="thi">UK पैलेट नेटवर्क — स्थिर आय का स्रोत</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_12_3">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_12_3',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_12_3',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_12_3')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_12_3">
+        <p>UK pallet networks are a unique and stable income source for small carriers. They provide a steady, predictable flow of pallet collections and deliveries in a defined geographic area — known as a <strong>depot franchise territory</strong>.</p>
+        <div class="gbox">
+          <strong>🔄 How Pallet Networks Work:</strong><br/>
+          1. Shippers book pallets through a network member<br/>
+          2. Local member collects pallets and trunks them overnight to the central hub<br/>
+          3. Hub sorts and sends pallets out to the destination depot<br/>
+          4. Destination depot delivers next morning<br/><br/>
+          This means your carrier collects in their local area, trunks overnight, and delivers locally at destination — highly efficient routing with minimal deadhead.
+        </div>
+        <div class="obox">
+          <strong>📦 UK's Big 4 Pallet Networks:</strong><br/><br/>
+          <strong>Palletforce:</strong> Owned by Eddie Stobart Group. ~100 depot members. Strong in Midlands and North England.<br/><br/>
+          <strong>Pall-Ex:</strong> One of UK's oldest pallet networks. ~90 depots. Strong European reach via Pall-Ex Europe.<br/><br/>
+          <strong>The Pallet Network (TPN):</strong> ~100+ UK members. Competitive on pricing. Strong in South and West England.<br/><br/>
+          <strong>Palletways:</strong> Part of Imperial group. European network — good for cross-border pallet work. Strongest in the South East.<br/><br/>
+          <strong>Hazchem Network:</strong> Specialist — hazardous goods pallets. Requires ADR certification.
+        </div>
+        <div class="hbox">
+          <strong>💰 Pallet Network Income for a Small Carrier:</strong><br/>
+          A carrier with 1–2 vehicles covering a depot territory can earn:<br/>
+          • Collections: £6–15 per pallet collected from local businesses<br/>
+          • Deliveries: £8–20 per pallet delivered in their territory<br/>
+          • Average carrier moves 20–60 pallets per day in a busy territory<br/>
+          • Monthly income: £3,000–12,000 from network work alone<br/><br/>
+          <strong>Advantages:</strong> Predictable daily work | No load board needed | Built-in client base | Regular overnight trunking income
+        </div>
+        <div class="kts"><span class="kt">Palletforce</span><span class="kt">Pall-Ex</span><span class="kt">TPN</span><span class="kt">Palletways</span><span class="kt">Depot Territory</span><span class="kt">Trunking</span></div>
+      </div>
+      <div class="chi" id="chi_12_3"><div id="th_12_3">
+        <p>UK पैलेट नेटवर्क छोटे कैरियर के लिए स्थिर आय का स्रोत है।</p>
+        <div class="gbox"><strong>कैसे काम करता है:</strong> स्थानीय कलेक्शन → रात भर हब तक ट्रंकिंग → अगले दिन डिलीवरी। न्यूनतम खाली मील।</div>
+        <div class="obox"><strong>UK के 4 बड़े नेटवर्क:</strong> Palletforce | Pall-Ex | TPN | Palletways। एक छोटा कैरियर £3,000–12,000/माह कमा सकता है।</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Quick Check — Pallet Networks</h4><span style="margin-left:auto" class="tag tag-green">3 Qs</span></div>
+        <div class="qbody" id="qb_12_3">
+          <div class="qi"><div class="qt">1. Which pallet network is owned by the Eddie Stobart Group?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_12_3','q1',true)">A. Palletforce</button>
+            <button class="qo" onclick="ans(this,'qb_12_3','q1',false)">B. Pall-Ex</button>
+            <button class="qo" onclick="ans(this,'qb_12_3','q1',false)">C. TPN</button>
+            <button class="qo" onclick="ans(this,'qb_12_3','q1',false)">D. Palletways</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. In a pallet network, "trunking" refers to:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_12_3','q2',false)">A. Delivering pallets directly to customers</button>
+            <button class="qo" onclick="ans(this,'qb_12_3','q2',true)">B. Moving pallets overnight from the local depot to the central hub</button>
+            <button class="qo" onclick="ans(this,'qb_12_3','q2',false)">C. Sorting pallets at the depot</button>
+            <button class="qo" onclick="ans(this,'qb_12_3','q2',false)">D. Loading pallets onto a container ship</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. A typical carrier covering a pallet network depot territory can earn per month:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_12_3','q3',false)">A. £500–800</button>
+            <button class="qo" onclick="ans(this,'qb_12_3','q3',false)">B. £1,000–2,000</button>
+            <button class="qo" onclick="ans(this,'qb_12_3','q3',true)">C. £3,000–12,000</button>
+            <button class="qo" onclick="ans(this,'qb_12_3','q3',false)">D. £50,000+</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_12_3"><div class="qscore" id="qs_12_3"></div><div id="qm_12_3" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_12_3','qr_12_3','qs_12_3','qm_12_3')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh"><h3>⚡ Practical</h3><div class="sl"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px"><ul class="pl">
+    <li><div class="pn">1</div><div><strong>CX Research:</strong> Go to courier-exchange.co.uk and explore the member search. Find 3 loads posted for your local area (or London). Note: rate, distance, vehicle type, urgency. Convert each to cost-per-mile.</div></li>
+    <li><div class="pn">2</div><div><strong>Company Research:</strong> Visit the subcontractor/carrier portal for DHL Supply Chain UK and Eddie Stobart. What documents and requirements do they ask for? Would your carrier qualify today?</div></li>
+    <li><div class="pn">3</div><div><strong>Pallet Network Territory Map:</strong> Using the Palletforce member map online, identify the depot covering your local area. What is their territory? How many pallets might they handle daily?</div></li>
+  </ul></div>
+  <div class="hwbox"><h4>📝 Homework — Day 12</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Research one UK pallet network of your choice (Palletforce, Pall-Ex, TPN or Palletways). Find their member application process. What are the requirements? What equipment do you need? Write a 1-page summary including how a carrier would join, what they earn, and what responsibilities they take on.</p></div>
+  <div class="dnav"><button class="btn btn-ghost" onclick="showDay(11,document.querySelectorAll('.day-tab')[0])">← Day 11</button><button class="btn btn-primary" style="background:linear-gradient(135deg,var(--green),#16a34a)" onclick="markDay(12);showDay(13,document.querySelectorAll('.day-tab')[2])">Day 13 →</button></div>
+</div>
+
+<!-- ═══ DAY 13: UK KPIs, Revenue & Dispatch Business Model ═══ -->
+<div class="day-panel" id="day13">
+  <div class="day-hero fade-up">
+    <div class="dnum">D13</div>
+    <div class="di">
+      <h2>UK KPIs, Revenue Analytics & Dispatch Business Model</h2>
+      <div class="ht">UK KPI, राजस्व विश्लेषण और डिस्पैच व्यवसाय मॉडल</div>
+      <div class="dm"><span class="tag tag-green">2hrs Theory</span><span class="tag tag-orange">2hrs Practical</span><span class="tag tag-cyan">3 Topics</span></div>
+    </div>
+  </div>
+  <div class="vb fade-up delay-1"><div class="vh"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 13 — KPIs & Dispatch Business</span><span style="margin-left:auto;font-size:11px;color:var(--grey)">~12 min</span></div><div class="vph" onclick="loadVid(this,'YOUR_D13_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 13: KPIs & Business Model</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D13_VIDEO_ID</div></div></div><div class="vnt">💡 Replace YOUR_D13_VIDEO_ID</div></div>
+  <div class="sh"><h3>📖 Theory Topics</h3><div class="sl"></div></div>
+
+  <div class="tc" id="tc_13_1">
+    <button class="tt" onclick="openT('tc_13_1',this)">
+      <div class="tnum">A</div><div class="ttx"><div class="ten">UK KPIs — Measuring Dispatcher & Carrier Performance</div><div class="thi">UK KPI — प्रदर्शन मापना</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_13_1">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_13_1',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_13_1',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_13_1')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_13_1">
+        <div class="gbox">
+          <strong>📊 Essential UK Dispatcher KPIs:</strong><br/><br/>
+          <strong>OTP — On Time Pickup %:</strong> Loads picked up on time ÷ total loads × 100. Target: >95%<br/>
+          <strong>OTD — On Time Delivery %:</strong> Same formula for delivery. Target: >95%<br/>
+          <strong>CPM — Cost Per Mile:</strong> Total vehicle costs ÷ total miles. Typical UK HGV: £1.20–1.80/mile<br/>
+          <strong>Revenue Per Mile:</strong> Total revenue ÷ total miles. Target: >£2.50/mile for HGV<br/>
+          <strong>Empty Running %:</strong> Empty miles ÷ total miles × 100. UK industry average: 25–30%. Your target: <15%<br/>
+          <strong>Vehicle Utilisation:</strong> Days vehicle worked ÷ available days × 100. Target: >85%<br/>
+          <strong>Fuel Efficiency:</strong> Miles per gallon (MPG). HGV average 8–12 MPG. Key cost driver.
+        </div>
+        <div class="obox">
+          <strong>💷 UK Revenue Calculation for Dispatcher:</strong><br/>
+          Commission-based dispatcher earns 7–10% of gross load revenue.<br/><br/>
+          Example: Carrier runs 4 loads/week at average £1,200/load:<br/>
+          Weekly gross: £4,800 | Monthly gross: £19,200<br/>
+          Dispatcher at 8%: £1,536/month from 1 vehicle<br/>
+          With 5 UK vehicles: £7,680/month from India<br/>
+          With 10 UK vehicles: £15,360/month from India 🚀
+        </div>
+        <div class="hbox">
+          <strong>📅 Daily KPI Tracking Template:</strong><br/>
+          Load# | Customer/Broker | Route | Miles | Rate (£) | CPM | Status | OTP | OTD | Notes<br/><br/>
+          Review weekly: Which lanes are most profitable? Which customers pay on time? Which routes have highest empty running? This data drives better decisions every week.
+        </div>
+        <div class="kts"><span class="kt">OTP</span><span class="kt">OTD</span><span class="kt">CPM</span><span class="kt">Empty Running</span><span class="kt">Vehicle Utilisation</span><span class="kt">MPG</span></div>
+      </div>
+      <div class="chi" id="chi_13_1"><div id="th_13_1">
+        <div class="gbox"><strong>UK KPI:</strong> OTP >95% | OTD >95% | प्रति मील राजस्व >£2.50 | खाली मील <15% | वाहन उपयोग >85%</div>
+        <div class="obox"><strong>कमाई:</strong> 1 वाहन = £1,536/माह | 5 वाहन = £7,680/माह | 10 वाहन = £15,360/माह (8% कमीशन पर)</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Quick Check — KPIs</h4><span style="margin-left:auto" class="tag tag-green">3 Qs</span></div>
+        <div class="qbody" id="qb_13_1">
+          <div class="qi"><div class="qt">1. A carrier runs 400 miles in a week. 120 miles were empty (no load). What is their empty running %?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_13_1','q1',false)">A. 12%</button>
+            <button class="qo" onclick="ans(this,'qb_13_1','q1',false)">B. 20%</button>
+            <button class="qo" onclick="ans(this,'qb_13_1','q1',true)">C. 30%</button>
+            <button class="qo" onclick="ans(this,'qb_13_1','q1',false)">D. 40%</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. A dispatcher charges 8% on a load rate of £1,400. How much do they earn from that single load?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_13_1','q2',false)">A. £56</button>
+            <button class="qo" onclick="ans(this,'qb_13_1','q2',true)">B. £112</button>
+            <button class="qo" onclick="ans(this,'qb_13_1','q2',false)">C. £140</button>
+            <button class="qo" onclick="ans(this,'qb_13_1','q2',false)">D. £200</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. The UK industry average for empty running % is:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_13_1','q3',false)">A. 5–10%</button>
+            <button class="qo" onclick="ans(this,'qb_13_1','q3',true)">B. 25–30%</button>
+            <button class="qo" onclick="ans(this,'qb_13_1','q3',false)">C. 45–50%</button>
+            <button class="qo" onclick="ans(this,'qb_13_1','q3',false)">D. 60%+</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_13_1"><div class="qscore" id="qs_13_1"></div><div id="qm_13_1" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_13_1','qr_13_1','qs_13_1','qm_13_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tc" id="tc_13_2">
+    <button class="tt" onclick="openT('tc_13_2',this)">
+      <div class="tnum">B</div><div class="ttx"><div class="ten">Finding UK Owner-Operators & Signing Your First Client</div><div class="thi">UK ओनर-ऑपरेटर खोजना और पहला क्लाइंट साइन करना</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_13_2">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_13_2',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_13_2',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_13_2')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_13_2">
+        <p>UK owner-operators are exactly like US ones — they are excellent drivers who hate paperwork, phone calls, and load searching. You solve all of that for 7–10% commission. Here is how to find and sign them.</p>
+        <div class="gbox">
+          <strong>🔍 Where to Find UK Owner-Operators:</strong><br/>
+          • <strong>Facebook groups:</strong> "UK Owner Operators", "HGV Owner Drivers UK", "Courier Driver UK Forum", "Truck Drivers UK"<br/>
+          • <strong>Courier Exchange:</strong> Search the carrier directory — many solo operators listed<br/>
+          • <strong>LinkedIn:</strong> Search "owner operator HGV UK" or "self employed truck driver UK"<br/>
+          • <strong>Transport cafés and truck stops:</strong> Keele Services, Thurrock, Cobham — drivers here are often looking for better work<br/>
+          • <strong>Local depot areas:</strong> Industrial estates near ports (Felixstowe, Southampton, Tilbury)<br/>
+          • <strong>Instagram/TikTok:</strong> Many UK truckers document their journeys — great engagement opportunity
+        </div>
+        <div class="obox">
+          <strong>📞 UK Owner-Operator Cold Call Script:</strong><br/><br/>
+          "Hi, is that [Name]? My name is [Your Name], I run a freight dispatch service helping UK owner-operators find consistent, well-paying loads.<br/><br/>
+          I handle your load searching, rate negotiation, all the paperwork, and check-calls — you just drive.<br/><br/>
+          I charge 8% commission — only when you earn. Would you be open to a quick 15-minute chat about how it works?"<br/><br/>
+          <em>Key: They pay nothing until you find them a load. Zero risk to them. This removes the biggest objection.</em>
+        </div>
+        <div class="hbox">
+          <strong>📄 Your UK Dispatch Service Agreement Must Include:</strong><br/>
+          • Your company name and their company name<br/>
+          • Commission rate (typically 7–10%)<br/>
+          • Payment terms (paid when they get paid)<br/>
+          • Notice period to end agreement (typically 30 days)<br/>
+          • Scope: what you do (load finding, negotiation, documentation, check-calls)<br/>
+          • What they do (provide vehicle details, O-Licence, insurance, availability)<br/>
+          <strong>Keep it to 1 page — long contracts scare away owner-operators.</strong>
+        </div>
+        <div class="kts"><span class="kt">Facebook Groups</span><span class="kt">LinkedIn Outreach</span><span class="kt">Cold Call Script</span><span class="kt">Service Agreement</span><span class="kt">8% Commission</span></div>
+      </div>
+      <div class="chi" id="chi_13_2"><div id="th_13_2">
+        <div class="gbox"><strong>UK ओनर-ऑपरेटर कहाँ मिलते हैं:</strong> Facebook Groups (UK Owner Operators, HGV Owner Drivers) | LinkedIn | Courier Exchange डायरेक्टरी | ट्रक स्टॉप | Instagram/TikTok</div>
+        <div class="obox"><strong>कोल्ड कॉल पिच:</strong> "मैं आपके लिए लोड ढूंढता हूँ, रेट negotiate करता हूँ, सभी कागज़ात संभालता हूँ — आप बस ड्राइव करें। 8% कमीशन — केवल जब आप कमाएं।"</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Quick Check — Client Acquisition</h4><span style="margin-left:auto" class="tag tag-green">3 Qs</span></div>
+        <div class="qbody" id="qb_13_2">
+          <div class="qi"><div class="qt">1. What is the biggest objection from UK owner-operators when you pitch dispatch services?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_13_2','q1',false)">A. They do not use phones</button>
+            <button class="qo" onclick="ans(this,'qb_13_2','q1',true)">B. Cost and risk — overcome by commission-only model (they pay nothing until you earn them money)</button>
+            <button class="qo" onclick="ans(this,'qb_13_2','q1',false)">C. They prefer US dispatchers</button>
+            <button class="qo" onclick="ans(this,'qb_13_2','q1',false)">D. They prefer to use DAT</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. How long should your UK dispatch service agreement ideally be?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_13_2','q2',false)">A. 10–15 pages with full legal clauses</button>
+            <button class="qo" onclick="ans(this,'qb_13_2','q2',true)">B. 1 page — long contracts scare away owner-operators</button>
+            <button class="qo" onclick="ans(this,'qb_13_2','q2',false)">C. No agreement needed — verbal is fine</button>
+            <button class="qo" onclick="ans(this,'qb_13_2','q2',false)">D. 5 pages minimum</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Best Facebook group to find UK HGV owner-operators is:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_13_2','q3',false)">A. Amazon Sellers UK</button>
+            <button class="qo" onclick="ans(this,'qb_13_2','q3',true)">B. "UK Owner Operators" or "HGV Owner Drivers UK"</button>
+            <button class="qo" onclick="ans(this,'qb_13_2','q3',false)">C. UK Business Network</button>
+            <button class="qo" onclick="ans(this,'qb_13_2','q3',false)">D. Driver CPC Forum</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_13_2"><div class="qscore" id="qs_13_2"></div><div id="qm_13_2" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_13_2','qr_13_2','qs_13_2','qm_13_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh"><h3>⚡ Practical</h3><div class="sl"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px"><ul class="pl">
+    <li><div class="pn">1</div><div><strong>KPI Dashboard:</strong> Build a Google Sheet with all 7 KPIs. Enter 10 sample UK loads. Calculate: total revenue, CPM, empty running %, revenue per mile. Which 3 loads were most profitable?</div></li>
+    <li><div class="pn">2</div><div><strong>Revenue Calculator:</strong> Calculate monthly dispatcher income for 1, 3, 5 and 10 UK vehicles at 8% commission, assuming 4 loads/week at £1,200 average. At what point does this become a full-time income from India?</div></li>
+    <li><div class="pn">3</div><div><strong>Cold Call Roleplay:</strong> One student = resistant UK owner-operator. Other student = dispatcher using the cold call script. Target: get agreement for a trial load. 5 rounds each.</div></li>
+  </ul></div>
+  <div class="hwbox"><h4>📝 Homework — Day 13</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Write your personal UK dispatch service pitch — in 60 seconds, what do you offer, what does it cost, and why should a UK owner-operator choose you? Practice it until it sounds completely natural. Tomorrow you will pitch it to the class cold.</p></div>
+  <div class="dnav"><button class="btn btn-ghost" onclick="showDay(12,document.querySelectorAll('.day-tab')[1])">← Day 12</button><button class="btn btn-primary" style="background:linear-gradient(135deg,var(--green),#16a34a)" onclick="markDay(13);showDay(14,document.querySelectorAll('.day-tab')[3])">Day 14 →</button></div>
+</div>
+
+<!-- ═══ DAY 14: Full UK Dispatch Workflow & Scaling ═══ -->
+<div class="day-panel" id="day14">
+  <div class="day-hero fade-up">
+    <div class="dnum">D14</div>
+    <div class="di">
+      <h2>Full UK Dispatch Workflow & Scaling to 10 Vehicles</h2>
+      <div class="ht">पूर्ण UK डिस्पैच वर्कफ्लो और 10 वाहनों तक विस्तार</div>
+      <div class="dm"><span class="tag tag-green">2hrs Theory</span><span class="tag tag-orange">2hrs Practical</span><span class="tag tag-cyan">2 Topics</span></div>
+    </div>
+  </div>
+  <div class="vb fade-up delay-1"><div class="vh"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 14 — UK Workflow & Scaling</span><span style="margin-left:auto;font-size:11px;color:var(--grey)">~12 min</span></div><div class="vph" onclick="loadVid(this,'YOUR_D14_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 14: UK Workflow & Scaling</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D14_VIDEO_ID</div></div></div><div class="vnt">💡 Replace YOUR_D14_VIDEO_ID</div></div>
+  <div class="sh"><h3>📖 Theory Topics</h3><div class="sl"></div></div>
+
+  <div class="tc" id="tc_14_1">
+    <button class="tt" onclick="openT('tc_14_1',this)">
+      <div class="tnum">A</div><div class="ttx"><div class="ten">Complete UK Dispatch Day — IST Time Alignment</div><div class="thi">IST समय में UK डिस्पैच का पूरा दिन</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_14_1">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_14_1',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_14_1',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_14_1')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_14_1">
+        <p>One major advantage of dispatching UK freight from India is the <strong>time zone alignment</strong>. UK is GMT (IST −5:30), which means UK business hours align well with the Indian working day — far better than US work which requires late-night shifts.</p>
+        <div class="gbox">
+          <strong>🕐 UK Dispatcher Day — From India (IST):</strong><br/><br/>
+          <strong>7:00 AM IST (1:30 AM UK):</strong> Check overnight messages. Any driver issues? Any loads delivered overnight? Update tracking sheet.<br/><br/>
+          <strong>9:00 AM IST (3:30 AM UK):</strong> Search CX and Haulage Exchange for loads needed for today and tomorrow. Plan routes.<br/><br/>
+          <strong>12:00 PM IST (6:30 AM UK — UK drivers starting):</strong> Call drivers for check-calls. Confirm today's loads. Handle any issues.<br/><br/>
+          <strong>1:30 PM IST (8:00 AM UK — UK brokers/shippers opening):</strong> Active calls and negotiations. This is peak broker time.<br/><br/>
+          <strong>5:30 PM IST (12:00 PM UK — midday):</strong> Afternoon check-calls. Handle delays, breakdowns, detention. Send ETA updates.<br/><br/>
+          <strong>8:30 PM IST (3:00 PM UK):</strong> Final check-calls. Chase outstanding PODs. Send invoices for today's deliveries.<br/><br/>
+          <strong>11:00 PM IST (5:30 PM UK — end of business):</strong> Plan tomorrow's loads. Pre-book where possible. End of day report to carrier.
+        </div>
+        <div class="obox">
+          <strong>🇬🇧 vs 🇺🇸 Time Zone Comparison for Indian Dispatcher:</strong><br/>
+          UK (GMT): IST −5:30 → UK 8 AM = India 1:30 PM ✅ Normal working hours<br/>
+          USA EST: IST −10:30 → USA 8 AM = India 6:30 PM 🌙 Evening shift required<br/>
+          USA PST: IST −13:30 → USA 8 AM = India 9:30 PM 🌙 Night shift required<br/><br/>
+          <strong>UK dispatching allows a normal Indian daytime working schedule. This is a major quality of life advantage.</strong>
+        </div>
+        <div class="hbox">
+          <strong>📋 UK Dispatcher's Daily Checklist:</strong><br/>
+          ☐ Check all driver check-calls up to date<br/>
+          ☐ All loads have signed CMR/consignment notes<br/>
+          ☐ PODs chased for all delivered loads<br/>
+          ☐ Invoices raised within 48 hours of delivery<br/>
+          ☐ Tachograph hours checked before assigning new loads<br/>
+          ☐ O-Licence and insurance valid for all operating vehicles<br/>
+          ☐ CX/Haulage Exchange searched for tomorrow's loads
+        </div>
+        <div class="kts"><span class="kt">IST Alignment</span><span class="kt">GMT</span><span class="kt">Peak Broker Time</span><span class="kt">Daily Checklist</span><span class="kt">End of Day Report</span></div>
+      </div>
+      <div class="chi" id="chi_14_1"><div id="th_14_1">
+        <div class="gbox"><strong>UK डिस्पैच का फायदा:</strong> UK (GMT) भारतीय दिन के समय के साथ अच्छी तरह मेल खाता है — USA की तरह रात की शिफ्ट की जरूरत नहीं।<br/>UK 8 AM = India 1:30 PM ✅ | USA 8 AM = India 6:30–9:30 PM 🌙</div>
+        <div class="obox"><strong>दैनिक चेकलिस्ट:</strong> ड्राइवर चेक-कॉल | CMR/कंसाइनमेंट नोट | POD चेज़ | 48 घंटे में इनवॉइस | टेकोग्राफ घंटे जाँच</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Quick Check — UK Workflow</h4><span style="margin-left:auto" class="tag tag-green">3 Qs</span></div>
+        <div class="qbody" id="qb_14_1">
+          <div class="qi"><div class="qt">1. When UK brokers/shippers start work at 8:00 AM GMT, what time is it in India (IST)?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_14_1','q1',false)">A. 6:30 AM IST</button>
+            <button class="qo" onclick="ans(this,'qb_14_1','q1',false)">B. 10:00 AM IST</button>
+            <button class="qo" onclick="ans(this,'qb_14_1','q1',true)">C. 1:30 PM IST</button>
+            <button class="qo" onclick="ans(this,'qb_14_1','q1',false)">D. 9:30 PM IST</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. Why is UK dispatching better for Indian lifestyle compared to US dispatching?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_14_1','q2',false)">A. UK pays higher rates</button>
+            <button class="qo" onclick="ans(this,'qb_14_1','q2',true)">B. UK time zone aligns with normal Indian daytime hours — no late-night shifts needed</button>
+            <button class="qo" onclick="ans(this,'qb_14_1','q2',false)">C. UK has fewer rules than USA</button>
+            <button class="qo" onclick="ans(this,'qb_14_1','q2',false)">D. UK loads are shorter distance</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. How quickly should you raise an invoice after a UK delivery?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_14_1','q3',false)">A. Within 1 week</button>
+            <button class="qo" onclick="ans(this,'qb_14_1','q3',true)">B. Within 48 hours</button>
+            <button class="qo" onclick="ans(this,'qb_14_1','q3',false)">C. When the carrier asks you to</button>
+            <button class="qo" onclick="ans(this,'qb_14_1','q3',false)">D. End of the month</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_14_1"><div class="qscore" id="qs_14_1"></div><div id="qm_14_1" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_14_1','qr_14_1','qs_14_1','qm_14_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tc" id="tc_14_2">
+    <button class="tt" onclick="openT('tc_14_2',this)">
+      <div class="tnum">B</div><div class="ttx"><div class="ten">Scaling 1 → 10 Vehicles & Remote Setup from India</div><div class="thi">1 से 10 वाहन तक विस्तार — भारत से रिमोट सेटअप</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_14_2">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_14_2',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_14_2',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_14_2')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_14_2">
+        <div class="obox">
+          <strong>🚀 12-Month Growth Roadmap:</strong><br/><br/>
+          <strong>Month 1–2 — Master One Vehicle:</strong> Learn one carrier's routes, preferences, and clients. Hit >95% KPIs consistently. Build trust. This is your proof of concept.<br/><br/>
+          <strong>Month 3–4 — Add 2nd and 3rd vehicle:</strong> Use your first carrier as a referral source. A happy UK owner-operator knows 5–10 others. Ask for introductions.<br/><br/>
+          <strong>Month 5–6 — Hire a junior dispatcher (India):</strong> At 3–4 vehicles, you need help. Train a junior — you manage relationships, they handle paperwork and check-calls.<br/><br/>
+          <strong>Month 6–12 — 5–10 vehicles:</strong> Formalise your dispatch company. Register as a business. Build standard processes. At 10 vehicles you are earning £10,000–15,000/month.
+        </div>
+        <div class="gbox">
+          <strong>🖥️ Essential Remote Dispatch Tools (India to UK):</strong><br/>
+          • <strong>UK Phone Number:</strong> Vonage, Skype Number, or CallHippo UK number (~£15/month)<br/>
+          • <strong>WhatsApp Business:</strong> Primary communication with UK drivers<br/>
+          • <strong>Courier Exchange (CX):</strong> £120–200/month — your main load source<br/>
+          • <strong>Google Sheets:</strong> Free load tracking until 5+ vehicles<br/>
+          • <strong>TMS:</strong> Loadmaster or Magnum/Mandata (UK-specific TMS) from Month 4+<br/>
+          • <strong>Email:</strong> Professional domain email (yourname@yourbusiness.co.uk)<br/>
+          • <strong>Internet:</strong> Minimum 50Mbps with mobile hotspot backup<br/>
+          • <strong>Total monthly cost to start:</strong> ~£350–500 — all from India
+        </div>
+        <div class="hbox">
+          <strong>💡 UK-Specific Tips for Remote Dispatchers:</strong><br/>
+          • Use a UK area code number — UK carriers trust local numbers more<br/>
+          • Learn key UK motorway routes (M1, M6, M25, M62, A1) — this builds trust<br/>
+          • Understand UK bank holidays — major freight disruption days<br/>
+          • Know UK trading terms — "collection today", "timed delivery", "AM delivery" are standard<br/>
+          • DVSA vehicle inspection notices are sent by post — remind carriers to update their O-Licence address
+        </div>
+        <div class="kts"><span class="kt">Vonage UK Number</span><span class="kt">WhatsApp Business</span><span class="kt">Mandata TMS</span><span class="kt">M1/M6/M25</span><span class="kt">UK Bank Holidays</span></div>
+      </div>
+      <div class="chi" id="chi_14_2"><div id="th_14_2">
+        <div class="obox"><strong>12 माह की योजना:</strong> माह 1-2: एक वाहन में महारत | माह 3-4: 2-3 वाहन | माह 5-6: जूनियर डिस्पैचर | माह 6-12: 5-10 वाहन → £10,000–15,000/माह</div>
+        <div class="gbox"><strong>जरूरी टूल्स:</strong> UK नंबर (Vonage/CallHippo ~£15/माह) | WhatsApp Business | Courier Exchange | Google Sheets | UK डोमेन ईमेल। कुल लागत: ~£350–500/माह</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Quick Check — Scaling</h4><span style="margin-left:auto" class="tag tag-green">3 Qs</span></div>
+        <div class="qbody" id="qb_14_2">
+          <div class="qi"><div class="qt">1. What is the best source of new UK carrier clients when you already have one happy carrier?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_14_2','q1',false)">A. Cold calling from phone book</button>
+            <button class="qo" onclick="ans(this,'qb_14_2','q1',true)">B. Referrals — your existing carrier knows 5–10 other owner-operators</button>
+            <button class="qo" onclick="ans(this,'qb_14_2','q1',false)">C. Posting job ads</button>
+            <button class="qo" onclick="ans(this,'qb_14_2','q1',false)">D. Buying a mailing list</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. Which UK-specific TMS is recommended for growing dispatch businesses?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_14_2','q2',false)">A. Aljex</button>
+            <button class="qo" onclick="ans(this,'qb_14_2','q2',false)">B. McLeod</button>
+            <button class="qo" onclick="ans(this,'qb_14_2','q2',true)">C. Mandata or Loadmaster</button>
+            <button class="qo" onclick="ans(this,'qb_14_2','q2',false)">D. Microsoft Excel only</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Approximate monthly cost to run a UK dispatch operation from India is:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_14_2','q3',false)">A. £50–100</button>
+            <button class="qo" onclick="ans(this,'qb_14_2','q3',false)">B. £1,000–2,000</button>
+            <button class="qo" onclick="ans(this,'qb_14_2','q3',true)">C. £350–500</button>
+            <button class="qo" onclick="ans(this,'qb_14_2','q3',false)">D. £5,000+</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_14_2"><div class="qscore" id="qs_14_2"></div><div id="qm_14_2" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_14_2','qr_14_2','qs_14_2','qm_14_2')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh"><h3>⚡ Practical</h3><div class="sl"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px"><ul class="pl">
+    <li><div class="pn">1</div><div><strong>Full Day Simulation:</strong> Instructor assigns 3 UK vehicles with live scenarios — a pallet network trunking run, a CX spot load, and a DHL subcontract delivery. Students manage all 3 simultaneously for 90 minutes including check-calls, issues, and documentation.</div></li>
+    <li><div class="pn">2</div><div><strong>Business Plan:</strong> Write your 12-month UK dispatch business plan. Include: How you find your first carrier, tools needed, monthly costs, income projections at 1/3/5/10 vehicles, and when you hire your first junior dispatcher.</div></li>
+  </ul></div>
+  <div class="hwbox"><h4>📝 Homework — Day 14</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Prepare for tomorrow's full Week 3 simulation day. Review: O-Licence rules, drivers' hours, CMR notes, Courier Exchange, UK logistics companies, KPIs, and your dispatch workflow. The simulation will test everything from this week.</p></div>
+  <div class="dnav"><button class="btn btn-ghost" onclick="showDay(13,document.querySelectorAll('.day-tab')[2])">← Day 13</button><button class="btn btn-primary" style="background:linear-gradient(135deg,var(--green),#16a34a)" onclick="markDay(14);showDay(15,document.querySelectorAll('.day-tab')[4])">Day 15 →</button></div>
+</div>
+
+<!-- ═══ DAY 15: Full UK Dispatch Simulation & Week 3 Review ═══ -->
+<div class="day-panel" id="day15">
+  <div class="day-hero fade-up">
+    <div class="dnum" style="font-size:18px">D15</div>
+    <div class="di">
+      <h2>Full UK Dispatch Simulation & Week 3 Review</h2>
+      <div class="ht">पूर्ण UK डिस्पैच सिमुलेशन और सप्ताह 3 समीक्षा</div>
+      <div class="dm"><span class="tag tag-green">4hrs Simulation</span><span class="tag tag-orange">Graded</span></div>
+    </div>
+  </div>
+  <div class="vb fade-up delay-1"><div class="vh"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 15 — Simulation Briefing</span><span style="margin-left:auto;font-size:11px;color:var(--grey)">~10 min</span></div><div class="vph" onclick="loadVid(this,'YOUR_D15_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 15: UK Simulation Briefing</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D15_VIDEO_ID</div></div></div><div class="vnt">💡 Replace YOUR_D15_VIDEO_ID</div></div>
+
+  <div class="sh"><h3>📋 Today's Simulation Scenarios</h3><div class="sl"></div></div>
+
+  <div class="card" style="padding:28px;margin-bottom:20px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:20px">
+      <span style="font-size:28px">🎯</span>
+      <div><div style="font-size:18px;font-weight:800">UK Dispatch Simulation — 4 Hours</div><div style="font-size:13px;color:var(--green)">आज आप एक पेशेवर UK डिस्पैचर की तरह काम करेंगे</div></div>
+    </div>
+    <ul class="pl">
+      <li><div class="pn">1</div><div><strong>Vehicle 1 — Curtainsider (Manchester):</strong> CX load: Manchester to London, £980, 220 miles. Driver has 7hrs available. Book the load, get CMR note ready, plan the route, check tachograph hours allow the journey, handle the check-call 2hrs in.</div></li>
+      <li><div class="pn">2</div><div><strong>Vehicle 2 — Pallet Network (Birmingham):</strong> Palletforce depot work: 28 pallets to collect from 4 local businesses, trunk overnight to Palletforce hub at Burntwood. Coordinate 4 collections, complete consignment notes, confirm trunking departure time.</div></li>
+      <li><div class="pn">3</div><div><strong>Vehicle 3 — DHL Subcontract (Bristol):</strong> DHL contract delivery: 3 drops in Bristol/Bath area. One customer not home. One delivery refused (damaged packaging). One successful. Handle each scenario correctly with documentation.</div></li>
+      <li><div class="pn">4</div><div><strong>Crisis:</strong> Vehicle 1 has a breakdown on the M1 near Milton Keynes. Load is time-sensitive. What do you do? Who do you call? In what order? Document everything.</div></li>
+      <li><div class="pn">5</div><div><strong>Negotiation:</strong> A new load appears on CX — London to Edinburgh, curtainsider, £1,100. Your target is £1,350. Poster is a known Courier Exchange member with 4-star rating. Use your ICAR method and negotiation techniques.</div></li>
+    </ul>
+  </div>
+
+  <div style="background:linear-gradient(135deg,rgba(34,197,94,0.08),rgba(30,27,139,0.3));border:1px solid rgba(34,197,94,0.25);border-radius:var(--radius-xl);padding:28px;margin-bottom:24px">
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px"><span style="font-size:28px">🏆</span>
+      <div><div style="font-size:18px;font-weight:800">Week 3 Complete!</div><div style="font-size:13px;color:var(--green);font-family:var(--font-hindi)">सप्ताह 3 पूरा! आप अब एक UK freight dispatcher की तरह सोचते हैं।</div></div>
+    </div>
+    <p style="font-size:14px;color:rgba(255,255,255,0.8);line-height:1.8;margin-bottom:16px">This week you mastered: UK Operator Licensing, DVSA rules, drivers' hours and tachograph law, CMR Notes and UK documentation, Courier Exchange and UK load boards, major UK logistics companies, pallet networks, KPIs, client acquisition, and how to run a UK dispatch business remotely from India.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <a href="week4.html" class="btn btn-primary" style="background:linear-gradient(135deg,var(--green),#16a34a)">Continue to Week 4 →</a>
+      <a href="tools.html" class="btn btn-secondary">🧮 Practice Tools</a>
+      <a href="madam-ji.html" class="btn btn-ghost">🎓 Ask Madam JI</a>
+    </div>
+  </div>
+
+  <div class="hwbox"><h4>📝 Week 3 Final Homework</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Create your Week 3 Cheat Sheet: O-Licence types, drivers' hours (daily/weekly/fortnightly), CMR vs Consignment Note, top 5 UK logistics companies, top 4 pallet networks, IST to GMT conversion, and your 12-month business plan summary. Week 4 assessment covers ALL weeks.</p></div>
+  <div class="dnav"><button class="btn btn-ghost" onclick="showDay(14,document.querySelectorAll('.day-tab')[3])">← Day 14</button><a href="week4.html" class="btn btn-primary" style="background:linear-gradient(135deg,var(--green),#16a34a)">Week 4 →</a></div>
+</div>
+
+</main>
+
+<footer style="border-top:1px solid rgba(34,197,94,0.15);padding:20px 24px;text-align:center;margin-top:40px">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px">
+      <img src="assets/logo.png" style="height:32px;background:white;padding:2px;border-radius:6px" onerror="this.style.display='none'"/>
+      <span style="font-weight:900;font-size:15px;letter-spacing:1px">EAGLE ACADEMY</span>
+    </div>
+    <div style="font-size:12px;color:var(--grey)">International Freight Dispatcher Certification — Week 3 of 4 | 🇬🇧 UK Primary Focus</div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+<script>
+let qA={};
+function showDay(n,btn){
+  document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
+  const p=document.getElementById('day'+n);if(p)p.classList.add('active');
+  if(btn)btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function markDay(n){
+  const c=document.getElementById('c'+n);if(c)c.style.display='inline';
+  updateProg();
+  try{const s=JSON.parse(localStorage.getItem('ea_w3')||'{}');s['d'+n]=true;localStorage.setItem('ea_w3',JSON.stringify(s));}catch(e){}
+}
+function updateProg(){
+  const done=document.querySelectorAll('.chk[style*="inline"]').length;
+  const p=Math.round(done/5*100);
+  const b=document.getElementById('wprog'),l=document.getElementById('wpct');
+  if(b)b.style.width=p+'%';if(l)l.textContent=p+'%';
+}
+function openT(id,btn){
+  const bid='body_'+id.replace('tc_','');
+  const b=document.getElementById(bid);if(!b)return;
+  const wasOpen=b.classList.contains('open');
+  document.querySelectorAll('.tbody').forEach(x=>x.classList.remove('open'));
+  document.querySelectorAll('.tt').forEach(x=>x.classList.remove('open'));
+  if(!wasOpen){b.classList.add('open');btn.classList.add('open');}
+}
+function setLang(lang,btn){
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.querySelectorAll('.chi').forEach(el=>el.classList.toggle('show',lang==='hi'));
+}
+function togHi(id){const el=document.getElementById(id);if(el)el.classList.toggle('show');}
+let synth=window.speechSynthesis;
+function spk(id,btn,lang){
+  if(synth)synth.cancel();
+  document.querySelectorAll('.ab.on').forEach(b=>b.classList.remove('on'));
+  const el=document.getElementById(id);if(!el||!synth)return;
+  const u=new SpeechSynthesisUtterance((el.innerText||el.textContent).replace(/\s+/g,' ').trim());
+  u.lang=lang;u.rate=0.88;
+  const vs=synth.getVoices(),m=vs.find(v=>v.lang.startsWith(lang.substring(0,2)));
+  if(m)u.voice=m;
+  btn.classList.add('on');u.onend=()=>btn.classList.remove('on');u.onerror=()=>btn.classList.remove('on');
+  synth.speak(u);
+}
+function stopSpk(){if(synth)synth.cancel();document.querySelectorAll('.ab.on').forEach(b=>b.classList.remove('on'));}
+function loadVid(el,id){
+  if(!id||id.includes('YOUR')){alert('📹 Instructor: Replace the video ID in the HTML with your YouTube video ID.');return;}
+  el.outerHTML=`<div style="position:relative;padding-bottom:56.25%"><iframe src="https://www.youtube.com/embed/${id}?autoplay=1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="autoplay;fullscreen" allowfullscreen></iframe></div>`;
+}
+function ans(btn,qbId,qKey,correct){
+  if(!qA[qbId])qA[qbId]={};if(qA[qbId][qKey])return;
+  qA[qbId][qKey]=correct;
+  btn.closest('.qi').querySelectorAll('.qo').forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  if(!correct)btn.closest('.qi').querySelectorAll('.qo').forEach(b=>{if(b.onclick&&b.onclick.toString().includes(',true'))b.classList.add('correct');});
+  const total=document.getElementById(qbId).querySelectorAll('.qi').length;
+  if(Object.keys(qA[qbId]).length>=total)showResult(qbId);
+}
+function showResult(qbId){
+  const a=qA[qbId]||{},total=Object.keys(a).length,correct=Object.values(a).filter(v=>v).length,pct=Math.round(correct/total*100);
+  const rid=qbId.replace('qb_','qr_'),sid=qbId.replace('qb_','qs_'),mid=qbId.replace('qb_','qm_');
+  const re=document.getElementById(rid),se=document.getElementById(sid),me=document.getElementById(mid);
+  if(re)re.classList.add('show');
+  if(se){se.textContent=correct+'/'+total+' — '+pct+'%';se.style.color=pct>=70?'var(--green)':pct>=50?'var(--gold)':'var(--red)';}
+  if(me)me.textContent=pct>=90?'🏆 Excellent!':pct>=70?'✅ Good work!':pct>=50?'📚 Review the topic.':'⚠️ Please re-read and retake.';
+}
+function retake(qbId,rId,sId,mId){
+  qA[qbId]={};
+  document.getElementById(qbId).querySelectorAll('.qo').forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong');});
+  const r=document.getElementById(rId);if(r)r.classList.remove('show');
+}
+document.addEventListener('DOMContentLoaded',()=>{
+  try{const s=JSON.parse(localStorage.getItem('ea_w3')||'{}');for(let d=11;d<=15;d++)if(s['d'+d]){const c=document.getElementById('c'+d);if(c)c.style.display='inline';}updateProg();}catch(e){}
+  if(window.speechSynthesis)window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+});
+</script>
+</body>
+</html>

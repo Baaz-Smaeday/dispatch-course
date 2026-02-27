@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Dispatch Tools — Eagle Academy</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<style>
+:root{
+  --navy-dark:#03041a;
+  --font-main:'DM Sans',sans-serif;
+  --font-head:'Syne',sans-serif;
+  --font-mono:'JetBrains Mono',monospace;
+  --font-hindi:'Noto Sans Devanagari',sans-serif;
+  --radius-md:12px;
+  --radius-lg:18px;
+  --radius-xl:24px;
+  --transition:all .22s ease;
+}
+.tools-hero{background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 60%,rgba(6,182,212,0.08) 100%);padding:40px 24px 32px;border-bottom:1px solid rgba(6,182,212,0.15);position:relative;overflow:hidden}
+.tools-hero::before{content:'⚙';position:absolute;right:4%;top:10px;font-size:200px;opacity:.03;pointer-events:none}
+.th-inner{max-width:1200px;margin:0 auto}
+.tools-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:20px;max-width:1200px;margin:0 auto;padding:32px 24px}
+.tool-card{background:rgba(255,255,255,0.025);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-xl);overflow:hidden;transition:var(--transition)}
+.tool-card:hover{border-color:rgba(6,182,212,0.3);transform:translateY(-2px)}
+.tool-head{padding:20px 22px 14px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:12px}
+.tool-icon{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0}
+.tool-body{padding:20px 22px}
+.tl{display:block;font-size:12px;color:var(--grey);font-family:var(--font-mono);margin-bottom:5px;font-weight:600;text-transform:uppercase;letter-spacing:.5px}
+.tf{width:100%;padding:10px 14px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-md);color:var(--white);font-family:var(--font-main);font-size:14px;outline:none;transition:border-color .2s;margin-bottom:12px;-webkit-appearance:none}
+.tf:focus{border-color:var(--cyan)}
+.tf-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.result-box{background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.25);border-radius:var(--radius-md);padding:14px 16px;margin-top:4px}
+.result-main{font-family:var(--font-head);font-size:28px;font-weight:900;color:var(--cyan);line-height:1}
+.result-sub{font-size:12px;color:var(--grey);margin-top:4px;line-height:1.6}
+.result-good{background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.3);}.result-good .result-main{color:var(--green)}
+.result-warn{background:rgba(249,115,22,0.08);border-color:rgba(249,115,22,0.3);}.result-warn .result-main{color:var(--orange)}
+.result-bad{background:rgba(239,68,68,0.08);border-color:rgba(239,68,68,0.3);}.result-bad .result-main{color:var(--red)}
+.calc-btn{width:100%;padding:11px;background:linear-gradient(135deg,var(--cyan),#0891b2);border:none;border-radius:var(--radius-md);color:white;font-family:var(--font-main);font-size:14px;font-weight:700;cursor:pointer;transition:var(--transition);margin-bottom:10px}
+.calc-btn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+.seg{display:flex;gap:4px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:var(--radius-md);padding:4px;margin-bottom:12px}
+.seg-btn{flex:1;padding:7px 10px;background:transparent;border:none;border-radius:9px;color:var(--grey);font-family:var(--font-main);font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition)}
+.seg-btn.act{background:linear-gradient(135deg,var(--cyan),#0891b2);color:white}
+.mini-grid{display:grid;gap:8px;margin-top:10px}
+.tz-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px}
+.tz-flag{font-size:18px}
+.tz-time{font-family:var(--font-mono);font-size:18px;font-weight:700}
+.tz-label{font-size:11px;color:var(--grey);margin-top:2px}
+.india-tz{border-color:rgba(249,115,22,0.3);background:rgba(249,115,22,0.06)}
+.india-tz .tz-time{color:var(--orange)}
+.uk-tz{border-color:rgba(34,197,94,0.3);background:rgba(34,197,94,0.06)}
+.uk-tz .tz-time{color:var(--green)}
+.usa-e-tz{border-color:rgba(6,182,212,0.3);background:rgba(6,182,212,0.06)}
+.usa-e-tz .tz-time{color:var(--cyan)}
+.usa-c-tz{border-color:rgba(99,102,241,0.3);background:rgba(99,102,241,0.06)}
+.usa-c-tz .tz-time{color:#a78bfa}
+.hours-vis{display:grid;grid-template-columns:repeat(24,1fr);gap:1px;margin-top:10px;border-radius:8px;overflow:hidden}
+.hv-cell{height:14px;background:rgba(255,255,255,0.06);position:relative;cursor:default}
+.hv-cell.drive{background:var(--green)}
+.hv-cell.break{background:var(--orange)}
+.hv-cell.rest{background:var(--red)}
+.hv-cell.load{background:var(--cyan)}
+.hv-legend{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:11px}
+.hv-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;margin-top:1px}
+select.tf option{background:#0d0c2e;color:white}
+.hi-note{font-family:var(--font-hindi);font-size:13px;color:rgba(255,200,80,0.8);margin-top:6px;display:none}
+.chi.show .hi-note{display:block}
+.divider-label{font-size:11px;color:var(--grey);text-align:center;position:relative;margin:10px 0}
+.divider-label::before,.divider-label::after{content:'';position:absolute;top:50%;width:42%;height:1px;background:rgba(255,255,255,0.07)}
+.divider-label::before{left:0}.divider-label::after{right:0}
+</style>
+</head>
+<body>
+
+<header class="ea-header">
+  <div class="ea-header-inner">
+    <a href="index.html" class="ea-logo">
+      <img src="assets/logo.png" alt="Eagle Academy" onerror="this.style.display='none'"/>
+      <div class="ea-logo-text"><div class="brand">EAGLE ACADEMY</div><div class="sub">Freight Dispatcher Certification</div></div>
+    </a>
+    <nav class="ea-nav">
+      <a href="index.html" class="ea-nav-btn">🏠 Home</a>
+      <a href="week1.html" class="ea-nav-btn">Week 1</a>
+      <a href="week2.html" class="ea-nav-btn">Week 2</a>
+      <a href="week3.html" class="ea-nav-btn">Week 3</a>
+      <a href="week4.html" class="ea-nav-btn">Week 4</a>
+      <a href="tools.html" class="ea-nav-btn active">🧮 Tools</a>
+      <a href="madam-ji.html" class="ea-nav-btn">🎓 Madam JI</a>
+      <a href="exam.html" class="ea-nav-btn">📝 Final Exam</a>
+    </nav>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('hi',this)">हिं</button>
+    </div>
+  </div>
+</header>
+
+<div class="ticker-wrap"><div class="ticker-inner" style="color:var(--cyan);font-family:var(--font-mono);font-size:12px">
+  <span>🧮 7 Live Tools</span><span>💷 UK Rate Calculator — £/mile</span><span>⏱ UK Hours Checker — Tachograph</span><span>🇬🇧↔🇮🇳 Time Zone Converter</span><span>💰 Dispatcher Commission</span><span>🚛 Detention Pay</span><span>📊 Load Profitability</span><span>🔁 Empty Running %</span><span>🧮 7 Live Tools</span><span>💷 UK Rate Calculator — £/mile</span><span>⏱ UK Hours Checker — Tachograph</span>
+</div></div>
+
+<section class="tools-hero">
+  <div class="th-inner">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:14px">
+      <span class="tag tag-cyan">Phase 5</span>
+      <span class="tag tag-green">🇬🇧 UK Primary</span>
+      <span class="tag tag-orange">7 Tools</span>
+    </div>
+    <h1 style="font-family:var(--font-head);font-size:clamp(24px,4vw,40px);font-weight:900;margin-bottom:6px">Dispatcher Toolbox</h1>
+    <p style="font-size:14px;color:var(--grey)">Live calculators for UK &amp; USA freight dispatch — rates, hours, commissions, time zones and more</p>
+    <p style="font-size:13px;color:var(--cyan);font-family:var(--font-hindi);margin-top:4px">डिस्पैचर टूलबॉक्स — UK और USA फ्रेट के लिए लाइव कैलकुलेटर</p>
+  </div>
+</section>
+
+<div class="tools-grid">
+
+  <!-- ═══ TOOL 1: UK Rate Calculator ═══ -->
+  <div class="tool-card">
+    <div class="tool-head">
+      <div class="tool-icon" style="background:rgba(34,197,94,0.15)">💷</div>
+      <div>
+        <div style="font-family:var(--font-head);font-size:15px;font-weight:800">UK Rate Calculator</div>
+        <div style="font-size:11px;color:var(--grey)">Cost per mile · Revenue per mile · Profitability</div>
+      </div>
+    </div>
+    <div class="tool-body">
+      <div class="seg" id="seg_rate">
+        <button class="seg-btn act" onclick="segSwitch('seg_rate',this,'r_uk')">🇬🇧 UK (£/mile)</button>
+        <button class="seg-btn" onclick="segSwitch('seg_rate',this,'r_us')">🇺🇸 USA ($/mile)</button>
+      </div>
+
+      <div id="r_uk">
+        <label class="tl">Load Rate (£)</label>
+        <input type="number" class="tf" id="r_uk_rate" placeholder="e.g. 1200" oninput="calcUKRate()"/>
+        <div class="tf-row">
+          <div><label class="tl">Miles</label><input type="number" class="tf" id="r_uk_miles" placeholder="e.g. 240" oninput="calcUKRate()"/></div>
+          <div><label class="tl">HGV Cost/Mile (£)</label><input type="number" class="tf" id="r_uk_cpm" placeholder="1.50" value="1.50" step="0.05" oninput="calcUKRate()"/></div>
+        </div>
+        <div id="r_uk_result" class="result-box" style="display:none">
+          <div class="result-main" id="r_uk_rpm">—</div>
+          <div class="result-sub" id="r_uk_sub">—</div>
+        </div>
+      </div>
+
+      <div id="r_us" style="display:none">
+        <label class="tl">Load Rate ($)</label>
+        <input type="number" class="tf" id="r_us_rate" placeholder="e.g. 2800" oninput="calcUSRate()"/>
+        <div class="tf-row">
+          <div><label class="tl">Miles</label><input type="number" class="tf" id="r_us_miles" placeholder="e.g. 950" oninput="calcUSRate()"/></div>
+          <div><label class="tl">Cost/Mile ($)</label><input type="number" class="tf" id="r_us_cpm" placeholder="1.65" value="1.65" step="0.05" oninput="calcUSRate()"/></div>
+        </div>
+        <div id="r_us_result" class="result-box" style="display:none">
+          <div class="result-main" id="r_us_rpm">—</div>
+          <div class="result-sub" id="r_us_sub">—</div>
+        </div>
+      </div>
+
+      <div class="hi-note chi">UK में £2.50/मील से ऊपर = अच्छा। £2.00 से नीचे = जांचें। USA में $2.50 से ऊपर = अच्छा।</div>
+    </div>
+  </div>
+
+  <!-- ═══ TOOL 2: UK Drivers Hours Checker ═══ -->
+  <div class="tool-card">
+    <div class="tool-head">
+      <div class="tool-icon" style="background:rgba(249,115,22,0.15)">⏱</div>
+      <div>
+        <div style="font-family:var(--font-head);font-size:15px;font-weight:800">UK Drivers' Hours Checker</div>
+        <div style="font-size:11px;color:var(--grey)">Can they legally complete this load?</div>
+      </div>
+    </div>
+    <div class="tool-body">
+      <div class="tf-row">
+        <div><label class="tl">Shift Start</label><input type="time" class="tf" id="h_start" value="06:00" oninput="calcHours()"/></div>
+        <div><label class="tl">Drive Distance (miles)</label><input type="number" class="tf" id="h_miles" placeholder="e.g. 260" oninput="calcHours()"/></div>
+      </div>
+      <div class="tf-row">
+        <div><label class="tl">Avg Speed (mph)</label><input type="number" class="tf" id="h_speed" placeholder="50" value="50" oninput="calcHours()"/></div>
+        <div><label class="tl">Loading Time (mins)</label><input type="number" class="tf" id="h_load" placeholder="60" value="60" oninput="calcHours()"/></div>
+      </div>
+      <div class="tf-row">
+        <div><label class="tl">Hours Already Driven</label><input type="number" class="tf" id="h_used" placeholder="0" value="0" step="0.5" oninput="calcHours()"/></div>
+        <div><label class="tl">Extended Day? (×2/wk max)</label>
+          <select class="tf" id="h_ext" onchange="calcHours()">
+            <option value="9">No — 9hr max</option>
+            <option value="10">Yes — 10hr max</option>
+          </select>
+        </div>
+      </div>
+
+      <div id="h_result" class="result-box" style="display:none">
+        <div class="result-main" id="h_verdict">—</div>
+        <div class="result-sub" id="h_detail">—</div>
+      </div>
+
+      <div style="margin-top:10px">
+        <div style="font-size:11px;color:var(--grey);margin-bottom:5px;font-family:var(--font-mono);font-weight:600">24HR TIMELINE</div>
+        <div class="hours-vis" id="h_vis"></div>
+        <div class="hv-legend">
+          <div style="display:flex;align-items:center;gap:4px"><div class="hv-dot" style="background:var(--green)"></div><span style="font-size:11px;color:var(--grey)">Drive</span></div>
+          <div style="display:flex;align-items:center;gap:4px"><div class="hv-dot" style="background:var(--orange)"></div><span style="font-size:11px;color:var(--grey)">Break</span></div>
+          <div style="display:flex;align-items:center;gap:4px"><div class="hv-dot" style="background:var(--cyan)"></div><span style="font-size:11px;color:var(--grey)">Load/Unload</span></div>
+          <div style="display:flex;align-items:center;gap:4px"><div class="hv-dot" style="background:var(--red)"></div><span style="font-size:11px;color:var(--grey)">Rest Required</span></div>
+        </div>
+      </div>
+      <div class="hi-note chi">4.5 घंटे ड्राइव → 45 मिनट ब्रेक अनिवार्य। दैनिक अधिकतम: 9 घंटे (सप्ताह में 2 बार 10 घंटे)।</div>
+    </div>
+  </div>
+
+  <!-- ═══ TOOL 3: Time Zone Converter ═══ -->
+  <div class="tool-card">
+    <div class="tool-head">
+      <div class="tool-icon" style="background:rgba(6,182,212,0.15)">🌍</div>
+      <div>
+        <div style="font-family:var(--font-head);font-size:15px;font-weight:800">Time Zone Converter</div>
+        <div style="font-size:11px;color:var(--grey)">India ↔ UK ↔ USA · Live &amp; manual</div>
+      </div>
+    </div>
+    <div class="tool-body">
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px">
+        <button class="calc-btn" style="margin:0;flex:1" onclick="setNow()">🕐 Set to Now</button>
+        <div style="flex:1">
+          <label class="tl">Set Custom Time (IST)</label>
+          <input type="time" class="tf" id="tz_input" style="margin-bottom:0" oninput="convertTZ()"/>
+        </div>
+      </div>
+
+      <div class="mini-grid">
+        <div class="tz-row india-tz">
+          <div style="display:flex;align-items:center;gap:10px"><span class="tz-flag">🇮🇳</span><div><div style="font-size:13px;font-weight:700">India (IST)</div><div class="tz-label">UTC +5:30</div></div></div>
+          <div style="text-align:right"><div class="tz-time" id="tz_ist">—</div><div class="tz-label" id="tz_ist_d">—</div></div>
+        </div>
+        <div class="tz-row uk-tz">
+          <div style="display:flex;align-items:center;gap:10px"><span class="tz-flag">🇬🇧</span><div><div style="font-size:13px;font-weight:700">UK (GMT/BST)</div><div class="tz-label" id="tz_uk_offset">UTC +0 / +1 BST</div></div></div>
+          <div style="text-align:right"><div class="tz-time" id="tz_uk">—</div><div class="tz-label" id="tz_uk_status">—</div></div>
+        </div>
+        <div class="tz-row usa-e-tz">
+          <div style="display:flex;align-items:center;gap:10px"><span class="tz-flag">🇺🇸</span><div><div style="font-size:13px;font-weight:700">USA East (EST/EDT)</div><div class="tz-label">UTC -5 / -4</div></div></div>
+          <div style="text-align:right"><div class="tz-time" id="tz_est">—</div><div class="tz-label" id="tz_est_status">—</div></div>
+        </div>
+        <div class="tz-row usa-c-tz">
+          <div style="display:flex;align-items:center;gap:10px"><span class="tz-flag">🇺🇸</span><div><div style="font-size:13px;font-weight:700">USA Central (CST/CDT)</div><div class="tz-label">UTC -6 / -5</div></div></div>
+          <div style="text-align:right"><div class="tz-time" id="tz_cst">—</div><div class="tz-label" id="tz_cst_status">—</div></div>
+        </div>
+      </div>
+
+      <div id="tz_advice" style="font-size:12px;color:var(--grey);margin-top:10px;padding:10px 12px;background:rgba(255,255,255,0.03);border-radius:8px;line-height:1.7"></div>
+      <div class="hi-note chi">UK = IST से 5:30 घंटे पीछे। UK सुबह 8 बजे = भारत दोपहर 1:30 बजे। USA (EST) = IST से 10:30 घंटे पीछे।</div>
+    </div>
+  </div>
+
+  <!-- ═══ TOOL 4: Dispatcher Commission ═══ -->
+  <div class="tool-card">
+    <div class="tool-head">
+      <div class="tool-icon" style="background:rgba(139,92,246,0.15)">💰</div>
+      <div>
+        <div style="font-family:var(--font-head);font-size:15px;font-weight:800">Dispatcher Commission</div>
+        <div style="font-size:11px;color:var(--grey)">Earnings per load · Monthly · Annual · INR</div>
+      </div>
+    </div>
+    <div class="tool-body">
+      <div class="seg" id="seg_comm">
+        <button class="seg-btn act" onclick="segSwitch('seg_comm',this,'cm_uk');calcComm()">🇬🇧 UK (£)</button>
+        <button class="seg-btn" onclick="segSwitch('seg_comm',this,'cm_us');calcComm()">🇺🇸 USA ($)</button>
+      </div>
+
+      <div id="cm_uk">
+        <div class="tf-row">
+          <div><label class="tl">Load Rate (£)</label><input type="number" class="tf" id="cm_uk_rate" placeholder="e.g. 1200" oninput="calcComm()"/></div>
+          <div><label class="tl">Commission %</label><input type="number" class="tf" id="cm_uk_pct" placeholder="8" value="8" min="1" max="15" step="0.5" oninput="calcComm()"/></div>
+        </div>
+      </div>
+      <div id="cm_us" style="display:none">
+        <div class="tf-row">
+          <div><label class="tl">Load Rate ($)</label><input type="number" class="tf" id="cm_us_rate" placeholder="e.g. 2800" oninput="calcComm()"/></div>
+          <div><label class="tl">Commission %</label><input type="number" class="tf" id="cm_us_pct" placeholder="8" value="8" min="1" max="15" step="0.5" oninput="calcComm()"/></div>
+        </div>
+      </div>
+
+      <div class="tf-row">
+        <div><label class="tl">Loads / Week</label><input type="number" class="tf" id="cm_loads" placeholder="4" value="4" oninput="calcComm()"/></div>
+        <div><label class="tl">No. of Vehicles</label><input type="number" class="tf" id="cm_vehicles" placeholder="1" value="1" oninput="calcComm()"/></div>
+      </div>
+
+      <div id="cm_result" style="display:none">
+        <div class="mini-grid" id="cm_grid"></div>
+      </div>
+      <div class="hi-note chi">8% कमीशन पर: 1 UK वाहन (£1,200/लोड, 4 लोड/सप्ताह) = £1,536/माह। 10 वाहन = £15,360/माह।</div>
+    </div>
+  </div>
+
+  <!-- ═══ TOOL 5: Detention Pay ═══ -->
+  <div class="tool-card">
+    <div class="tool-head">
+      <div class="tool-icon" style="background:rgba(239,68,68,0.15)">🕐</div>
+      <div>
+        <div style="font-family:var(--font-head);font-size:15px;font-weight:800">Detention Pay Calculator</div>
+        <div style="font-size:11px;color:var(--grey)">UK &amp; USA · How much to claim</div>
+      </div>
+    </div>
+    <div class="tool-body">
+      <div class="seg" id="seg_det">
+        <button class="seg-btn act" onclick="segSwitch('seg_det',this,'det_uk');calcDet()">🇬🇧 UK</button>
+        <button class="seg-btn" onclick="segSwitch('seg_det',this,'det_us');calcDet()">🇺🇸 USA</button>
+      </div>
+
+      <div id="det_uk">
+        <div class="tf-row">
+          <div><label class="tl">Arrived Time</label><input type="time" class="tf" id="det_uk_arr" value="09:00" oninput="calcDet()"/></div>
+          <div><label class="tl">Departed / Released</label><input type="time" class="tf" id="det_uk_dep" value="12:00" oninput="calcDet()"/></div>
+        </div>
+        <div><label class="tl">UK Detention Rate (£/hr)</label><input type="number" class="tf" id="det_uk_rate" placeholder="25" value="25" oninput="calcDet()"/></div>
+        <div style="font-size:11px;color:var(--grey);margin-bottom:10px">2 free hours included. Detention billed after that.</div>
+      </div>
+
+      <div id="det_us" style="display:none">
+        <div class="tf-row">
+          <div><label class="tl">Arrived Time</label><input type="time" class="tf" id="det_us_arr" value="09:00" oninput="calcDet()"/></div>
+          <div><label class="tl">Departed / Released</label><input type="time" class="tf" id="det_us_dep" value="12:00" oninput="calcDet()"/></div>
+        </div>
+        <div><label class="tl">Detention Rate ($/hr)</label><input type="number" class="tf" id="det_us_rate" placeholder="50" value="50" oninput="calcDet()"/></div>
+        <div style="font-size:11px;color:var(--grey);margin-bottom:10px">2 free hours included. Detention billed after that.</div>
+      </div>
+
+      <div id="det_result" class="result-box" style="display:none">
+        <div class="result-main" id="det_amount">—</div>
+        <div class="result-sub" id="det_detail">—</div>
+      </div>
+      <div class="hi-note chi">2 मुफ्त घंटे। उसके बाद प्रति घंटे डिटेंशन चार्ज। लिखित में दर्ज करें और 24 घंटे के अंदर क्लेम करें।</div>
+    </div>
+  </div>
+
+  <!-- ═══ TOOL 6: Empty Running ═══ -->
+  <div class="tool-card">
+    <div class="tool-head">
+      <div class="tool-icon" style="background:rgba(251,191,36,0.15)">📊</div>
+      <div>
+        <div style="font-family:var(--font-head);font-size:15px;font-weight:800">Empty Running Calculator</div>
+        <div style="font-size:11px;color:var(--grey)">Weekly empty run % · KPI target check</div>
+      </div>
+    </div>
+    <div class="tool-body">
+      <div class="tf-row">
+        <div><label class="tl">Total Miles This Week</label><input type="number" class="tf" id="er_total" placeholder="e.g. 1200" oninput="calcER()"/></div>
+        <div><label class="tl">Empty Miles</label><input type="number" class="tf" id="er_empty" placeholder="e.g. 240" oninput="calcER()"/></div>
+      </div>
+      <label class="tl">Weekly Revenue (£ or $)</label>
+      <input type="number" class="tf" id="er_rev" placeholder="e.g. 4800" oninput="calcER()"/>
+
+      <div id="er_result" style="display:none">
+        <div class="result-box" id="er_box">
+          <div class="result-main" id="er_pct">—</div>
+          <div class="result-sub" id="er_detail">—</div>
+        </div>
+        <div style="margin-top:8px">
+          <div style="height:10px;background:rgba(255,255,255,0.07);border-radius:99px;overflow:hidden">
+            <div id="er_bar" style="height:100%;border-radius:99px;transition:width .6s ease;background:var(--green)"></div>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:10px;color:var(--grey);margin-top:3px;font-family:var(--font-mono)">
+            <span>0%</span><span style="color:var(--green)">TARGET: &lt;15%</span><span style="color:var(--orange)">INDUSTRY: 25–30%</span><span>50%</span>
+          </div>
+        </div>
+      </div>
+      <div class="hi-note chi">खाली मील <15% = बेहतरीन। UK उद्योग औसत: 25–30%। अधिक बैकहॉल लोड खोजें।</div>
+    </div>
+  </div>
+
+  <!-- ═══ TOOL 7: Load Profitability ═══ -->
+  <div class="tool-card" style="grid-column:span 1">
+    <div class="tool-head">
+      <div class="tool-icon" style="background:rgba(34,197,94,0.15)">🚛</div>
+      <div>
+        <div style="font-family:var(--font-head);font-size:15px;font-weight:800">Load Profitability Analyser</div>
+        <div style="font-size:11px;color:var(--grey)">Should you take this load? Full P&amp;L</div>
+      </div>
+    </div>
+    <div class="tool-body">
+      <div class="seg" id="seg_prof">
+        <button class="seg-btn act" onclick="segSwitch('seg_prof',this,'pf_uk');calcProfit()">🇬🇧 UK (£)</button>
+        <button class="seg-btn" onclick="segSwitch('seg_prof',this,'pf_us');calcProfit()">🇺🇸 USA ($)</button>
+      </div>
+
+      <div id="pf_uk">
+        <div class="tf-row">
+          <div><label class="tl">Load Rate (£)</label><input type="number" class="tf" id="pf_uk_rate" placeholder="e.g. 1100" oninput="calcProfit()"/></div>
+          <div><label class="tl">Miles</label><input type="number" class="tf" id="pf_uk_miles" placeholder="e.g. 280" oninput="calcProfit()"/></div>
+        </div>
+        <div class="tf-row">
+          <div><label class="tl">Fuel Cost (£/mile)</label><input type="number" class="tf" id="pf_uk_fuel" placeholder="0.65" value="0.65" step="0.05" oninput="calcProfit()"/></div>
+          <div><label class="tl">Driver Cost (£/mile)</label><input type="number" class="tf" id="pf_uk_driver" placeholder="0.55" value="0.55" step="0.05" oninput="calcProfit()"/></div>
+        </div>
+        <div class="tf-row">
+          <div><label class="tl">Other Costs (£/mile)</label><input type="number" class="tf" id="pf_uk_other" placeholder="0.30" value="0.30" step="0.05" oninput="calcProfit()"/></div>
+          <div><label class="tl">Dispatcher % (commission)</label><input type="number" class="tf" id="pf_uk_comm" placeholder="8" value="8" step="0.5" oninput="calcProfit()"/></div>
+        </div>
+      </div>
+
+      <div id="pf_us" style="display:none">
+        <div class="tf-row">
+          <div><label class="tl">Load Rate ($)</label><input type="number" class="tf" id="pf_us_rate" placeholder="e.g. 2600" oninput="calcProfit()"/></div>
+          <div><label class="tl">Miles</label><input type="number" class="tf" id="pf_us_miles" placeholder="e.g. 850" oninput="calcProfit()"/></div>
+        </div>
+        <div class="tf-row">
+          <div><label class="tl">Fuel Cost ($/mile)</label><input type="number" class="tf" id="pf_us_fuel" placeholder="0.75" value="0.75" step="0.05" oninput="calcProfit()"/></div>
+          <div><label class="tl">Driver Cost ($/mile)</label><input type="number" class="tf" id="pf_us_driver" placeholder="0.65" value="0.65" step="0.05" oninput="calcProfit()"/></div>
+        </div>
+        <div class="tf-row">
+          <div><label class="tl">Other Costs ($/mile)</label><input type="number" class="tf" id="pf_us_other" placeholder="0.25" value="0.25" step="0.05" oninput="calcProfit()"/></div>
+          <div><label class="tl">Dispatcher % (commission)</label><input type="number" class="tf" id="pf_us_comm" placeholder="8" value="8" step="0.5" oninput="calcProfit()"/></div>
+        </div>
+      </div>
+
+      <div id="pf_result" style="display:none">
+        <div class="mini-grid" id="pf_grid"></div>
+        <div style="margin-top:8px;padding:10px 12px;border-radius:10px;font-size:14px;font-weight:700;text-align:center" id="pf_verdict"></div>
+      </div>
+      <div class="hi-note chi">कुल लागत = (ईंधन + ड्राइवर + अन्य) × मील + डिस्पैचर कमीशन। लाभ = लोड रेट − कुल लागत।</div>
+    </div>
+  </div>
+
+</div><!-- tools-grid -->
+
+<footer style="border-top:1px solid rgba(6,182,212,0.1);padding:20px 24px;text-align:center;margin-top:8px">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:6px">
+      <img src="assets/logo.png" style="height:28px;background:white;padding:2px;border-radius:5px" onerror="this.style.display='none'"/>
+      <span style="font-weight:900;font-size:14px;letter-spacing:1px;font-family:var(--font-head)">EAGLE ACADEMY</span>
+    </div>
+    <div style="font-size:12px;color:var(--grey)">Dispatcher Toolbox · Phase 5 · All calculations are estimates for training purposes</div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+<script>
+let lang='en';
+function setLang(l,btn){lang=l;document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.querySelectorAll('.hi-note').forEach(el=>el.style.display=l==='hi'?'block':'none');}
+function segSwitch(segId,btn,showId){
+  document.querySelectorAll('#'+segId+' .seg-btn').forEach(b=>b.classList.remove('act'));btn.classList.add('act');
+  const seg=document.getElementById(segId);
+  seg.parentNode.querySelectorAll('[id^="'+showId.replace(/_.*/,'_')+'"]').forEach(el=>{if(el.id!==segId)el.style.display='none';});
+  const show=document.getElementById(showId);if(show)show.style.display='block';
+}
+
+/* ─── TOOL 1: UK/US Rate Calculator ─── */
+function calcUKRate(){
+  const rate=parseFloat(document.getElementById('r_uk_rate').value)||0;
+  const miles=parseFloat(document.getElementById('r_uk_miles').value)||0;
+  const cpm=parseFloat(document.getElementById('r_uk_cpm').value)||1.50;
+  if(!rate||!miles)return;
+  const rpm=(rate/miles);const profit=rate-(cpm*miles);const profitPct=Math.round(profit/rate*100);
+  const el=document.getElementById('r_uk_result');el.style.display='block';
+  document.getElementById('r_uk_rpm').textContent='£'+rpm.toFixed(2)+'/mile';
+  document.getElementById('r_uk_sub').textContent=`Revenue: £${rate.toFixed(0)} | Cost: £${(cpm*miles).toFixed(0)} | Gross Profit: £${profit.toFixed(0)} (${profitPct}%)`;
+  el.className='result-box'+(rpm>=2.5?' result-good':rpm>=1.8?' result-warn':' result-bad');
+}
+function calcUSRate(){
+  const rate=parseFloat(document.getElementById('r_us_rate').value)||0;
+  const miles=parseFloat(document.getElementById('r_us_miles').value)||0;
+  const cpm=parseFloat(document.getElementById('r_us_cpm').value)||1.65;
+  if(!rate||!miles)return;
+  const rpm=rate/miles;const profit=rate-(cpm*miles);const profitPct=Math.round(profit/rate*100);
+  const el=document.getElementById('r_us_result');el.style.display='block';
+  document.getElementById('r_us_rpm').textContent='$'+rpm.toFixed(2)+'/mile';
+  document.getElementById('r_us_sub').textContent=`Revenue: $${rate.toFixed(0)} | Cost: $${(cpm*miles).toFixed(0)} | Gross Profit: $${profit.toFixed(0)} (${profitPct}%)`;
+  el.className='result-box'+(rpm>=2.5?' result-good':rpm>=1.8?' result-warn':' result-bad');
+}
+
+/* ─── TOOL 2: UK Hours Checker ─── */
+function calcHours(){
+  const startStr=document.getElementById('h_start').value;
+  const miles=parseFloat(document.getElementById('h_miles').value)||0;
+  const speed=parseFloat(document.getElementById('h_speed').value)||50;
+  const loadMins=parseFloat(document.getElementById('h_load').value)||60;
+  const usedHrs=parseFloat(document.getElementById('h_used').value)||0;
+  const maxDrive=parseFloat(document.getElementById('h_ext').value)||9;
+  if(!miles||!startStr)return;
+  const driveHrs=miles/speed;
+  const breakHrs=driveHrs>4.5?0.75:0;
+  const totalHrs=driveHrs+breakHrs+(loadMins/60);
+  const availableDrive=maxDrive-usedHrs;
+  const canComplete=driveHrs<=availableDrive;
+  const endHrs=totalHrs;
+  const el=document.getElementById('h_result');el.style.display='block';
+  const [sh,sm]=startStr.split(':').map(Number);
+  const endMins=sh*60+sm+Math.round(endHrs*60);
+  const endH=Math.floor(endMins/60)%24;const endM=endMins%60;
+  const endStr=String(endH).padStart(2,'0')+':'+String(endM).padStart(2,'0');
+  if(canComplete){
+    el.className='result-box result-good';
+    document.getElementById('h_verdict').textContent='✅ LEGAL — Can Complete';
+    document.getElementById('h_detail').textContent=`Drive: ${driveHrs.toFixed(1)}hrs | Break: ${breakHrs>0?'45min':'None needed'} | Load/Unload: ${loadMins}min | Est finish: ${endStr} | Available drive: ${availableDrive.toFixed(1)}hrs`;
+  } else {
+    el.className='result-box result-bad';
+    document.getElementById('h_verdict').textContent='🚫 ILLEGAL — Hours Exceeded';
+    document.getElementById('h_detail').textContent=`Needs ${driveHrs.toFixed(1)}hrs driving but only ${availableDrive.toFixed(1)}hrs available after ${usedHrs}hrs already driven. Plan 2-day journey or find different driver.`;
+  }
+  // timeline viz
+  const vis=document.getElementById('h_vis');vis.innerHTML='';
+  for(let i=0;i<24;i++){const c=document.createElement('div');c.className='hv-cell';
+    const minuteOfDay=sh*60+sm+(i*60);
+    const elapsed=(minuteOfDay-(sh*60+sm))/60;
+    if(elapsed<0||elapsed>endHrs+1){c.classList.add('');}
+    else if(elapsed<=driveHrs*0.5){c.classList.add('drive');}
+    else if(breakHrs>0&&elapsed>driveHrs*0.5&&elapsed<=driveHrs*0.5+0.75){c.classList.add('break');}
+    else if(elapsed<=driveHrs+breakHrs){c.classList.add('drive');}
+    else if(elapsed<=driveHrs+breakHrs+loadMins/60){c.classList.add('load');}
+    else if(!canComplete){c.classList.add('rest');}
+    c.title=`${i}:00`;vis.appendChild(c);
+  }
+}
+
+/* ─── TOOL 3: Time Zone ─── */
+function fmt(d){return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');}
+function fmtDay(d){return d.toLocaleDateString('en-GB',{weekday:'short',day:'numeric',month:'short'});}
+function isUKBST(d){const m=d.getMonth();return m>=2&&m<=9;}
+function isUSAEDT(d){const m=d.getMonth();return m>=2&&m<=9;}
+
+function convertTZ(useNow){
+  const now=new Date();
+  let istH,istM;
+  if(useNow){istH=now.getHours();istM=now.getMinutes();const ti=document.getElementById('tz_input');if(ti)ti.value=String(istH).padStart(2,'0')+':'+String(istM).padStart(2,'0');}
+  else{const v=document.getElementById('tz_input').value;if(!v)return;const[h,m]=v.split(':').map(Number);istH=h;istM=m;}
+  const base=new Date(now.getFullYear(),now.getMonth(),now.getDate(),istH,istM,0);
+  const bst=isUKBST(base);const edt=isUSAEDT(base);
+  const ukOff=bst?-(5*60+30-60):-(5*60+30);
+  const estOff=edt?-(5*60+30+4*60):-(5*60+30+5*60);
+  const cstOff=edt?-(5*60+30+5*60):-(5*60+30+6*60);
+  const ukDate=new Date(base.getTime()+ukOff*60000);
+  const estDate=new Date(base.getTime()+estOff*60000);
+  const cstDate=new Date(base.getTime()+cstOff*60000);
+  document.getElementById('tz_ist').textContent=fmt(base);
+  document.getElementById('tz_ist_d').textContent=fmtDay(base);
+  document.getElementById('tz_uk').textContent=fmt(ukDate);
+  document.getElementById('tz_uk_status').textContent=fmtDay(ukDate)+(bst?' (BST)':' (GMT)');
+  document.getElementById('tz_uk_offset').textContent=bst?'UTC +1 (BST)':'UTC +0 (GMT)';
+  document.getElementById('tz_est').textContent=fmt(estDate);
+  document.getElementById('tz_est_status').textContent=fmtDay(estDate)+(edt?' (EDT)':' (EST)');
+  document.getElementById('tz_cst').textContent=fmt(cstDate);
+  document.getElementById('tz_cst_status').textContent=fmtDay(cstDate)+(edt?' (CDT)':' (CST)');
+  const ukH=ukDate.getHours();
+  let advice='';
+  if(ukH>=8&&ukH<18)advice='🟢 UK business hours (8AM–6PM) — good time to call UK carriers and brokers.';
+  else if(ukH>=6&&ukH<8)advice='🟡 UK early morning — some drivers starting. Avoid calling transport offices yet.';
+  else if(ukH>=18&&ukH<22)advice='🟡 UK evening — office hours ended. WhatsApp/SMS OK for non-urgent comms.';
+  else advice='🔴 UK night hours — do not call. Schedule messages for morning.';
+  document.getElementById('tz_advice').textContent=advice;
+}
+function setNow(){convertTZ(true);}
+
+/* ─── TOOL 4: Commission ─── */
+function calcComm(){
+  const isUK=document.getElementById('cm_uk').style.display!=='none';
+  const sym=isUK?'£':'$';
+  const rate=parseFloat(document.getElementById(isUK?'cm_uk_rate':'cm_us_rate').value)||0;
+  const pct=parseFloat(document.getElementById(isUK?'cm_uk_pct':'cm_us_pct').value)||8;
+  const loads=parseFloat(document.getElementById('cm_loads').value)||4;
+  const vehicles=parseFloat(document.getElementById('cm_vehicles').value)||1;
+  if(!rate)return;
+  const perLoad=rate*(pct/100);
+  const weekly=perLoad*loads*vehicles;
+  const monthly=weekly*4;
+  const annual=monthly*12;
+  const inr=isUK?monthly*107:monthly*84; // approx conversion
+  document.getElementById('cm_result').style.display='block';
+  document.getElementById('cm_grid').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+      <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.25);border-radius:10px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:900;color:#a78bfa;font-family:var(--font-head)">${sym}${perLoad.toFixed(0)}</div><div style="font-size:10px;color:var(--grey);margin-top:3px">Per Load</div></div>
+      <div style="background:rgba(6,182,212,0.1);border:1px solid rgba(6,182,212,0.25);border-radius:10px;padding:12px;text-align:center"><div style="font-size:20px;font-weight:900;color:var(--cyan);font-family:var(--font-head)">${sym}${weekly.toFixed(0)}</div><div style="font-size:10px;color:var(--grey);margin-top:3px">Per Week</div></div>
+      <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.25);border-radius:10px;padding:12px;text-align:center"><div style="font-size:22px;font-weight:900;color:var(--green);font-family:var(--font-head)">${sym}${monthly.toFixed(0)}</div><div style="font-size:10px;color:var(--grey);margin-top:3px">Monthly (${vehicles} vehicles)</div></div>
+      <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.25);border-radius:10px;padding:12px;text-align:center"><div style="font-size:18px;font-weight:900;color:var(--gold);font-family:var(--font-head)">₹${(inr/100000).toFixed(1)}L</div><div style="font-size:10px;color:var(--grey);margin-top:3px">Monthly (INR approx)</div></div>
+    </div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:10px;padding:10px 14px;font-size:12px;color:var(--grey);line-height:1.7;margin-top:2px">
+      ${sym}${annual.toFixed(0)}/year · ${pct}% of ${sym}${rate} · ${loads} loads/wk · ${vehicles} vehicle${vehicles>1?'s':''} · ₹${Math.round(inr).toLocaleString('en-IN')}/month (approx)
+    </div>`;
+}
+
+/* ─── TOOL 5: Detention ─── */
+function calcDet(){
+  const isUK=document.getElementById('det_uk').style.display!=='none';
+  const sym=isUK?'£':'$';
+  const arr=document.getElementById(isUK?'det_uk_arr':'det_us_arr').value;
+  const dep=document.getElementById(isUK?'det_uk_dep':'det_us_dep').value;
+  const rate=parseFloat(document.getElementById(isUK?'det_uk_rate':'det_us_rate').value)||(isUK?25:50);
+  if(!arr||!dep)return;
+  const[ah,am]=arr.split(':').map(Number);const[dh,dm]=dep.split(':').map(Number);
+  let mins=(dh*60+dm)-(ah*60+am);if(mins<0)mins+=1440;
+  const hrs=mins/60;const freeHrs=2;const billableHrs=Math.max(0,hrs-freeHrs);
+  const amount=billableHrs*rate;
+  const el=document.getElementById('det_result');el.style.display='block';
+  document.getElementById('det_amount').textContent=sym+amount.toFixed(2);
+  document.getElementById('det_detail').textContent=`Total wait: ${hrs.toFixed(2)}hrs | Free: ${freeHrs}hrs | Billable: ${billableHrs.toFixed(2)}hrs @ ${sym}${rate}/hr${amount===0?' — No detention payable':' — Claim within 24hrs of delivery'}`;
+  el.className='result-box'+(amount>0?' result-warn':' result-good');
+}
+
+/* ─── TOOL 6: Empty Running ─── */
+function calcER(){
+  const total=parseFloat(document.getElementById('er_total').value)||0;
+  const empty=parseFloat(document.getElementById('er_empty').value)||0;
+  const rev=parseFloat(document.getElementById('er_rev').value)||0;
+  if(!total||!empty)return;
+  const pct=Math.round(empty/total*100);
+  const rpmLoaded=rev&&(total-empty)>0?rev/(total-empty):0;
+  document.getElementById('er_result').style.display='block';
+  const box=document.getElementById('er_box');
+  document.getElementById('er_pct').textContent=pct+'% Empty Running';
+  document.getElementById('er_detail').textContent=`${empty} empty miles of ${total} total | Loaded RPM: ${rpmLoaded>0?'£$'.slice(0,1)+rpmLoaded.toFixed(2)+'/mile':'N/A'} | Industry avg: 25–30%`;
+  box.className='result-box'+(pct<15?' result-good':pct<25?' result-warn':' result-bad');
+  const bar=document.getElementById('er_bar');
+  bar.style.width=Math.min(pct*2,100)+'%';
+  bar.style.background=pct<15?'var(--green)':pct<25?'var(--orange)':'var(--red)';
+}
+
+/* ─── TOOL 7: Load Profitability ─── */
+function calcProfit(){
+  const isUK=document.getElementById('pf_uk').style.display!=='none';
+  const sym=isUK?'£':'$';
+  const rate=parseFloat(document.getElementById(isUK?'pf_uk_rate':'pf_us_rate').value)||0;
+  const miles=parseFloat(document.getElementById(isUK?'pf_uk_miles':'pf_us_miles').value)||0;
+  const fuel=parseFloat(document.getElementById(isUK?'pf_uk_fuel':'pf_us_fuel').value)||0;
+  const driver=parseFloat(document.getElementById(isUK?'pf_uk_driver':'pf_us_driver').value)||0;
+  const other=parseFloat(document.getElementById(isUK?'pf_uk_other':'pf_us_other').value)||0;
+  const commPct=parseFloat(document.getElementById(isUK?'pf_uk_comm':'pf_us_comm').value)||8;
+  if(!rate||!miles)return;
+  const commAmt=rate*(commPct/100);
+  const fuelCost=fuel*miles;const driverCost=driver*miles;const otherCost=other*miles;
+  const totalCost=fuelCost+driverCost+otherCost+commAmt;
+  const profit=rate-totalCost;const margin=Math.round(profit/rate*100);
+  const rpm=rate/miles;
+  document.getElementById('pf_result').style.display='block';
+  document.getElementById('pf_grid').innerHTML=`
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px">
+      <div style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:12px;text-align:center"><div style="font-size:18px;font-weight:900;color:var(--cyan);font-family:var(--font-head)">${sym}${totalCost.toFixed(0)}</div><div style="font-size:10px;color:var(--grey);margin-top:2px">Total Cost</div></div>
+      <div style="background:rgba(${profit>0?'34,197,94':'239,68,68'},0.1);border:1px solid rgba(${profit>0?'34,197,94':'239,68,68'},0.3);border-radius:10px;padding:12px;text-align:center"><div style="font-size:18px;font-weight:900;color:${profit>0?'var(--green)':'var(--red)'};font-family:var(--font-head)">${sym}${profit.toFixed(0)}</div><div style="font-size:10px;color:var(--grey);margin-top:2px">Gross Profit</div></div>
+      <div style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2);border-radius:10px;padding:12px;text-align:center"><div style="font-size:18px;font-weight:900;color:#a78bfa;font-family:var(--font-head)">${rpm.toFixed(2)}</div><div style="font-size:10px;color:var(--grey);margin-top:2px">${sym}/mile RPM</div></div>
+    </div>
+    <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.06);border-radius:10px;padding:10px 14px;font-size:11px;color:var(--grey);line-height:1.8;margin-top:2px">
+      Fuel: ${sym}${fuelCost.toFixed(0)} | Driver: ${sym}${driverCost.toFixed(0)} | Other: ${sym}${otherCost.toFixed(0)} | Dispatch (${commPct}%): ${sym}${commAmt.toFixed(0)} | Margin: ${margin}%
+    </div>`;
+  const v=document.getElementById('pf_verdict');
+  if(profit>0&&margin>=20){v.style.background='rgba(34,197,94,0.12)';v.style.color='var(--green)';v.style.border='1px solid rgba(34,197,94,0.3)';v.textContent='✅ TAKE THIS LOAD — Good profitability ('+margin+'% margin)';}
+  else if(profit>0){v.style.background='rgba(249,115,22,0.1)';v.style.color='var(--orange)';v.style.border='1px solid rgba(249,115,22,0.3)';v.textContent='⚠️ MARGINAL — Profitable but low margin ('+margin+'%). Negotiate rate up.';}
+  else{v.style.background='rgba(239,68,68,0.1)';v.style.color='var(--red)';v.style.border='1px solid rgba(239,68,68,0.3)';v.textContent='🚫 REJECT — This load loses money. Either renegotiate or pass.';}
+}
+
+// Auto-run time zone on load
+window.addEventListener('DOMContentLoaded',()=>{
+  setNow();
+  setInterval(()=>{convertTZ(true);},60000); // update every minute
+  calcHours();
+});
+</script>
+</body>
+</html>

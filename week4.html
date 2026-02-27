@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Week 4 — UK Career Accelerator | Eagle Academy</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<style>
+.week-hero{background:linear-gradient(135deg,var(--navy-dark) 0%,var(--navy) 60%,rgba(139,92,246,0.1) 100%);border-bottom:1px solid rgba(139,92,246,0.2);padding:40px 24px 32px;position:relative;overflow:hidden}
+.week-hero::before{content:'4';position:absolute;right:5%;top:-20px;font-size:220px;font-weight:900;color:rgba(139,92,246,0.04);line-height:1;pointer-events:none}
+.week-hero-inner{max-width:1200px;margin:0 auto}
+.day-tabs-wrap{background:rgba(8,7,48,0.9);border-bottom:1px solid rgba(139,92,246,0.15);position:sticky;top:68px;z-index:100;backdrop-filter:blur(12px)}
+.day-tabs{max-width:1200px;margin:0 auto;padding:0 24px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.day-tabs::-webkit-scrollbar{display:none}
+.day-tab{padding:14px 22px;border:none;background:transparent;color:var(--grey);font-family:var(--font-main);font-size:13px;font-weight:600;cursor:pointer;transition:var(--transition);border-bottom:3px solid transparent;white-space:nowrap;flex-shrink:0}
+.day-tab:hover{color:var(--white)}.day-tab.active{color:#a78bfa;border-bottom-color:#a78bfa}
+.chk{color:var(--green);margin-left:5px}
+.main-wrap{max-width:1200px;margin:0 auto;padding:32px 24px}
+.day-panel{display:none}.day-panel.active{display:block;animation:fadeUp 0.4s ease}
+.day-hero{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(30,27,139,0.3));border:1px solid rgba(139,92,246,0.25);border-radius:var(--radius-xl);padding:28px 32px;margin-bottom:28px;display:flex;align-items:flex-start;gap:20px}
+.dnum{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,#7c3aed,#4f46e5);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:900;flex-shrink:0;box-shadow:0 8px 32px rgba(139,92,246,0.35);color:white}
+.di h2{font-size:24px;font-weight:800;margin-bottom:4px}
+.di .ht{color:#a78bfa;font-family:var(--font-hindi);font-size:15px}
+.di .dm{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}
+.sh{display:flex;align-items:center;gap:12px;margin:28px 0 18px}
+.sh h3{font-size:18px;font-weight:800}.sl{flex:1;height:1px;background:rgba(139,92,246,0.2)}
+.vb{margin-bottom:28px;border-radius:var(--radius-lg);overflow:hidden;border:2px solid rgba(139,92,246,0.25);box-shadow:0 12px 40px rgba(0,0,0,0.4)}
+.vh{background:linear-gradient(90deg,var(--navy-dark),var(--navy));padding:12px 18px;display:flex;align-items:center;gap:8px;border-bottom:1px solid rgba(139,92,246,0.2);font-size:13px;font-weight:600}
+.dot{width:10px;height:10px;border-radius:50%}
+.vph{aspect-ratio:16/9;background:linear-gradient(135deg,var(--navy-dark),rgba(139,92,246,0.06));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;cursor:pointer}
+.vph:hover{background:rgba(139,92,246,0.07)}
+.pcirc{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#4f46e5);display:flex;align-items:center;justify-content:center;font-size:32px;box-shadow:0 0 40px rgba(139,92,246,0.4);animation:pulseOrange 2.5s ease infinite}
+.vnt{padding:10px 18px;background:rgba(139,92,246,0.07);border-top:1px solid rgba(139,92,246,0.15);font-size:12px;color:#a78bfa}
+.tc{background:rgba(255,255,255,0.03);border:1px solid rgba(139,92,246,0.15);border-radius:var(--radius-lg);margin-bottom:18px;overflow:hidden}
+.tt{width:100%;background:none;border:none;padding:18px 22px;cursor:pointer;display:flex;align-items:center;gap:14px;text-align:left;transition:var(--transition)}
+.tt:hover{background:rgba(139,92,246,0.05)}
+.tnum{width:38px;height:38px;border-radius:10px;background:linear-gradient(135deg,#7c3aed,#4f46e5);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:900;color:white;flex-shrink:0}
+.ttx{flex:1}.ten{font-size:15px;font-weight:700;color:var(--white)}.thi{font-size:12px;color:#a78bfa;font-family:var(--font-hindi);margin-top:2px}
+.tarr{font-size:18px;color:var(--grey);transition:transform 0.3s}
+.tt.open .tarr{transform:rotate(90deg);color:#a78bfa}
+.tbody{display:none;padding:0 22px 22px}.tbody.open{display:block;animation:fadeUp 0.3s ease}
+.abar{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;background:rgba(30,27,139,0.5);border:1px solid rgba(139,92,246,0.2);border-radius:var(--radius-md);margin-bottom:16px}
+.ab{display:inline-flex;align-items:center;gap:5px;padding:6px 14px;border-radius:999px;border:none;cursor:pointer;font-size:12px;font-weight:600;font-family:var(--font-main);transition:var(--transition)}
+.ab-en{background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3)}.ab-en:hover,.ab-en.on{background:#7c3aed;color:white}
+.ab-hi{background:rgba(251,191,36,0.15);color:var(--gold);border:1px solid rgba(251,191,36,0.3)}.ab-hi:hover,.ab-hi.on{background:var(--gold);color:#030418}
+.ab-stop{background:rgba(239,68,68,0.12);color:var(--red);border:1px solid rgba(239,68,68,0.3)}.ab-stop:hover{background:var(--red);color:white}
+.ab-tog{background:rgba(251,191,36,0.1);color:var(--gold);border:1px solid rgba(251,191,36,0.3)}
+.cen{font-size:14px;line-height:1.9;color:rgba(255,255,255,0.85)}
+.chi{display:none;font-size:15px;line-height:2;color:rgba(255,220,120,0.9);font-family:var(--font-hindi)}.chi.show{display:block;animation:fadeUp 0.3s ease}
+.pbox{background:rgba(139,92,246,0.08);border-left:3px solid #7c3aed;padding:14px 18px;border-radius:0 var(--radius-md) var(--radius-md) 0;margin:12px 0;font-size:13px;line-height:1.8}
+.gbox{background:rgba(34,197,94,0.08);border-left:3px solid var(--green);padding:14px 18px;border-radius:0 var(--radius-md) var(--radius-md) 0;margin:12px 0;font-size:13px;line-height:1.8}
+.obox{background:rgba(249,115,22,0.08);border-left:3px solid var(--orange);padding:14px 18px;border-radius:0 var(--radius-md) var(--radius-md) 0;margin:12px 0;font-size:13px;line-height:1.8}
+.hbox{background:rgba(6,182,212,0.08);border-left:3px solid var(--cyan);padding:14px 18px;border-radius:0 var(--radius-md) var(--radius-md) 0;margin:12px 0;font-size:13px;line-height:1.8}
+.wbox{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.25);border-radius:var(--radius-md);padding:14px 18px;margin:12px 0;font-size:13px;line-height:1.8}
+.sbox{background:rgba(30,27,139,0.5);border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-md);padding:16px 20px;margin:12px 0;font-size:13px;line-height:1.9;font-family:var(--font-mono)}
+.kts{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}
+.kt{background:rgba(30,27,139,0.6);border:1px solid rgba(99,102,241,0.3);border-radius:999px;padding:4px 14px;font-size:12px;font-weight:600;color:#a5b4fc;font-family:var(--font-mono)}
+.pl{list-style:none;padding:0;margin:0}
+.pl li{display:flex;gap:12px;align-items:flex-start;padding:12px 0;border-bottom:1px solid rgba(255,255,255,0.06);font-size:13px;line-height:1.7}
+.pl li:last-child{border-bottom:none}
+.pn{width:26px;height:26px;border-radius:50%;background:rgba(139,92,246,0.2);color:#a78bfa;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;margin-top:2px}
+.hwbox{background:linear-gradient(135deg,rgba(30,27,139,0.5),rgba(139,92,246,0.08));border:1px solid rgba(139,92,246,0.25);border-radius:var(--radius-lg);padding:22px 24px;margin-bottom:20px}
+.hwbox h4{font-size:16px;font-weight:800;margin-bottom:8px}
+.tquiz{margin-top:24px;background:rgba(30,27,139,0.4);border:1px solid rgba(99,102,241,0.3);border-radius:var(--radius-lg);overflow:hidden}
+.qh{padding:14px 20px;background:rgba(30,27,139,0.6);display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,0.06)}
+.qh h4{font-size:15px;font-weight:700}
+.qbody{padding:20px}
+.qi{margin-bottom:22px}.qi:last-child{margin-bottom:0}
+.qt{font-size:14px;font-weight:600;margin-bottom:10px;line-height:1.6}
+.qopts{display:flex;flex-direction:column;gap:8px}
+.qo{width:100%;padding:10px 16px;text-align:left;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:var(--radius-md);cursor:pointer;font-size:13px;color:var(--white);font-family:var(--font-main);transition:var(--transition)}
+.qo:hover{border-color:#a78bfa;background:rgba(139,92,246,0.08)}
+.qo.correct{border-color:var(--green)!important;background:rgba(34,197,94,0.15)!important;color:var(--green)}
+.qo.wrong{border-color:var(--red)!important;background:rgba(239,68,68,0.15)!important;color:var(--red)}
+.qo:disabled{cursor:default}
+.qresult{display:none;padding:16px 20px;border-top:1px solid rgba(255,255,255,0.08);text-align:center}
+.qresult.show{display:block;animation:fadeUp 0.3s ease}
+.qscore{font-size:32px;font-weight:900}
+.dnav{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:24px;border-top:1px solid rgba(139,92,246,0.15)}
+
+/* EXAM STYLES */
+.exam-wrap{max-width:800px;margin:0 auto}
+.exam-q{background:rgba(255,255,255,0.03);border:1px solid rgba(139,92,246,0.2);border-radius:var(--radius-lg);padding:22px;margin-bottom:16px}
+.exam-q .qn{font-size:11px;color:#a78bfa;font-family:var(--font-mono);font-weight:700;margin-bottom:8px;text-transform:uppercase;letter-spacing:1px}
+.exam-q .qt{font-size:14px;font-weight:700;margin-bottom:14px;line-height:1.6}
+.exam-opts{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media(max-width:600px){.exam-opts{grid-template-columns:1fr}}
+.exam-opt{padding:10px 14px;border-radius:var(--radius-md);border:1px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.03);cursor:pointer;font-size:13px;text-align:left;color:var(--white);transition:var(--transition);font-family:var(--font-main)}
+.exam-opt:hover{border-color:#a78bfa;background:rgba(139,92,246,0.08)}
+.exam-opt.sel{border-color:#7c3aed;background:rgba(139,92,246,0.15);color:#a78bfa}
+.exam-opt.correct{border-color:var(--green)!important;background:rgba(34,197,94,0.15)!important;color:var(--green)!important}
+.exam-opt.wrong{border-color:var(--red)!important;background:rgba(239,68,68,0.15)!important;color:var(--red)!important}
+.exam-opt:disabled{cursor:default}
+.exam-header{background:linear-gradient(135deg,rgba(139,92,246,0.15),rgba(30,27,139,0.4));border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-xl);padding:28px;margin-bottom:28px;text-align:center}
+.exam-timer{font-family:var(--font-mono);font-size:48px;font-weight:900;color:#a78bfa}
+.exam-result-box{background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(30,27,139,0.4));border:1px solid rgba(139,92,246,0.35);border-radius:var(--radius-xl);padding:32px;text-align:center;display:none}
+.cert-badge{width:120px;height:120px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,var(--orange));display:flex;align-items:center;justify-content:center;font-size:48px;margin:0 auto 20px;box-shadow:0 0 60px rgba(139,92,246,0.5)}
+
+@media(max-width:640px){.day-hero{flex-direction:column;padding:20px}.main-wrap{padding:20px 16px}}
+</style>
+</head>
+<body>
+
+<header class="ea-header">
+  <div class="ea-header-inner">
+    <a href="index.html" class="ea-logo">
+      <img src="assets/logo.png" alt="Eagle Academy" onerror="this.style.display='none'"/>
+      <div class="ea-logo-text"><div class="brand">EAGLE ACADEMY</div><div class="sub">Freight Dispatcher Certification</div></div>
+    </a>
+    <nav class="ea-nav">
+      <a href="index.html" class="ea-nav-btn">🏠 Home</a>
+      <a href="week1.html" class="ea-nav-btn">Week 1</a>
+      <a href="week2.html" class="ea-nav-btn">Week 2</a>
+      <a href="week3.html" class="ea-nav-btn">Week 3</a>
+      <a href="week4.html" class="ea-nav-btn active">Week 4</a>
+      <a href="tools.html" class="ea-nav-btn">🧮 Tools</a>
+      <a href="madam-ji.html" class="ea-nav-btn">🎓 Madam JI</a>
+      <a href="exam.html" class="ea-nav-btn">📝 Final Exam</a>
+    </nav>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('hi',this)">हिं</button>
+    </div>
+  </div>
+</header>
+
+<div class="ticker-wrap"><div class="ticker-inner" id="tk" style="font-size:12px;color:#a78bfa;font-family:var(--font-mono)">
+  <span>🎓 Final Week — You Are Almost Certified!</span><span>📄 UK Dispatcher CV: Highlight DVSA, O-Licence, Courier Exchange, CMR</span><span>💼 LinkedIn: "UK Freight Dispatcher | HGV | CPC | Remote"</span><span>🎯 Interview: Know your tachograph rules inside out</span><span>💰 Entry UK dispatcher: £28,000–38,000/year</span><span>🚀 Remote from India: £7,000–15,000/month at 10 vehicles</span><span>🏆 Eagle Academy Certified = Industry Credibility</span><span>📞 DVSA Helpline: 0300 123 9000</span><span>🎓 Final Week — You Are Almost Certified!</span><span>📄 UK Dispatcher CV: Highlight DVSA, O-Licence, Courier Exchange</span>
+</div></div>
+
+<section class="week-hero">
+  <div class="week-hero-inner">
+    <div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">
+      <span class="tag" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3)">Week 4 of 4</span>
+      <span class="tag tag-orange">🇬🇧 UK Career Launch</span>
+      <span class="tag tag-green">FINAL WEEK</span>
+    </div>
+    <h1 style="font-size:clamp(24px,4vw,42px);font-weight:900;margin-bottom:8px">UK Career Accelerator & Certification</h1>
+    <p style="font-size:15px;color:var(--grey);margin-bottom:4px">UK dispatcher CV, LinkedIn, interview mastery, job strategy, remote business launch — and your Final Exam</p>
+    <p style="font-size:14px;color:#a78bfa;font-family:var(--font-hindi)">UK करियर एक्सेलेरेटर — CV, LinkedIn, इंटरव्यू, जॉब रणनीति और अंतिम परीक्षा</p>
+    <div style="margin-top:20px;max-width:500px">
+      <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--grey);margin-bottom:6px"><span>Week Progress</span><span id="wpct">0%</span></div>
+      <div class="progress-track"><div class="progress-fill" id="wprog" style="width:0%;background:linear-gradient(90deg,#7c3aed,var(--orange))"></div></div>
+    </div>
+  </div>
+</section>
+
+<div class="day-tabs-wrap"><div class="day-tabs">
+  <button class="day-tab active" onclick="showDay(16,this)">Day 16 <span id="c16" class="chk" style="display:none">✓</span></button>
+  <button class="day-tab" onclick="showDay(17,this)">Day 17 <span id="c17" class="chk" style="display:none">✓</span></button>
+  <button class="day-tab" onclick="showDay(18,this)">Day 18 <span id="c18" class="chk" style="display:none">✓</span></button>
+  <button class="day-tab" onclick="showDay(19,this)">Day 19 <span id="c19" class="chk" style="display:none">✓</span></button>
+  <button class="day-tab" onclick="showDay(20,this)">🏆 Day 20 <span id="c20" class="chk" style="display:none">✓</span></button>
+</div></div>
+
+<main class="main-wrap">
+
+<!-- ═══ DAY 16: UK CV & LinkedIn ═══ -->
+<div class="day-panel active" id="day16">
+  <div class="day-hero fade-up">
+    <div class="dnum">D16</div>
+    <div class="di">
+      <h2>UK Dispatcher CV & LinkedIn Profile</h2>
+      <div class="ht">UK डिस्पैचर CV और LinkedIn प्रोफ़ाइल</div>
+      <div class="dm"><span class="tag" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3)">2hrs Theory</span><span class="tag tag-orange">2hrs Build</span><span class="tag tag-cyan">2 Topics</span></div>
+    </div>
+  </div>
+  <div class="vb fade-up delay-1"><div class="vh"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 16 — UK CV & LinkedIn</span><span style="margin-left:auto;font-size:11px;color:var(--grey)">~11 min</span></div><div class="vph" onclick="loadVid(this,'YOUR_D16_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 16: UK CV & LinkedIn</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D16_VIDEO_ID</div></div></div><div class="vnt">💡 Replace YOUR_D16_VIDEO_ID in HTML</div></div>
+  <div class="sh"><h3>📖 Theory Topics</h3><div class="sl"></div></div>
+
+  <!-- UK CV Structure -->
+  <div class="tc" id="tc_16_1">
+    <button class="tt" onclick="openT('tc_16_1',this)">
+      <div class="tnum">A</div><div class="ttx"><div class="ten">UK Freight Dispatcher CV — Structure & Keywords</div><div class="thi">UK डिस्पैचर CV — संरचना और कीवर्ड</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_16_1">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_16_1',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_16_1',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_16_1')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_16_1">
+        <p>A UK dispatcher CV must speak the language of UK transport employers. UK recruiters spend <strong>6–8 seconds</strong> on a first scan. Your CV must show UK-specific knowledge immediately — DVSA, O-Licence, CMR, Courier Exchange — or it gets rejected.</p>
+        <div class="pbox">
+          <strong>📋 UK Dispatcher CV Structure:</strong><br/><br/>
+          <strong>1. Header:</strong> Full name | Phone (UK number if possible) | Professional email | LinkedIn URL | Location (City, UK)<br/><br/>
+          <strong>2. Professional Summary (4 lines max):</strong><br/>
+          "Certified International Freight Dispatcher with comprehensive knowledge of UK transport legislation, DVSA compliance, drivers' hours regulations and tachograph law. Experienced in Courier Exchange, CMR documentation, pallet network operations, and multi-vehicle coordination. Eagle Academy Certified — ready for immediate placement."<br/><br/>
+          <strong>3. Core Skills (keyword block — ATS scanners love this):</strong><br/>
+          UK O-Licence Compliance | DVSA Regulations | Drivers' Hours (EU) | Tachograph Analysis | CMR Notes | Courier Exchange (CX) | Haulage Exchange | Curtainsider & HGV Operations | Pallet Networks (Palletforce/Pall-Ex/TPN) | Rate Negotiation | Fleet KPI Tracking | Vehicle Utilisation | Empty Running Reduction | TMS (Mandata/Loadmaster) | Google Workspace<br/><br/>
+          <strong>4. Training & Certification:</strong><br/>
+          Eagle Academy — International Freight Dispatcher Certification (4 weeks, 80 hours)<br/>
+          Modules: UK Transport Law | Drivers' Hours & Tachograph | CMR Documentation | Courier Exchange | UK Pallet Networks | KPI Management | Dispatch Business Operations<br/><br/>
+          <strong>5. Practical Experience (from course simulations):</strong><br/>
+          Multi-vehicle dispatch simulations (3 vehicles simultaneously) | Courier Exchange load negotiations | UK compliance documentation | Pallet network coordination | Driver check-call protocols | Detention and delay management<br/><br/>
+          <strong>6. Education | Languages | References on request</strong>
+        </div>
+        <div class="gbox">
+          <strong>🎯 UK CV Golden Rules:</strong><br/>
+          • Maximum 2 pages (1 page preferred for entry level)<br/>
+          • No photo (UK CVs never include photos — different from India)<br/>
+          • No date of birth (illegal to discriminate by age in UK)<br/>
+          • Use British English spellings: organisation, licence, colour, behaviour<br/>
+          • Save as PDF named: Firstname_Lastname_Dispatcher_CV.pdf<br/>
+          • Tailor the first 3 lines to match the job description keywords exactly
+        </div>
+        <div class="wbox"><strong>⚠️ Common Mistakes by Indian Applicants:</strong><br/>
+          Including a photo | Using American spellings (license instead of licence) | Date of birth on CV | Listing irrelevant qualifications | Generic summary that doesn't mention UK-specific knowledge
+        </div>
+        <div class="kts"><span class="kt">ATS Keywords</span><span class="kt">UK O-Licence</span><span class="kt">CMR Notes</span><span class="kt">Courier Exchange</span><span class="kt">British English</span></div>
+      </div>
+      <div class="chi" id="chi_16_1"><div id="th_16_1">
+        <div class="pbox"><strong>UK CV के नियम:</strong> अधिकतम 2 पेज | कोई फोटो नहीं (UK में फोटो नहीं लगाते) | जन्मतिथि नहीं | British spelling (licence, organisation) | PDF में सेव करें।</div>
+        <div class="gbox"><strong>Professional Summary में:</strong> DVSA, O-Licence, CMR, Courier Exchange, पैलेट नेटवर्क — ये UK-specific keywords डालें। Eagle Academy Certificate का उल्लेख करें।</div>
+        <div class="wbox"><strong>भारतीय आवेदकों की गलतियाँ:</strong> फोटो लगाना | American spelling (license) | जन्मतिथि देना | UK से असंबंधित योग्यताएं</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Quick Check — UK CV</h4><span style="margin-left:auto" class="tag" style="background:rgba(139,92,246,0.15);color:#a78bfa">3 Qs</span></div>
+        <div class="qbody" id="qb_16_1">
+          <div class="qi"><div class="qt">1. Should a UK CV include your photograph?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_16_1','q1',false)">A. Yes — always include a professional headshot</button>
+            <button class="qo" onclick="ans(this,'qb_16_1','q1',true)">B. No — UK CVs never include photos</button>
+            <button class="qo" onclick="ans(this,'qb_16_1','q1',false)">C. Only for senior positions</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. Which spelling is correct on a UK CV?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_16_1','q2',false)">A. "Driver's license" (American spelling)</button>
+            <button class="qo" onclick="ans(this,'qb_16_1','q2',true)">B. "Driver's licence" (British spelling)</button>
+            <button class="qo" onclick="ans(this,'qb_16_1','q2',false)">C. Either is fine</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. What makes a UK transport dispatcher CV stand out immediately?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_16_1','q3',false)">A. A colourful design with lots of graphics</button>
+            <button class="qo" onclick="ans(this,'qb_16_1','q3',false)">B. Listing as many previous jobs as possible</button>
+            <button class="qo" onclick="ans(this,'qb_16_1','q3',true)">C. UK-specific keywords: DVSA, O-Licence, CMR, Courier Exchange, tachograph in the first section</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_16_1"><div class="qscore" id="qs_16_1"></div><div id="qm_16_1" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_16_1','qr_16_1','qs_16_1','qm_16_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LinkedIn -->
+  <div class="tc" id="tc_16_2">
+    <button class="tt" onclick="openT('tc_16_2',this)">
+      <div class="tnum">B</div><div class="ttx"><div class="ten">LinkedIn Profile Optimisation for UK Transport Jobs</div><div class="thi">LinkedIn प्रोफ़ाइल — UK ट्रांसपोर्ट जॉब के लिए</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_16_2">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_16_2',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_16_2',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_16_2')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_16_2">
+        <div class="pbox">
+          <strong>💼 LinkedIn Headline (the single most important line):</strong><br/>
+          <em>"UK Freight Dispatcher | DVSA Compliance | Courier Exchange | CMR | HGV | Remote | Eagle Academy Certified"</em><br/><br/>
+          This headline contains every keyword a UK transport recruiter searches for. It tells them: you know UK law, you know the tools, you're available remotely, you're certified.
+        </div>
+        <div class="gbox">
+          <strong>🖼️ Profile Optimisation Checklist:</strong><br/>
+          ✅ Professional headshot (clear background, professional clothing)<br/>
+          ✅ Banner image: UK motorway/truck photo or Eagle Academy branding<br/>
+          ✅ Headline: All UK transport keywords<br/>
+          ✅ Open to Work: Set to "Remote" and "Freight Dispatcher" / "Transport Coordinator"<br/>
+          ✅ About section: 3 paragraphs — who you are, UK knowledge, what you offer<br/>
+          ✅ Featured: Upload your Eagle Academy certificate<br/>
+          ✅ Skills: DVSA compliance, O-Licence, CMR documentation, Courier Exchange, tachograph, fleet management, rate negotiation<br/>
+          ✅ Certifications: Eagle Academy — International Freight Dispatcher<br/>
+          ✅ Languages: English (Professional), Hindi (Native)
+        </div>
+        <div class="obox">
+          <strong>🔍 UK Transport LinkedIn Groups to Join:</strong><br/>
+          • "UK Road Transport & Logistics Professionals"<br/>
+          • "HGV Owner Operators UK"<br/>
+          • "UK Freight & Logistics Network"<br/>
+          • "Transport Manager CPC UK"<br/>
+          • "British International Freight Association (BIFA)"<br/><br/>
+          Join all 5, comment on 2 posts per week — LinkedIn's algorithm will show your profile to more UK recruiters automatically.
+        </div>
+        <div class="hbox">
+          <strong>📨 LinkedIn Cold Outreach to UK Carriers:</strong><br/>
+          "Hi [Name], I'm an Eagle Academy certified freight dispatcher specialising in UK HGV operations. I help owner-operators and small fleets find consistent CX loads, manage compliance, and reduce empty running — remotely from India during UK business hours (I'm GMT+5:30).<br/><br/>
+          Would you be open to a 10-minute call to explore if I can help your operation?"<br/><br/>
+          Send to: UK haulage company directors, transport managers, fleet owners on LinkedIn.
+        </div>
+        <div class="kts"><span class="kt">LinkedIn Headline</span><span class="kt">Open to Work</span><span class="kt">UK Groups</span><span class="kt">Eagle Academy Certificate</span><span class="kt">Cold Outreach</span></div>
+      </div>
+      <div class="chi" id="chi_16_2"><div id="th_16_2">
+        <div class="pbox"><strong>LinkedIn Headline:</strong> "UK Freight Dispatcher | DVSA | Courier Exchange | CMR | HGV | Remote | Eagle Academy Certified" — इसमें सभी UK transport keywords हैं।</div>
+        <div class="gbox"><strong>5 UK LinkedIn Groups:</strong> UK Road Transport & Logistics | HGV Owner Operators UK | UK Freight & Logistics Network — सभी join करें और हफ्ते में 2 posts पर comment करें।</div>
+      </div></div>
+    </div>
+  </div>
+
+  <div class="sh"><h3>⚡ Practical</h3><div class="sl"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px"><ul class="pl">
+    <li><div class="pn">1</div><div><strong>Build Your CV:</strong> Using the template, write your complete UK dispatcher CV. Include all UK keywords. Instructor grades: Does it pass a 6-second scan? Does it show UK-specific knowledge?</div></li>
+    <li><div class="pn">2</div><div><strong>LinkedIn Live Build:</strong> Build or update your LinkedIn profile in class. Set Open to Work. Join all 5 UK transport groups. Instructor reviews headline and About section.</div></li>
+    <li><div class="pn">3</div><div><strong>Peer Review:</strong> Exchange CVs with your partner. Give 3 specific improvements. Would you hire them based on the CV alone?</div></li>
+  </ul></div>
+  <div class="hwbox"><h4>📝 Homework — Day 16</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Apply to 5 UK remote freight dispatcher jobs tonight. Use LinkedIn Jobs, Indeed.co.uk, and Transport & Logistics jobs on Totaljobs.com. Screenshot each application. Bring them to class tomorrow. Also send 3 LinkedIn cold messages to UK transport company directors.</p></div>
+  <div class="dnav"><a href="week3.html" class="btn btn-ghost">← Week 3</a><button class="btn btn-primary" style="background:linear-gradient(135deg,#7c3aed,#4f46e5)" onclick="markDay(16);showDay(17,document.querySelectorAll('.day-tab')[1])">Day 17 →</button></div>
+</div>
+
+<!-- ═══ DAY 17: Interview Mastery ═══ -->
+<div class="day-panel" id="day17">
+  <div class="day-hero fade-up">
+    <div class="dnum">D17</div>
+    <div class="di">
+      <h2>UK Transport Interview Mastery</h2>
+      <div class="ht">UK ट्रांसपोर्ट इंटरव्यू में महारत</div>
+      <div class="dm"><span class="tag" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3)">Full Day Practice</span><span class="tag tag-orange">Roleplay</span></div>
+    </div>
+  </div>
+  <div class="vb fade-up delay-1"><div class="vh"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 17 — Interview Mastery</span><span style="margin-left:auto;font-size:11px;color:var(--grey)">~12 min</span></div><div class="vph" onclick="loadVid(this,'YOUR_D17_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 17: Interview Mastery</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D17_VIDEO_ID</div></div></div><div class="vnt">💡 Replace YOUR_D17_VIDEO_ID</div></div>
+  <div class="sh"><h3>🎯 UK Transport Interview Questions</h3><div class="sl"></div></div>
+
+  <div class="tc" id="tc_17_1">
+    <button class="tt" onclick="openT('tc_17_1',this)">
+      <div class="tnum">A</div><div class="ttx"><div class="ten">Top 12 UK Dispatcher Interview Questions & Model Answers</div><div class="thi">12 सबसे महत्वपूर्ण UK इंटरव्यू प्रश्न और उत्तर</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_17_1">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_17_1',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_17_1',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_17_1')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_17_1">
+        <div class="pbox">
+          <strong>Q1: "What do you know about UK Operator Licensing?"</strong><br/>
+          Model Answer: "An Operator's Licence is issued by the Traffic Commissioner and regulated by DVSA. There are three types — Restricted for own goods only, Standard National for carrying hire goods within the UK, and Standard International for cross-border work. Every carrier operating HGVs over 3.5 tonnes commercially must hold a valid O-Licence. As a dispatcher I always verify the carrier's licence is active and appropriate for the load before dispatching."
+        </div>
+        <div class="pbox">
+          <strong>Q2: "Walk me through UK drivers' hours rules."</strong><br/>
+          Model Answer: "The key rules are: maximum 9 hours driving daily — extendable to 10 hours twice per week. After 4.5 hours continuous driving, the driver must take a mandatory 45-minute break, which can be split into 15 then 30 minutes. The weekly driving limit is 56 hours and the fortnightly limit is 90 hours. Minimum daily rest is 11 hours. Everything is recorded on the tachograph, and DVSA can request data at any time. I plan all loads within these windows and always ask drivers their remaining hours before assigning a new load."
+        </div>
+        <div class="pbox">
+          <strong>Q3: "What is a CMR Note and when do you use it?"</strong><br/>
+          Model Answer: "A CMR Note is the legally required document for all international road freight movements. It's required for any load crossing national boundaries — including UK to EU post-Brexit. It must be issued in at least three originals — one for the sender, one travels with the goods, and one the carrier keeps. It contains sender and consignee details, cargo description, carrier information, and both parties' signatures. For UK domestic loads, we use a consignment note or delivery note instead."
+        </div>
+        <div class="pbox">
+          <strong>Q4: "How do you use Courier Exchange?"</strong><br/>
+          Model Answer: "Courier Exchange is the UK's largest freight exchange. I use it to search for available loads by postcode, vehicle type, and date. I check the member's credit rating before accepting work — similar to how you'd check a broker's score on DAT in the US market. I also post available vehicles when my carrier has capacity. I understand the importance of maintaining a strong CX rating through on-time collections, reliable communication, and professional documentation."
+        </div>
+        <div class="pbox">
+          <strong>Q5: "A driver has been waiting 3 hours at a shipper. What do you do?"</strong><br/>
+          Model Answer: "First I confirm the exact arrival time from the driver and document it. Detention pay starts after 2 free hours, so 1 hour is already billable. I call the shipper immediately to get an ETA for loading. I notify the broker or customer in writing. I check whether the delay will affect the driver's legal hours window and whether the delivery can still be completed legally today. If tachograph hours won't allow a legal completion, I proactively communicate a new ETA. I claim detention in writing within 24 hours of delivery."
+        </div>
+        <div class="gbox">
+          <strong>Q6: "What is your minimum acceptable rate for a UK HGV load?"</strong><br/>
+          Model Answer: "I calculate this based on cost-per-mile. A typical UK HGV has operating costs of around £1.20–1.80 per mile including fuel, driver, insurance, and vehicle finance. I target a minimum revenue of £2.50 per mile to ensure the carrier is profitable after costs. For a curtainsider on a 250-mile London to Manchester run, that means I need at least £625 minimum — I'd target £800–950."
+        </div>
+        <div class="pbox">
+          <strong>Q7–12 Quick Fire Questions:</strong><br/>
+          Q7: "What does DVSA stand for?" → Driver and Vehicle Standards Agency<br/>
+          Q8: "Name 3 UK pallet networks." → Palletforce, Pall-Ex, TPN, Palletways<br/>
+          Q9: "What is trunking?" → Moving pallets overnight from local depot to central hub<br/>
+          Q10: "What does empty running mean?" → Miles driven without a load. Target under 15%.<br/>
+          Q11: "Name 2 UK logistics companies." → DHL Supply Chain, XPO, Wincanton, Eddie Stobart<br/>
+          Q12: "What is a tachograph mode 'H'?" → Other work — loading, paperwork (not rest, not driving)
+        </div>
+        <div class="kts"><span class="kt">O-Licence Answer</span><span class="kt">Drivers Hours Answer</span><span class="kt">CMR Answer</span><span class="kt">CX Answer</span><span class="kt">STAR Method</span></div>
+      </div>
+      <div class="chi" id="chi_17_1"><div id="th_17_1">
+        <div class="pbox"><strong>इंटरव्यू की तैयारी:</strong> ये 12 प्रश्न UK ट्रांसपोर्ट इंटरव्यू में हमेशा आते हैं। हर उत्तर में UK-specific terms का उपयोग करें: O-Licence, DVSA, CMR, CX, तachograph।</div>
+        <div class="gbox"><strong>STAR Method:</strong> Situation (स्थिति) → Task (काम) → Action (कार्रवाई) → Result (परिणाम) — हर scenario प्रश्न का उत्तर इसी तरह दें।</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Interview Prep Check</h4><span style="margin-left:auto" class="tag tag-green">4 Qs</span></div>
+        <div class="qbody" id="qb_17_1">
+          <div class="qi"><div class="qt">1. Interviewer: "Walk me through drivers' hours." Your first sentence should be:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_17_1','q1',false)">A. "I'm not sure of the exact rules..."</button>
+            <button class="qo" onclick="ans(this,'qb_17_1','q1',true)">B. "The key rules are: maximum 9 hours driving daily — extendable to 10 hours twice per week..."</button>
+            <button class="qo" onclick="ans(this,'qb_17_1','q1',false)">C. "It depends on which country..."</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. "Name 3 UK pallet networks." Correct answer:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_17_1','q2',false)">A. DAT, Courier Exchange, Transcore</button>
+            <button class="qo" onclick="ans(this,'qb_17_1','q2',true)">B. Palletforce, Pall-Ex, TPN (and Palletways)</button>
+            <button class="qo" onclick="ans(this,'qb_17_1','q2',false)">C. DHL, XPO, Wincanton</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. "What is your minimum acceptable rate for a UK HGV load?" Best answer starts with:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_17_1','q3',false)">A. "Whatever the market offers"</button>
+            <button class="qo" onclick="ans(this,'qb_17_1','q3',true)">B. "I calculate based on cost-per-mile — UK HGV operating costs are £1.20–1.80/mile so I target minimum £2.50 revenue per mile..."</button>
+            <button class="qo" onclick="ans(this,'qb_17_1','q3',false)">C. "I don't discuss rates in interviews"</button>
+          </div></div>
+          <div class="qi"><div class="qt">4. Tachograph mode "H" means:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_17_1','q4',false)">A. Rest</button>
+            <button class="qo" onclick="ans(this,'qb_17_1','q4',false)">B. Driving</button>
+            <button class="qo" onclick="ans(this,'qb_17_1','q4',true)">C. Other Work — loading, paperwork, waiting at a job</button>
+            <button class="qo" onclick="ans(this,'qb_17_1','q4',false)">D. Hazmat mode</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_17_1"><div class="qscore" id="qs_17_1"></div><div id="qm_17_1" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_17_1','qr_17_1','qs_17_1','qm_17_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh"><h3>⚡ Practical</h3><div class="sl"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px"><ul class="pl">
+    <li><div class="pn">1</div><div><strong>Mock Interview Round 1:</strong> 30 minutes, all 12 questions. Instructor scores each answer out of 3. Minimum pass: 28/36. Below that = retake tonight.</div></li>
+    <li><div class="pn">2</div><div><strong>Mock Interview Round 2:</strong> Scenario-based. Instructor plays a Transport Manager at a busy UK haulier. Students must handle: breakdown mid-load, a drivers' hours question, and a rate negotiation challenge.</div></li>
+    <li><div class="pn">3</div><div><strong>Video Interview:</strong> Record 60-second answer to "Tell me about yourself as a UK freight dispatcher." Watch it back. Grade: clarity, confidence, UK knowledge demonstrated.</div></li>
+  </ul></div>
+  <div class="hwbox"><h4>📝 Homework — Day 17</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Record yourself answering all 12 interview questions. Time yourself — each answer should be 45–90 seconds. Listen back critically. Which answers sound confident? Which need work? Repeat until all 12 are smooth and natural. This is your final preparation before the exam.</p></div>
+  <div class="dnav"><button class="btn btn-ghost" onclick="showDay(16,document.querySelectorAll('.day-tab')[0])">← Day 16</button><button class="btn btn-primary" style="background:linear-gradient(135deg,#7c3aed,#4f46e5)" onclick="markDay(17);showDay(18,document.querySelectorAll('.day-tab')[2])">Day 18 →</button></div>
+</div>
+
+<!-- ═══ DAY 18: UK Job Strategy & Freelance Launch ═══ -->
+<div class="day-panel" id="day18">
+  <div class="day-hero fade-up">
+    <div class="dnum">D18</div>
+    <div class="di">
+      <h2>UK Job Strategy, Remote Work & Freelance Launch</h2>
+      <div class="ht">UK जॉब रणनीति, रिमोट काम और फ्रीलांस लॉन्च</div>
+      <div class="dm"><span class="tag" style="background:rgba(139,92,246,0.15);color:#a78bfa;border:1px solid rgba(139,92,246,0.3)">2hrs Theory</span><span class="tag tag-orange">2hrs Action</span></div>
+    </div>
+  </div>
+  <div class="vb fade-up delay-1"><div class="vh"><div class="dot" style="background:#ef4444"></div><div class="dot" style="background:#fbbf24;margin:0 4px"></div><div class="dot" style="background:#22c55e"></div><span style="margin-left:8px">📹 Day 18 — Job Strategy & Launch</span><span style="margin-left:auto;font-size:11px;color:var(--grey)">~11 min</span></div><div class="vph" onclick="loadVid(this,'YOUR_D18_VIDEO_ID')"><div class="pcirc">▶</div><div style="text-align:center"><div style="font-size:16px;font-weight:700;margin-bottom:6px">Day 18: UK Job Strategy</div><div style="font-size:12px;color:var(--grey);font-family:var(--font-mono)">🎬 Replace YOUR_D18_VIDEO_ID</div></div></div><div class="vnt">💡 Replace YOUR_D18_VIDEO_ID</div></div>
+  <div class="sh"><h3>📖 Theory Topics</h3><div class="sl"></div></div>
+
+  <div class="tc" id="tc_18_1">
+    <button class="tt" onclick="openT('tc_18_1',this)">
+      <div class="tnum">A</div><div class="ttx"><div class="ten">UK Remote Dispatcher Salary & Job Platforms</div><div class="thi">UK रिमोट डिस्पैचर वेतन और जॉब प्लेटफॉर्म</div></div><span class="tarr">›</span>
+    </button>
+    <div class="tbody" id="body_18_1">
+      <div class="abar"><span style="font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:1px;font-weight:600;margin-right:4px">🔊 Listen:</span>
+        <button class="ab ab-en" onclick="spk('te_18_1',this,'en-GB')">▶ English</button>
+        <button class="ab ab-hi" onclick="spk('th_18_1',this,'hi-IN')">▶ हिंदी</button>
+        <button class="ab ab-stop" onclick="stopSpk()">⏹ Stop</button>
+        <button class="ab ab-tog" onclick="togHi('chi_18_1')">हिं Toggle</button>
+      </div>
+      <div class="cen" id="te_18_1">
+        <div class="gbox">
+          <strong>💷 UK Dispatcher Salary Ranges (2025–26):</strong><br/>
+          Entry-level Transport Coordinator: £24,000–32,000/year<br/>
+          Experienced Freight Dispatcher: £32,000–45,000/year<br/>
+          Senior Transport Planner: £42,000–58,000/year<br/>
+          Remote dispatcher (India, UK carrier): £8,000–18,000/year equivalent (from India costs)<br/><br/>
+          <strong>Self-employed from India (10 vehicles, 8% commission):</strong> £120,000–180,000/year gross → Your cut: £9,600–14,400/year → converted: ₹10–15 lakh/month 🚀
+        </div>
+        <div class="obox">
+          <strong>🔍 Best UK Job Platforms for Dispatchers:</strong><br/>
+          <strong>LinkedIn Jobs:</strong> Search "freight dispatcher remote" | "transport coordinator remote" | "logistics planner UK"<br/>
+          <strong>Indeed.co.uk:</strong> Strong for UK logistics. Filter by "Remote" location.<br/>
+          <strong>Totaljobs.com:</strong> Large UK-specific job board. Strong in transport & logistics.<br/>
+          <strong>CV-Library.co.uk:</strong> UK-only job board. Good for transport roles.<br/>
+          <strong>Reed.co.uk:</strong> Strong general UK jobs board with good logistics section.<br/>
+          <strong>Direct approach:</strong> Email transport managers at UK hauliers directly — more effective than job boards for remote roles.
+        </div>
+        <div class="pbox">
+          <strong>📧 Direct Email to UK Transport Manager (Template):</strong><br/>
+          Subject: Remote Freight Dispatcher — Eagle Academy Certified — Available Immediately<br/><br/>
+          Dear [Name/Hiring Manager],<br/><br/>
+          I am an Eagle Academy certified freight dispatcher with comprehensive knowledge of UK transport law including DVSA compliance, O-Licence requirements, drivers' hours regulations, and CMR documentation. I am experienced with Courier Exchange, UK pallet networks, and multi-vehicle fleet coordination.<br/><br/>
+          I am based in India (GMT+5:30) which aligns well with UK business hours, and I work remotely for UK carriers and logistics companies. I am immediately available and have a dedicated workspace with fast broadband and a UK phone number.<br/><br/>
+          I would welcome a brief conversation about how I can support your operation. My CV and Eagle Academy certificate are attached.<br/><br/>
+          Kind regards, [Your Name]
+        </div>
+        <div class="kts"><span class="kt">Indeed.co.uk</span><span class="kt">Totaljobs</span><span class="kt">CV-Library</span><span class="kt">Direct Email</span><span class="kt">Remote UK</span></div>
+      </div>
+      <div class="chi" id="chi_18_1"><div id="th_18_1">
+        <div class="gbox"><strong>UK वेतन:</strong> Entry: £24,000–32,000/वर्ष | अनुभवी: £32,000–45,000/वर्ष | भारत से स्व-रोजगार (10 वाहन): ₹10–15 लाख/माह 🚀</div>
+        <div class="obox"><strong>UK जॉब प्लेटफॉर्म:</strong> LinkedIn Jobs | Indeed.co.uk | Totaljobs.com | CV-Library.co.uk | Reed.co.uk | सीधा ईमेल</div>
+      </div></div>
+      <div class="tquiz">
+        <div class="qh"><span>🧠</span><h4>Quick Check — Job Strategy</h4><span style="margin-left:auto" class="tag tag-green">3 Qs</span></div>
+        <div class="qbody" id="qb_18_1">
+          <div class="qi"><div class="qt">1. Which is the best UK-specific job board for transport roles?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_18_1','q1',false)">A. ZipRecruiter</button>
+            <button class="qo" onclick="ans(this,'qb_18_1','q1',true)">B. Totaljobs.com or CV-Library.co.uk</button>
+            <button class="qo" onclick="ans(this,'qb_18_1','q1',false)">C. Craigslist</button>
+          </div></div>
+          <div class="qi"><div class="qt">2. A self-employed dispatcher managing 10 UK vehicles at 8% commission (avg £1,200/load, 4 loads/week each) earns approximately per month:</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_18_1','q2',false)">A. £500/month</button>
+            <button class="qo" onclick="ans(this,'qb_18_1','q2',false)">B. £2,000/month</button>
+            <button class="qo" onclick="ans(this,'qb_18_1','q2',true)">C. £15,360/month gross (10 × 4 loads × £1,200 × 8% × 4 weeks)</button>
+          </div></div>
+          <div class="qi"><div class="qt">3. Why does India (GMT+5:30) work well for UK dispatching?</div><div class="qopts">
+            <button class="qo" onclick="ans(this,'qb_18_1','q3',false)">A. UK and India are in the same time zone</button>
+            <button class="qo" onclick="ans(this,'qb_18_1','q3',true)">B. UK business hours align with normal Indian daytime — no night shifts needed, unlike US dispatching</button>
+            <button class="qo" onclick="ans(this,'qb_18_1','q3',false)">C. UK customers prefer Indian time zones</button>
+          </div></div>
+        </div>
+        <div class="qresult" id="qr_18_1"><div class="qscore" id="qs_18_1"></div><div id="qm_18_1" style="font-size:14px;color:var(--grey);margin:6px 0"></div><button class="btn btn-outline btn-sm" onclick="retake('qb_18_1','qr_18_1','qs_18_1','qm_18_1')">↩ Retake</button></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sh"><h3>⚡ Practical — Job Application Sprint</h3><div class="sl"></div></div>
+  <div class="card" style="padding:24px;margin-bottom:20px"><ul class="pl">
+    <li><div class="pn">1</div><div><strong>10 Applications in Class:</strong> Apply to 10 remote UK dispatcher jobs right now using LinkedIn, Indeed.co.uk, and Totaljobs. Screenshot each. This is not homework — do it now.</div></li>
+    <li><div class="pn">2</div><div><strong>5 Direct Emails:</strong> Find 5 UK haulage companies on Google. Find the transport manager's email. Send the direct email template (personalised for each company). Bring evidence tomorrow.</div></li>
+    <li><div class="pn">3</div><div><strong>Freelance Profile:</strong> Build a basic Upwork or Freelancer.com profile as "UK Freight Dispatcher." Write your service description using all UK keywords.</div></li>
+  </ul></div>
+  <div class="hwbox"><h4>📝 Homework — Day 18</h4><p style="font-size:14px;line-height:1.8;color:rgba(255,255,255,0.82)">Tomorrow is your Final Theory Exam — 40 questions covering all 4 weeks with UK focus. Tonight: review your Week 1–4 cheat sheets. Focus especially on: O-Licence types, drivers' hours rules, CMR vs consignment note, UK load boards, pallet networks, and all the UK logistics companies. Good luck!</p></div>
+  <div class="dnav"><button class="btn btn-ghost" onclick="showDay(17,document.querySelectorAll('.day-tab')[1])">← Day 17</button><button class="btn btn-primary" style="background:linear-gradient(135deg,#7c3aed,#4f46e5)" onclick="markDay(18);showDay(19,document.querySelectorAll('.day-tab')[3])">Day 19 — Final Exam →</button></div>
+</div>
+
+<!-- ═══ DAY 19: Final Theory Exam ═══ -->
+<div class="day-panel" id="day19">
+  <div class="day-hero fade-up">
+    <div class="dnum" style="font-size:18px">D19</div>
+    <div class="di">
+      <h2>Final Theory Exam — 40 Questions (UK Focus)</h2>
+      <div class="ht">अंतिम सैद्धांतिक परीक्षा — 40 प्रश्न (UK फोकस)</div>
+      <div class="dm"><span class="tag tag-orange">60 Minutes</span><span class="tag tag-green">Pass: 28/40 (70%)</span></div>
+    </div>
+  </div>
+
+  <div class="exam-header">
+    <div style="font-size:28px;margin-bottom:8px">📝 Final Exam</div>
+    <div style="font-size:16px;font-weight:700;margin-bottom:4px">Eagle Academy — International Freight Dispatcher Certification</div>
+    <div style="font-size:13px;color:var(--grey);margin-bottom:20px">UK Primary Focus | 40 Questions | 60 Minutes | 70% to Pass</div>
+    <div class="exam-timer" id="exam_timer">60:00</div>
+    <div style="font-size:12px;color:var(--grey);margin-top:8px">Timer starts when you click Begin</div>
+    <div style="margin-top:16px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <button class="btn btn-primary" style="background:linear-gradient(135deg,#7c3aed,#4f46e5)" id="exam_start_btn" onclick="startExam()">▶ Begin Exam</button>
+      <div style="font-size:12px;color:var(--grey);align-self:center" id="exam_status">Ready — click Begin when you are ready</div>
+    </div>
+  </div>
+
+  <div class="exam-wrap" id="exam_questions" style="display:none">
+
+    <div class="exam-q">
+      <div class="qn">Question 1 — UK Transport Law</div>
+      <div class="qt">Which organisation issues the Operator's Licence in the UK?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,1,false)">A. FMCSA</button>
+        <button class="exam-opt" onclick="examAns(this,1,true)">B. Traffic Commissioner (DVSA)</button>
+        <button class="exam-opt" onclick="examAns(this,1,false)">C. HMRC</button>
+        <button class="exam-opt" onclick="examAns(this,1,false)">D. Companies House</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 2 — O-Licence Types</div>
+      <div class="qt">A UK carrier wants to carry goods for hire across the UK AND into Europe. Which licence do they need?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,2,false)">A. Restricted Licence</button>
+        <button class="exam-opt" onclick="examAns(this,2,false)">B. Standard National Licence</button>
+        <button class="exam-opt" onclick="examAns(this,2,true)">C. Standard International Licence</button>
+        <button class="exam-opt" onclick="examAns(this,2,false)">D. No licence needed for EU</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 3 — Drivers' Hours</div>
+      <div class="qt">How long must a UK HGV driver drive before a mandatory break is required?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,3,false)">A. 3 hours</button>
+        <button class="exam-opt" onclick="examAns(this,3,true)">B. 4.5 hours</button>
+        <button class="exam-opt" onclick="examAns(this,3,false)">C. 6 hours</button>
+        <button class="exam-opt" onclick="examAns(this,3,false)">D. 8 hours</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 4 — Drivers' Hours</div>
+      <div class="qt">The maximum weekly driving limit for a UK HGV driver is:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,4,false)">A. 40 hours</button>
+        <button class="exam-opt" onclick="examAns(this,4,false)">B. 48 hours</button>
+        <button class="exam-opt" onclick="examAns(this,4,true)">C. 56 hours</button>
+        <button class="exam-opt" onclick="examAns(this,4,false)">D. 70 hours</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 5 — Tachograph</div>
+      <div class="qt">Tachograph mode "X" represents:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,5,false)">A. Driving</button>
+        <button class="exam-opt" onclick="examAns(this,5,false)">B. Other work</button>
+        <button class="exam-opt" onclick="examAns(this,5,false)">C. Availability</button>
+        <button class="exam-opt" onclick="examAns(this,5,true)">D. Rest</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 6 — UK Documentation</div>
+      <div class="qt">For a UK domestic delivery, which document is used instead of a CMR Note?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,6,false)">A. Bill of Lading</button>
+        <button class="exam-opt" onclick="examAns(this,6,true)">B. Consignment Note (delivery note)</button>
+        <button class="exam-opt" onclick="examAns(this,6,false)">C. W-9 form</button>
+        <button class="exam-opt" onclick="examAns(this,6,false)">D. Rate Confirmation</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 7 — CMR Note</div>
+      <div class="qt">A CMR Note must be issued in how many originals?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,7,false)">A. 1</button>
+        <button class="exam-opt" onclick="examAns(this,7,false)">B. 2</button>
+        <button class="exam-opt" onclick="examAns(this,7,true)">C. At least 3</button>
+        <button class="exam-opt" onclick="examAns(this,7,false)">D. 5</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 8 — Post-Brexit</div>
+      <div class="qt">Since Brexit, UK–EU road freight requires which additional number?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,8,false)">A. MC Number</button>
+        <button class="exam-opt" onclick="examAns(this,8,true)">B. EORI Number</button>
+        <button class="exam-opt" onclick="examAns(this,8,false)">C. DAT Credit Score</button>
+        <button class="exam-opt" onclick="examAns(this,8,false)">D. DVSA Licence Number</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 9 — UK Load Boards</div>
+      <div class="qt">Courier Exchange is the UK equivalent of which US platform?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,9,false)">A. Uber Freight</button>
+        <button class="exam-opt" onclick="examAns(this,9,true)">B. DAT Load Board</button>
+        <button class="exam-opt" onclick="examAns(this,9,false)">C. LinkedIn</button>
+        <button class="exam-opt" onclick="examAns(this,9,false)">D. Shiply</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 10 — UK Logistics</div>
+      <div class="qt">Which is the largest 3PL (third-party logistics) company in the UK?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,10,true)">A. DHL Supply Chain UK</button>
+        <button class="exam-opt" onclick="examAns(this,10,false)">B. Eddie Stobart</button>
+        <button class="exam-opt" onclick="examAns(this,10,false)">C. Royal Mail</button>
+        <button class="exam-opt" onclick="examAns(this,10,false)">D. Evri</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 11 — Pallet Networks</div>
+      <div class="qt">Which UK pallet network is owned by the Eddie Stobart Group?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,11,true)">A. Palletforce</button>
+        <button class="exam-opt" onclick="examAns(this,11,false)">B. Pall-Ex</button>
+        <button class="exam-opt" onclick="examAns(this,11,false)">C. TPN</button>
+        <button class="exam-opt" onclick="examAns(this,11,false)">D. Palletways</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 12 — Pallet Networks</div>
+      <div class="qt">"Trunking" in a pallet network means:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,12,false)">A. Delivering pallets to customers</button>
+        <button class="exam-opt" onclick="examAns(this,12,true)">B. Moving pallets overnight from local depot to central hub</button>
+        <button class="exam-opt" onclick="examAns(this,12,false)">C. Sorting pallets at the warehouse</button>
+        <button class="exam-opt" onclick="examAns(this,12,false)">D. Packing pallets at the shipper</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 13 — KPIs</div>
+      <div class="qt">What is the UK industry target for empty running percentage?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,13,true)">A. Under 15%</button>
+        <button class="exam-opt" onclick="examAns(this,13,false)">B. Under 50%</button>
+        <button class="exam-opt" onclick="examAns(this,13,false)">C. Under 80%</button>
+        <button class="exam-opt" onclick="examAns(this,13,false)">D. There is no target</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 14 — Time Zones</div>
+      <div class="qt">When it is 8:00 AM in the UK (GMT), what time is it in India (IST)?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,14,false)">A. 8:00 AM</button>
+        <button class="exam-opt" onclick="examAns(this,14,false)">B. 10:30 AM</button>
+        <button class="exam-opt" onclick="examAns(this,14,true)">C. 1:30 PM</button>
+        <button class="exam-opt" onclick="examAns(this,14,false)">D. 9:30 PM</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 15 — Negotiation (ICAR)</div>
+      <div class="qt">In the ICAR broker call method, what does "A" stand for?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,15,false)">A. Agree</button>
+        <button class="exam-opt" onclick="examAns(this,15,true)">B. Ask — ask for their rate first, never give yours first</button>
+        <button class="exam-opt" onclick="examAns(this,15,false)">C. Accept</button>
+        <button class="exam-opt" onclick="examAns(this,15,false)">D. Advance</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 16 — Documentation</div>
+      <div class="qt">What document must be signed by BOTH broker and carrier BEFORE the truck moves?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,16,false)">A. W-9</button>
+        <button class="exam-opt" onclick="examAns(this,16,false)">B. COI</button>
+        <button class="exam-opt" onclick="examAns(this,16,true)">C. Rate Confirmation (RC)</button>
+        <button class="exam-opt" onclick="examAns(this,16,false)">D. CMR Note</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 17 — UK Financial</div>
+      <div class="qt">Minimum financial standing for 1 vehicle on a UK O-Licence is:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,17,false)">A. £2,000</button>
+        <button class="exam-opt" onclick="examAns(this,17,false)">B. £5,000</button>
+        <button class="exam-opt" onclick="examAns(this,17,true)">C. £8,000</button>
+        <button class="exam-opt" onclick="examAns(this,17,false)">D. £20,000</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 18 — Detention</div>
+      <div class="qt">UK detention pay begins after how many FREE hours at a facility?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,18,false)">A. 30 minutes</button>
+        <button class="exam-opt" onclick="examAns(this,18,true)">B. 2 hours</button>
+        <button class="exam-opt" onclick="examAns(this,18,false)">C. 4 hours</button>
+        <button class="exam-opt" onclick="examAns(this,18,false)">D. 8 hours</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 19 — TONU</div>
+      <div class="qt">TONU stands for:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,19,true)">A. Truck Ordered Not Used</button>
+        <button class="exam-opt" onclick="examAns(this,19,false)">B. Transfer Of Non-Urgent goods</button>
+        <button class="exam-opt" onclick="examAns(this,19,false)">C. Time On Normal Use</button>
+        <button class="exam-opt" onclick="examAns(this,19,false)">D. Total Outstanding Not Unpaid</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 20 — UK CV</div>
+      <div class="qt">Which of the following should NEVER appear on a UK CV?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,20,false)">A. Eagle Academy Certification</button>
+        <button class="exam-opt" onclick="examAns(this,20,false)">B. UK-specific skills (DVSA, CMR, CX)</button>
+        <button class="exam-opt" onclick="examAns(this,20,true)">C. Your photograph and date of birth</button>
+        <button class="exam-opt" onclick="examAns(this,20,false)">D. Professional Summary</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 21 — USA HOS</div>
+      <div class="qt">USA maximum daily driving limit (HOS) is:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,21,false)">A. 9 hours</button>
+        <button class="exam-opt" onclick="examAns(this,21,false)">B. 10 hours</button>
+        <button class="exam-opt" onclick="examAns(this,21,true)">C. 11 hours</button>
+        <button class="exam-opt" onclick="examAns(this,21,false)">D. 14 hours</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 22 — Load Boards</div>
+      <div class="qt">RPM stands for:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,22,false)">A. Revenue Per Month</button>
+        <button class="exam-opt" onclick="examAns(this,22,true)">B. Revenue Per Mile</button>
+        <button class="exam-opt" onclick="examAns(this,22,false)">C. Rate Per Minute</button>
+        <button class="exam-opt" onclick="examAns(this,22,false)">D. Route Planning Method</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 23 — Factoring</div>
+      <div class="qt">A $3,000 invoice factored at 3%. How much does the carrier receive?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,23,false)">A. $3,000</button>
+        <button class="exam-opt" onclick="examAns(this,23,true)">B. $2,910</button>
+        <button class="exam-opt" onclick="examAns(this,23,false)">C. $2,700</button>
+        <button class="exam-opt" onclick="examAns(this,23,false)">D. $2,400</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 24 — UK Load Rate</div>
+      <div class="qt">A typical UK full curtainsider (13.6m) load rates at approximately:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,24,false)">A. £50–100</button>
+        <button class="exam-opt" onclick="examAns(this,24,false)">B. £200–350</button>
+        <button class="exam-opt" onclick="examAns(this,24,true)">C. £600–2,500 depending on lane</button>
+        <button class="exam-opt" onclick="examAns(this,24,false)">D. £10,000+</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 25 — DVSA</div>
+      <div class="qt">DVSA stands for:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,25,false)">A. Driver Vehicle Safety Agency</button>
+        <button class="exam-opt" onclick="examAns(this,25,true)">B. Driver and Vehicle Standards Agency</button>
+        <button class="exam-opt" onclick="examAns(this,25,false)">C. Department of Vehicle and Safety Assessments</button>
+        <button class="exam-opt" onclick="examAns(this,25,false)">D. Drivers Verification and Standards Association</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 26 — BOL</div>
+      <div class="qt">When does a Bill of Lading become a Proof of Delivery (POD)?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,26,false)">A. When the driver signs at pickup</button>
+        <button class="exam-opt" onclick="examAns(this,26,true)">B. When the consignee signs at delivery</button>
+        <button class="exam-opt" onclick="examAns(this,26,false)">C. When the broker confirms payment</button>
+        <button class="exam-opt" onclick="examAns(this,26,false)">D. When the dispatcher sends the invoice</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 27 — UK TMS</div>
+      <div class="qt">Which is a UK-specific TMS recommended for growing dispatch businesses?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,27,false)">A. Aljex</button>
+        <button class="exam-opt" onclick="examAns(this,27,false)">B. McLeod</button>
+        <button class="exam-opt" onclick="examAns(this,27,true)">C. Mandata or Loadmaster</button>
+        <button class="exam-opt" onclick="examAns(this,27,false)">D. QuickBooks</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 28 — Scaling</div>
+      <div class="qt">What is the best source of new UK carrier clients after signing your first carrier?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,28,false)">A. Cold calling from a directory</button>
+        <button class="exam-opt" onclick="examAns(this,28,true)">B. Referrals — your existing carrier knows 5–10 other owner-operators</button>
+        <button class="exam-opt" onclick="examAns(this,28,false)">C. Buying mailing lists</button>
+        <button class="exam-opt" onclick="examAns(this,28,false)">D. Newspaper adverts</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 29 — UK Drivers Hours Split Break</div>
+      <div class="qt">Can a driver take a 45-minute break as 15 minutes followed by 30 minutes?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,29,true)">A. Yes — a 15+30 split in that order is legal</button>
+        <button class="exam-opt" onclick="examAns(this,29,false)">B. No — must always be one continuous 45 minutes</button>
+        <button class="exam-opt" onclick="examAns(this,29,false)">C. Only on international routes</button>
+        <button class="exam-opt" onclick="examAns(this,29,false)">D. Only for drivers under 25</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 30 — UK Phone</div>
+      <div class="qt">Which tool gives you a UK phone number for approximately £15/month?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,30,false)">A. WhatsApp only</button>
+        <button class="exam-opt" onclick="examAns(this,30,true)">B. Vonage or CallHippo</button>
+        <button class="exam-opt" onclick="examAns(this,30,false)">C. Royal Mail</button>
+        <button class="exam-opt" onclick="examAns(this,30,false)">D. BT Landline</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 31 — COI</div>
+      <div class="qt">Minimum cargo insurance for a US carrier's COI is:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,31,false)">A. $50,000</button>
+        <button class="exam-opt" onclick="examAns(this,31,true)">B. $100,000</button>
+        <button class="exam-opt" onclick="examAns(this,31,false)">C. $500,000</button>
+        <button class="exam-opt" onclick="examAns(this,31,false)">D. $5,000,000</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 32 — Negotiation</div>
+      <div class="qt">You state your rate to a broker. They go silent. You should:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,32,false)">A. Immediately lower your rate to break the silence</button>
+        <button class="exam-opt" onclick="examAns(this,32,true)">B. Stay silent — the first to speak loses bargaining power</button>
+        <button class="exam-opt" onclick="examAns(this,32,false)">C. Repeat your rate louder</button>
+        <button class="exam-opt" onclick="examAns(this,32,false)">D. Hang up</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 33 — UK Compliance</div>
+      <div class="qt">Where do you verify a UK carrier's O-Licence is active?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,33,true)">A. vehicle-operator-licensing.service.gov.uk</button>
+        <button class="exam-opt" onclick="examAns(this,33,false)">B. Companies House</button>
+        <button class="exam-opt" onclick="examAns(this,33,false)">C. Courier Exchange member list</button>
+        <button class="exam-opt" onclick="examAns(this,33,false)">D. The carrier's own website</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 34 — UK Dispatcher Income</div>
+      <div class="qt">A dispatcher at 8% managing 1 UK vehicle (4 loads/week at £1,200 avg) earns monthly approximately:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,34,false)">A. £200/month</button>
+        <button class="exam-opt" onclick="examAns(this,34,true)">B. £1,536/month</button>
+        <button class="exam-opt" onclick="examAns(this,34,false)">C. £4,800/month</button>
+        <button class="exam-opt" onclick="examAns(this,34,false)">D. £12,000/month</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 35 — Carrier Packet</div>
+      <div class="qt">The complete carrier packet includes (select all that apply — choose the most complete answer):</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,35,false)">A. Just the W-9</button>
+        <button class="exam-opt" onclick="examAns(this,35,false)">B. W-9 and COI only</button>
+        <button class="exam-opt" onclick="examAns(this,35,true)">C. W-9 + COI + MC Authority Certificate + Operating Authority + Void cheque</button>
+        <button class="exam-opt" onclick="examAns(this,35,false)">D. Only the MC number</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 36 — UK Freight Lane</div>
+      <div class="qt">The highest-volume freight corridor in the UK is:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,36,true)">A. London ↔ Birmingham ↔ Manchester (M1/M6)</button>
+        <button class="exam-opt" onclick="examAns(this,36,false)">B. Edinburgh ↔ Cardiff</button>
+        <button class="exam-opt" onclick="examAns(this,36,false)">C. Plymouth ↔ Norwich</button>
+        <button class="exam-opt" onclick="examAns(this,36,false)">D. Bristol ↔ Aberdeen</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 37 — Check Calls</div>
+      <div class="qt">How often should you check-call a driver on a moving UK load?</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,37,false)">A. Once per day only</button>
+        <button class="exam-opt" onclick="examAns(this,37,true)">B. Every 2–4 hours</button>
+        <button class="exam-opt" onclick="examAns(this,37,false)">C. Only if something goes wrong</button>
+        <button class="exam-opt" onclick="examAns(this,37,false)">D. Only at pickup and delivery</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 38 — UK Subcontracting</div>
+      <div class="qt">To become a DHL Supply Chain UK subcontractor, your carrier MUST have:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,38,false)">A. 10 years experience</button>
+        <button class="exam-opt" onclick="examAns(this,38,false)">B. Fleet of at least 10 vehicles</button>
+        <button class="exam-opt" onclick="examAns(this,38,true)">C. Valid O-Licence + minimum £5M liability insurance + pass compliance audit</button>
+        <button class="exam-opt" onclick="examAns(this,38,false)">D. US MC number</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 39 — Breakdown Protocol</div>
+      <div class="qt">Your UK driver breaks down mid-load. First call to make is:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,39,false)">A. Call the shipper</button>
+        <button class="exam-opt" onclick="examAns(this,39,true)">B. Call the broker/customer immediately with location and revised ETA</button>
+        <button class="exam-opt" onclick="examAns(this,39,false)">C. Wait for the driver to fix it first</button>
+        <button class="exam-opt" onclick="examAns(this,39,false)">D. Cancel the load</button>
+      </div>
+    </div>
+
+    <div class="exam-q">
+      <div class="qn">Question 40 — Certification Criteria</div>
+      <div class="qt">To pass the Eagle Academy Final Exam and receive certification, you must score:</div>
+      <div class="exam-opts">
+        <button class="exam-opt" onclick="examAns(this,40,false)">A. 50% (20/40)</button>
+        <button class="exam-opt" onclick="examAns(this,40,false)">B. 60% (24/40)</button>
+        <button class="exam-opt" onclick="examAns(this,40,true)">C. 70% (28/40)</button>
+        <button class="exam-opt" onclick="examAns(this,40,false)">D. 90% (36/40)</button>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:32px;padding-top:24px;border-top:1px solid rgba(139,92,246,0.2)">
+      <button class="btn btn-primary" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);padding:14px 40px;font-size:16px" onclick="submitExam()" id="submit_btn" disabled>Submit Exam</button>
+      <div style="font-size:12px;color:var(--grey);margin-top:8px" id="submit_hint">Answer all 40 questions to enable submit</div>
+    </div>
+  </div>
+
+  <!-- Exam Result -->
+  <div class="exam-result-box" id="exam_result">
+    <div class="cert-badge" id="cert_icon">🏆</div>
+    <div style="font-size:28px;font-weight:900;margin-bottom:8px" id="result_title">Congratulations!</div>
+    <div class="qscore" id="result_score" style="color:#a78bfa"></div>
+    <div style="font-size:14px;color:var(--grey);margin:8px 0 20px" id="result_msg"></div>
+    <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-lg);padding:16px;margin-bottom:20px;font-size:13px" id="result_breakdown"></div>
+    <button class="btn btn-primary" style="background:linear-gradient(135deg,var(--green),#16a34a)" onclick="showDay(20,document.querySelectorAll('.day-tab')[4])">Proceed to Graduation →</button>
+  </div>
+
+  <div class="dnav"><button class="btn btn-ghost" onclick="showDay(18,document.querySelectorAll('.day-tab')[2])">← Day 18</button><button class="btn btn-primary" style="background:linear-gradient(135deg,#7c3aed,#4f46e5)" onclick="markDay(19);showDay(20,document.querySelectorAll('.day-tab')[4])">Day 20 — Graduation →</button></div>
+</div>
+
+<!-- ═══ DAY 20: Graduation ═══ -->
+<div class="day-panel" id="day20">
+  <div style="text-align:center;padding:40px 24px">
+    <div style="font-size:80px;margin-bottom:20px;animation:float 3s ease infinite">🦅</div>
+    <h1 style="font-size:clamp(28px,5vw,48px);font-weight:900;margin-bottom:12px">Congratulations, Dispatcher!</h1>
+    <p style="font-size:16px;color:#a78bfa;font-family:var(--font-hindi);margin-bottom:8px">बधाई हो! आप Eagle Academy के सर्टिफाइड UK फ्रेट डिस्पैचर हैं!</p>
+    <p style="font-size:15px;color:var(--grey);max-width:600px;margin:0 auto 32px;line-height:1.8">You have completed 80 hours of intensive training. You now know UK transport law, DVSA compliance, drivers' hours, CMR documentation, Courier Exchange, pallet networks, client acquisition, KPIs, and how to build a dispatch business from India.</p>
+
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:16px;max-width:800px;margin:0 auto 40px">
+      <div style="background:rgba(139,92,246,0.1);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-lg);padding:20px;text-align:center">
+        <div style="font-size:32px;font-weight:900;color:#a78bfa">20</div><div style="font-size:12px;color:var(--grey)">Days Completed</div>
+      </div>
+      <div style="background:rgba(34,197,94,0.1);border:1px solid rgba(34,197,94,0.3);border-radius:var(--radius-lg);padding:20px;text-align:center">
+        <div style="font-size:32px;font-weight:900;color:var(--green)">80</div><div style="font-size:12px;color:var(--grey)">Hours Training</div>
+      </div>
+      <div style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.3);border-radius:var(--radius-lg);padding:20px;text-align:center">
+        <div style="font-size:32px;font-weight:900;color:var(--orange)">🇬🇧</div><div style="font-size:12px;color:var(--grey)">UK Specialist</div>
+      </div>
+      <div style="background:rgba(251,191,36,0.1);border:1px solid rgba(251,191,36,0.3);border-radius:var(--radius-lg);padding:20px;text-align:center">
+        <div style="font-size:32px;font-weight:900;color:var(--gold)">✓</div><div style="font-size:12px;color:var(--grey)">Certified</div>
+      </div>
+    </div>
+
+    <div style="background:linear-gradient(135deg,rgba(139,92,246,0.12),rgba(30,27,139,0.4));border:2px solid rgba(139,92,246,0.4);border-radius:var(--radius-xl);padding:40px;max-width:700px;margin:0 auto 40px">
+      <div style="font-size:14px;color:var(--grey);text-transform:uppercase;letter-spacing:2px;margin-bottom:8px;font-family:var(--font-mono)">CERTIFICATE OF COMPLETION</div>
+      <div style="font-size:28px;font-weight:900;margin-bottom:4px">Eagle Academy</div>
+      <div style="font-size:16px;color:#a78bfa;margin-bottom:20px">International Freight Dispatcher Certification</div>
+      <div style="border-top:1px solid rgba(139,92,246,0.3);border-bottom:1px solid rgba(139,92,246,0.3);padding:16px;margin:20px 0;font-size:14px;line-height:1.8;color:rgba(255,255,255,0.8)">
+        This certifies successful completion of the <strong>80-hour International Freight Dispatcher Programme</strong> with specialisation in UK transport operations, DVSA compliance, and UK logistics industry practice.
+      </div>
+      <div style="font-size:13px;color:var(--grey)">Modules: UK Transport Law · Drivers' Hours & Tachograph · CMR Documentation · Courier Exchange · UK Pallet Networks · KPI Management · Dispatch Business Operations · Career Launch</div>
+    </div>
+
+    <div style="max-width:700px;margin:0 auto">
+      <h3 style="font-size:20px;font-weight:800;margin-bottom:20px">🚀 Your Next Steps — Start Today</h3>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left">
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(34,197,94,0.3);border-radius:var(--radius-lg);padding:16px">
+          <div style="font-size:16px;margin-bottom:6px">✅ Apply for Jobs</div>
+          <div style="font-size:12px;color:var(--grey);line-height:1.7">LinkedIn Jobs, Indeed.co.uk, Totaljobs — search "remote freight dispatcher UK"</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(139,92,246,0.3);border-radius:var(--radius-lg);padding:16px">
+          <div style="font-size:16px;margin-bottom:6px">✅ Find First UK Carrier</div>
+          <div style="font-size:12px;color:var(--grey);line-height:1.7">Facebook: "UK Owner Operators" group. Pitch your service today.</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(249,115,22,0.3);border-radius:var(--radius-lg);padding:16px">
+          <div style="font-size:16px;margin-bottom:6px">✅ Set Up Your Tools</div>
+          <div style="font-size:12px;color:var(--grey);line-height:1.7">UK phone number (Vonage/CallHippo), Courier Exchange membership, Google Sheets tracker</div>
+        </div>
+        <div style="background:rgba(255,255,255,0.03);border:1px solid rgba(251,191,36,0.3);border-radius:var(--radius-lg);padding:16px">
+          <div style="font-size:16px;margin-bottom:6px">✅ Post Your Certificate</div>
+          <div style="font-size:12px;color:var(--grey);line-height:1.7">Share on LinkedIn. Tag Eagle Academy. UK employers are watching.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:40px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="index.html" class="btn btn-ghost">🏠 Back to Home</a>
+      <a href="tools.html" class="btn btn-secondary">🧮 Practice Tools</a>
+      <a href="madam-ji.html" class="btn btn-primary" style="background:linear-gradient(135deg,#7c3aed,#4f46e5)">🎓 Ask Madam JI</a>
+    </div>
+  </div>
+</div>
+
+</main>
+
+<footer style="border-top:1px solid rgba(139,92,246,0.15);padding:20px 24px;text-align:center;margin-top:40px">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:8px">
+      <img src="assets/logo.png" style="height:32px;background:white;padding:2px;border-radius:6px" onerror="this.style.display='none'"/>
+      <span style="font-weight:900;font-size:15px;letter-spacing:1px">EAGLE ACADEMY</span>
+    </div>
+    <div style="font-size:12px;color:var(--grey)">International Freight Dispatcher Certification — Week 4 of 4 | 🇬🇧 UK Career Accelerator</div>
+  </div>
+</footer>
+
+<script src="assets/app.js"></script>
+<script>
+let qA={}, examA={}, examTotal=40, examStarted=false, timerInt=null;
+
+function showDay(n,btn){
+  document.querySelectorAll('.day-panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.day-tab').forEach(t=>t.classList.remove('active'));
+  const p=document.getElementById('day'+n);if(p)p.classList.add('active');
+  if(btn)btn.classList.add('active');
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+function markDay(n){
+  const c=document.getElementById('c'+n);if(c)c.style.display='inline';
+  updateProg();
+  try{const s=JSON.parse(localStorage.getItem('ea_w4')||'{}');s['d'+n]=true;localStorage.setItem('ea_w4',JSON.stringify(s));}catch(e){}
+}
+function updateProg(){
+  const done=document.querySelectorAll('.chk[style*="inline"]').length;
+  const p=Math.round(done/5*100);
+  const b=document.getElementById('wprog'),l=document.getElementById('wpct');
+  if(b)b.style.width=p+'%';if(l)l.textContent=p+'%';
+}
+function openT(id,btn){
+  const bid='body_'+id.replace('tc_','');
+  const b=document.getElementById(bid);if(!b)return;
+  const wasOpen=b.classList.contains('open');
+  document.querySelectorAll('.tbody').forEach(x=>x.classList.remove('open'));
+  document.querySelectorAll('.tt').forEach(x=>x.classList.remove('open'));
+  if(!wasOpen){b.classList.add('open');btn.classList.add('open');}
+}
+function setLang(lang,btn){
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');
+  document.querySelectorAll('.chi').forEach(el=>el.classList.toggle('show',lang==='hi'));
+}
+function togHi(id){const el=document.getElementById(id);if(el)el.classList.toggle('show');}
+let synth=window.speechSynthesis;
+function spk(id,btn,lang){
+  if(synth)synth.cancel();
+  document.querySelectorAll('.ab.on').forEach(b=>b.classList.remove('on'));
+  const el=document.getElementById(id);if(!el||!synth)return;
+  const u=new SpeechSynthesisUtterance((el.innerText||el.textContent).replace(/\s+/g,' ').trim());
+  u.lang=lang;u.rate=0.88;
+  const vs=synth.getVoices(),m=vs.find(v=>v.lang.startsWith(lang.substring(0,2)));
+  if(m)u.voice=m;
+  btn.classList.add('on');u.onend=()=>btn.classList.remove('on');u.onerror=()=>btn.classList.remove('on');
+  synth.speak(u);
+}
+function stopSpk(){if(synth)synth.cancel();document.querySelectorAll('.ab.on').forEach(b=>b.classList.remove('on'));}
+function loadVid(el,id){
+  if(!id||id.includes('YOUR')){alert('📹 Instructor: Replace the video ID in the HTML with your YouTube video ID.');return;}
+  el.outerHTML=`<div style="position:relative;padding-bottom:56.25%"><iframe src="https://www.youtube.com/embed/${id}?autoplay=1" style="position:absolute;top:0;left:0;width:100%;height:100%;border:none" allow="autoplay;fullscreen" allowfullscreen></iframe></div>`;
+}
+function ans(btn,qbId,qKey,correct){
+  if(!qA[qbId])qA[qbId]={};if(qA[qbId][qKey])return;
+  qA[qbId][qKey]=correct;
+  btn.closest('.qi').querySelectorAll('.qo').forEach(b=>b.disabled=true);
+  btn.classList.add(correct?'correct':'wrong');
+  if(!correct)btn.closest('.qi').querySelectorAll('.qo').forEach(b=>{if(b.onclick&&b.onclick.toString().includes(',true'))b.classList.add('correct');});
+  const total=document.getElementById(qbId).querySelectorAll('.qi').length;
+  if(Object.keys(qA[qbId]).length>=total)showResult(qbId);
+}
+function showResult(qbId){
+  const a=qA[qbId]||{},total=Object.keys(a).length,correct=Object.values(a).filter(v=>v).length,pct=Math.round(correct/total*100);
+  const rid=qbId.replace('qb_','qr_'),sid=qbId.replace('qb_','qs_'),mid=qbId.replace('qb_','qm_');
+  const re=document.getElementById(rid),se=document.getElementById(sid),me=document.getElementById(mid);
+  if(re)re.classList.add('show');
+  if(se){se.textContent=correct+'/'+total+' — '+pct+'%';se.style.color=pct>=70?'var(--green)':pct>=50?'var(--gold)':'var(--red)';}
+  if(me)me.textContent=pct>=90?'🏆 Excellent!':pct>=70?'✅ Good work!':pct>=50?'📚 Review the topic.':'⚠️ Please re-read and retake.';
+}
+function retake(qbId,rId,sId,mId){
+  qA[qbId]={};
+  document.getElementById(qbId).querySelectorAll('.qo').forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong');});
+  const r=document.getElementById(rId);if(r)r.classList.remove('show');
+}
+
+/* ── EXAM ENGINE ── */
+function startExam(){
+  examStarted=true;
+  document.getElementById('exam_start_btn').style.display='none';
+  document.getElementById('exam_status').textContent='Exam in progress — answer all 40 questions';
+  document.getElementById('exam_questions').style.display='block';
+  let secs=3600;
+  timerInt=setInterval(()=>{
+    secs--;
+    const m=Math.floor(secs/60),s=secs%60;
+    document.getElementById('exam_timer').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');
+    if(secs<=0){clearInterval(timerInt);submitExam();}
+  },1000);
+  window.scrollTo({top:document.getElementById('exam_questions').offsetTop-100,behavior:'smooth'});
+}
+function examAns(btn,qNum,correct){
+  if(!examStarted)return;
+  const allOpts=btn.closest('.exam-q').querySelectorAll('.exam-opt');
+  allOpts.forEach(b=>{b.disabled=true;b.classList.remove('sel');});
+  examA[qNum]=correct;
+  btn.classList.add('sel');
+  const answered=Object.keys(examA).length;
+  const sub=document.getElementById('submit_btn'),hint=document.getElementById('submit_hint');
+  if(answered>=examTotal){sub.disabled=false;if(hint)hint.textContent='All questions answered — click Submit!';}
+  else{if(hint)hint.textContent=`${answered} of ${examTotal} answered`;}
+}
+function submitExam(){
+  clearInterval(timerInt);
+  const allOpts=document.querySelectorAll('.exam-opt');
+  allOpts.forEach(b=>b.disabled=true);
+  const correct=Object.values(examA).filter(v=>v).length;
+  const pct=Math.round(correct/examTotal*100);
+  const rBox=document.getElementById('exam_result');
+  const ci=document.getElementById('cert_icon');
+  const rt=document.getElementById('result_title');
+  const rs=document.getElementById('result_score');
+  const rm=document.getElementById('result_msg');
+  const rb=document.getElementById('result_breakdown');
+  rs.textContent=correct+'/'+examTotal+' — '+pct+'%';
+  if(pct>=95){
+    ci.textContent='🏆';rt.textContent='Certified with Distinction!';
+    rs.style.color='var(--gold)';
+    rm.textContent='Outstanding performance! You are an exceptional Eagle Academy graduate.';
+    rb.innerHTML='<strong style="color:var(--gold)">🥇 Distinction (95%+)</strong> — Eagle Academy Certified with Distinction. Add this to your CV and LinkedIn immediately!';
+  } else if(pct>=85){
+    ci.textContent='🎖️';rt.textContent='Certified with Merit!';
+    rs.style.color='var(--green)';
+    rm.textContent='Excellent result! You have earned your Eagle Academy Merit certification.';
+    rb.innerHTML='<strong style="color:var(--green)">✅ Merit (85–94%)</strong> — Eagle Academy Certified with Merit. Well done!';
+  } else if(pct>=70){
+    ci.textContent='🎓';rt.textContent='Certified!';
+    rs.style.color='#a78bfa';
+    rm.textContent='Congratulations — you have passed and earned your Eagle Academy certification!';
+    rb.innerHTML='<strong style="color:#a78bfa">✅ Passed (70–84%)</strong> — Eagle Academy Certified. You are job-ready!';
+  } else {
+    ci.textContent='📚';rt.textContent='Not Yet — Keep Going!';
+    rs.style.color='var(--red)';
+    rm.textContent='You scored below 70%. Review the topics you found difficult and retake — you can do this!';
+    rb.innerHTML='<strong style="color:var(--red)">📖 Review Required</strong> — Focus on: UK transport law, drivers hours, CMR documentation, and pallet networks.';
+  }
+  rBox.style.display='block';
+  document.getElementById('submit_btn').style.display='none';
+  markDay(19);
+  rBox.scrollIntoView({behavior:'smooth',block:'center'});
+}
+
+document.addEventListener('DOMContentLoaded',()=>{
+  try{const s=JSON.parse(localStorage.getItem('ea_w4')||'{}');for(let d=16;d<=20;d++)if(s['d'+d]){const c=document.getElementById('c'+d);if(c)c.style.display='inline';}updateProg();}catch(e){}
+  if(window.speechSynthesis)window.speechSynthesis.onvoiceschanged=()=>window.speechSynthesis.getVoices();
+});
+</script>
+</body>
+</html>

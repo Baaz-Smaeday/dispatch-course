@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Certificate — Eagle Academy</title>
+<link rel="stylesheet" href="assets/style.css"/>
+<style>
+/* ── PAGE SHELL ── */
+body{background:var(--navy-dark);color:var(--white)}
+.cert-page{max-width:1000px;margin:0 auto;padding:32px 24px}
+
+/* ── MANUAL ENTRY FORM (shown if no exam data) ── */
+.entry-card{background:linear-gradient(135deg,rgba(139,92,246,0.1),rgba(30,27,139,0.4));border:2px solid rgba(139,92,246,0.3);border-radius:20px;padding:36px;max-width:560px;margin:60px auto;text-align:center}
+.fi{background:rgba(255,255,255,0.05);border:2px solid rgba(139,92,246,0.3);border-radius:10px;color:white;padding:12px 16px;font-family:var(--font-main);font-size:15px;width:100%;outline:none;margin:8px 0;transition:border-color .2s;box-sizing:border-box}
+.fi:focus{border-color:#a78bfa}
+.fi::placeholder{color:var(--grey)}
+select.fi option{background:#0d0c2e;color:white}
+
+/* ── CONTROLS BAR ── */
+.ctrl-bar{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:28px;padding:16px 20px;background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:14px}
+.ctrl-bar span{font-size:13px;color:var(--grey)}
+.btn-print{background:linear-gradient(135deg,#7c3aed,#4f46e5);color:white;border:none;padding:10px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;font-family:var(--font-main);transition:var(--transition)}
+.btn-print:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn-retake{background:rgba(255,255,255,0.06);color:var(--grey);border:1px solid rgba(255,255,255,0.1);padding:10px 20px;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font-main);transition:var(--transition)}
+.btn-retake:hover{background:rgba(255,255,255,0.1);color:var(--white)}
+
+/* ══════════════════════════════════════════
+   CERTIFICATE — THE MAIN DOCUMENT
+   (this section prints beautifully)
+══════════════════════════════════════════ */
+.cert-outer{
+  position:relative;
+  background:#fefcf7;
+  color:#1a1a2e;
+  border-radius:8px;
+  overflow:hidden;
+  box-shadow:0 32px 80px rgba(0,0,0,0.6);
+  margin-bottom:32px;
+  min-height:680px;
+}
+
+/* corner ornaments */
+.cert-outer::before,.cert-outer::after{
+  content:'';position:absolute;width:120px;height:120px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Cpath d='M0 0 L120 0 L120 20 L20 20 L20 120 L0 120 Z' fill='none' stroke='%231e1b8b' stroke-width='3' opacity='0.2'/%3E%3Cpath d='M10 10 L110 10 L110 20 L20 20 L20 110 L10 110 Z' fill='none' stroke='%231e1b8b' stroke-width='1.5' opacity='0.12'/%3E%3C/svg%3E");
+  background-size:contain;background-repeat:no-repeat;
+}
+.cert-outer::before{top:0;left:0}
+.cert-outer::after{bottom:0;right:0;transform:rotate(180deg)}
+
+/* top colour band */
+.cert-band{height:10px;background:linear-gradient(90deg,#1e1b8b 0%,#7c3aed 40%,#f97316 70%,#1e1b8b 100%)}
+
+/* inner padding */
+.cert-inner{padding:48px 64px 44px;position:relative;z-index:1}
+@media(max-width:640px){.cert-inner{padding:32px 28px 28px}}
+
+/* header row */
+.cert-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px;padding-bottom:20px;border-bottom:1px solid rgba(30,27,139,0.12)}
+.cert-logo-block{display:flex;align-items:center;gap:10px}
+.cert-logo-img{height:44px;background:white;padding:3px;border-radius:6px;border:1px solid rgba(30,27,139,0.15)}
+.cert-brand{font-family:'Georgia',serif;font-size:18px;font-weight:700;color:#1e1b8b;letter-spacing:.5px}
+.cert-brand-sub{font-size:10px;color:#666;letter-spacing:1px;text-transform:uppercase;margin-top:1px}
+.cert-uk-flag{font-size:28px}
+
+/* title block */
+.cert-title-block{text-align:center;margin-bottom:28px}
+.cert-of{font-family:'Georgia',serif;font-size:13px;letter-spacing:3px;text-transform:uppercase;color:#7c3aed;margin-bottom:6px}
+.cert-main-title{font-family:'Georgia',serif;font-size:clamp(22px,4vw,34px);font-weight:700;color:#1e1b8b;line-height:1.2;margin-bottom:4px}
+.cert-sub-title{font-size:13px;color:#666;letter-spacing:.5px}
+
+/* divider line with diamond */
+.cert-divider{display:flex;align-items:center;gap:12px;margin:20px 0}
+.cert-divider-line{flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(30,27,139,0.2),transparent)}
+.cert-diamond{width:8px;height:8px;background:#7c3aed;transform:rotate(45deg);flex-shrink:0}
+
+/* recipient */
+.cert-presented{font-family:'Georgia',serif;font-size:13px;color:#888;text-align:center;margin-bottom:8px;letter-spacing:.5px}
+.cert-name{font-family:'Georgia',serif;font-size:clamp(28px,5vw,46px);font-weight:700;color:#1e1b8b;text-align:center;line-height:1.15;margin-bottom:4px;word-break:break-word}
+.cert-name-line{width:100%;max-width:480px;height:1px;background:rgba(30,27,139,0.15);margin:8px auto 20px}
+
+/* body text */
+.cert-body{font-family:'Georgia',serif;font-size:13.5px;color:#444;text-align:center;line-height:1.9;max-width:620px;margin:0 auto 20px}
+.cert-body strong{color:#1e1b8b}
+
+/* modules grid */
+.cert-modules{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin:16px 0 24px}
+.cert-mod{background:rgba(30,27,139,0.06);border:1px solid rgba(30,27,139,0.12);border-radius:6px;padding:4px 12px;font-size:11px;color:#1e1b8b;font-family:'Georgia',serif;letter-spacing:.3px}
+
+/* score badge */
+.cert-score-row{display:flex;align-items:center;justify-content:center;gap:16px;margin:20px 0}
+.cert-score-badge{display:flex;flex-direction:column;align-items:center;background:linear-gradient(135deg,#1e1b8b,#7c3aed);color:white;border-radius:12px;padding:14px 22px;min-width:90px}
+.csb-num{font-family:'Georgia',serif;font-size:28px;font-weight:700;line-height:1}
+.csb-lbl{font-size:10px;letter-spacing:1px;text-transform:uppercase;opacity:.8;margin-top:3px}
+.cert-grade-badge{display:flex;flex-direction:column;align-items:center;border-radius:12px;padding:14px 22px;min-width:110px;border:2px solid}
+
+/* grade colours */
+.grade-pass{background:rgba(139,92,246,0.08);border-color:rgba(139,92,246,0.35);color:#5b21b6}
+.grade-merit{background:rgba(34,197,94,0.08);border-color:rgba(34,197,94,0.35);color:#166534}
+.grade-distinction{background:rgba(251,191,36,0.1);border-color:rgba(251,191,36,0.4);color:#92400e}
+
+.cgb-icon{font-size:22px;margin-bottom:4px}
+.cgb-text{font-family:'Georgia',serif;font-size:15px;font-weight:700}
+.cgb-sub{font-size:10px;letter-spacing:.5px;opacity:.7;text-transform:uppercase;margin-top:2px}
+
+/* bottom row — signatures */
+.cert-bottom{display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;margin-top:28px;padding-top:20px;border-top:1px solid rgba(30,27,139,0.1)}
+@media(max-width:560px){.cert-bottom{grid-template-columns:1fr}}
+.cert-sig-block{text-align:center}
+.cert-sig-line{height:1px;background:rgba(30,27,139,0.2);margin:6px auto 6px;max-width:120px}
+.cert-sig-label{font-size:10px;color:#888;letter-spacing:.8px;text-transform:uppercase;font-family:'Georgia',serif}
+.cert-sig-name{font-family:'Georgia',serif;font-size:12px;color:#333;margin-bottom:2px;font-style:italic}
+.cert-id{font-family:'Courier New',monospace;font-size:9px;color:#aaa;text-align:center;margin-top:16px;letter-spacing:1px}
+
+/* bottom colour band */
+.cert-band-btm{height:6px;background:linear-gradient(90deg,#1e1b8b 0%,#7c3aed 40%,#f97316 70%,#1e1b8b 100%)}
+
+/* watermark */
+.cert-watermark{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-family:'Georgia',serif;font-size:96px;font-weight:900;color:rgba(30,27,139,0.028);white-space:nowrap;pointer-events:none;z-index:0;letter-spacing:4px}
+
+/* ── SCORE BREAKDOWN CARD ── */
+.breakdown-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:24px;margin-bottom:24px}
+.bk-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:16px}
+@media(max-width:560px){.bk-grid{grid-template-columns:1fr 1fr}}
+.bk-box{border-radius:12px;padding:16px;text-align:center}
+.bk-val{font-size:24px;font-weight:900;font-family:var(--font-head);margin-bottom:4px}
+.bk-topic{font-size:11px;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:.5px}
+.bk-bar-wrap{height:4px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;margin-top:8px}
+.bk-bar{height:100%;border-radius:99px}
+
+/* ── SHARE CARD ── */
+.share-card{background:linear-gradient(135deg,rgba(139,92,246,0.08),rgba(30,27,139,0.3));border:1px solid rgba(139,92,246,0.25);border-radius:16px;padding:24px;text-align:center;margin-bottom:24px}
+
+/* ── PRINT STYLES ── */
+@media print{
+  header,.ctrl-bar,.breakdown-card,.share-card,.next-steps,
+  .ticker-wrap,footer,nav{display:none!important}
+  body{background:white!important;margin:0;padding:0}
+  .cert-page{padding:0;max-width:none}
+  .cert-outer{
+    box-shadow:none!important;
+    border-radius:0!important;
+    margin:0!important;
+    page-break-inside:avoid;
+    min-height:auto;
+  }
+  .cert-inner{padding:40px 56px 36px}
+  @page{margin:8mm;size:A4 landscape}
+}
+</style>
+</head>
+<body>
+
+<header class="ea-header">
+  <div class="ea-header-inner">
+    <a href="index.html" class="ea-logo">
+      <img src="assets/logo.png" alt="Eagle Academy" onerror="this.style.display='none'"/>
+      <div class="ea-logo-text"><div class="brand">EAGLE ACADEMY</div><div class="sub">Freight Dispatcher Certification</div></div>
+    </a>
+    <nav class="ea-nav">
+      <a href="index.html" class="ea-nav-btn">🏠 Home</a>
+      <a href="exam.html" class="ea-nav-btn">📝 Exam</a>
+      <a href="certificate.html" class="ea-nav-btn active">🎓 Certificate</a>
+    </nav>
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en',this)">EN</button>
+      <button class="lang-btn" onclick="setLang('hi',this)">हिं</button>
+    </div>
+  </div>
+</header>
+
+<!-- ══ MANUAL ENTRY (shown if no localStorage data) ══ -->
+<div id="entry_section" style="display:none">
+  <div class="cert-page">
+    <div class="entry-card">
+      <div style="font-size:48px;margin-bottom:12px">🎓</div>
+      <h2 style="font-size:22px;font-weight:900;margin-bottom:6px">Generate Your Certificate</h2>
+      <p style="font-size:13px;color:var(--grey);margin-bottom:20px;line-height:1.7">Complete the exam to auto-fill this page, or enter your details manually below</p>
+      <input type="text" id="mn_name" class="fi" placeholder="Your Full Name" maxlength="60"/>
+      <select id="mn_grade" class="fi">
+        <option value="">Select Grade</option>
+        <option value="Pass">Pass (70–84%)</option>
+        <option value="Merit">Merit (85–94%)</option>
+        <option value="Distinction">Distinction (95%+)</option>
+      </select>
+      <input type="text" id="mn_score" class="fi" placeholder="Score e.g. 38/50" maxlength="10"/>
+      <input type="text" id="mn_date" class="fi" placeholder="Date e.g. 1 June 2025"/>
+      <br/>
+      <button class="btn-print" style="width:100%;padding:14px;font-size:15px;margin-top:8px" onclick="generateFromForm()">Generate Certificate →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ CERTIFICATE SECTION ══ -->
+<div id="cert_section" style="display:none">
+  <div class="cert-page">
+
+    <!-- Controls -->
+    <div class="ctrl-bar">
+      <div style="font-size:20px">🎓</div>
+      <div>
+        <div style="font-weight:700;font-size:15px" id="ctrl_name_preview">—</div>
+        <div style="font-size:12px;color:var(--grey)">Eagle Academy Certified</div>
+      </div>
+      <div style="flex:1"></div>
+      <span id="ctrl_grade_tag" style="padding:5px 14px;border-radius:99px;font-size:12px;font-weight:700"></span>
+      <button class="btn-print" onclick="window.print()">🖨️ Print Certificate</button>
+      <a href="exam.html" class="btn-retake">↩ Retake Exam</a>
+    </div>
+
+    <!-- ══ THE CERTIFICATE ══ -->
+    <div class="cert-outer" id="the_cert">
+      <div class="cert-band"></div>
+
+      <div class="cert-watermark" id="cert_wm">CERTIFIED</div>
+
+      <div class="cert-inner">
+
+        <!-- Header -->
+        <div class="cert-header">
+          <div class="cert-logo-block">
+            <img src="assets/logo.png" class="cert-logo-img" alt="Eagle Academy" onerror="this.style.display='none'"/>
+            <div>
+              <div class="cert-brand">EAGLE ACADEMY</div>
+              <div class="cert-brand-sub">International Freight Dispatcher</div>
+            </div>
+          </div>
+          <div style="text-align:right">
+            <div class="cert-uk-flag">🇬🇧</div>
+            <div style="font-size:10px;color:#888;letter-spacing:.5px;margin-top:2px;font-family:'Georgia',serif">UK Specialist</div>
+          </div>
+        </div>
+
+        <!-- Title -->
+        <div class="cert-title-block">
+          <div class="cert-of">Certificate of Achievement</div>
+          <div class="cert-main-title">International Freight Dispatcher</div>
+          <div class="cert-sub-title">Certification Programme · 80 Guided Learning Hours · 4 Weeks</div>
+        </div>
+
+        <div class="cert-divider"><div class="cert-divider-line"></div><div class="cert-diamond"></div><div class="cert-divider-line"></div></div>
+
+        <!-- Recipient -->
+        <div class="cert-presented">This certifies that</div>
+        <div class="cert-name" id="cert_name_print">Student Name</div>
+        <div class="cert-name-line"></div>
+
+        <!-- Body text -->
+        <div class="cert-body">
+          has successfully completed the <strong>Eagle Academy International Freight Dispatcher Certification Programme</strong>,
+          demonstrating comprehensive knowledge of <strong>UK transport law, DVSA compliance, drivers' hours regulations,
+          tachograph law, CMR documentation, Courier Exchange operations, UK pallet networks</strong> and
+          professional freight dispatch business practice.
+        </div>
+
+        <!-- Modules -->
+        <div class="cert-modules">
+          <span class="cert-mod">🇬🇧 UK Transport Law</span>
+          <span class="cert-mod">DVSA Compliance</span>
+          <span class="cert-mod">Drivers' Hours &amp; Tachograph</span>
+          <span class="cert-mod">CMR Documentation</span>
+          <span class="cert-mod">Courier Exchange</span>
+          <span class="cert-mod">UK Pallet Networks</span>
+          <span class="cert-mod">Rate Negotiation</span>
+          <span class="cert-mod">KPI &amp; Fleet Management</span>
+          <span class="cert-mod">Dispatch Business Operations</span>
+        </div>
+
+        <!-- Score + Grade -->
+        <div class="cert-score-row">
+          <div class="cert-score-badge">
+            <div class="csb-num" id="cert_score_print">—</div>
+            <div class="csb-lbl">Score</div>
+          </div>
+          <div class="cert-grade-badge" id="cert_grade_badge">
+            <div class="cgb-icon" id="cert_grade_icon">🎓</div>
+            <div class="cgb-text" id="cert_grade_text">Certified</div>
+            <div class="cgb-sub" id="cert_grade_sub">Eagle Academy</div>
+          </div>
+        </div>
+
+        <div class="cert-divider"><div class="cert-divider-line"></div><div class="cert-diamond"></div><div class="cert-divider-line"></div></div>
+
+        <!-- Signatures -->
+        <div class="cert-bottom">
+          <div class="cert-sig-block">
+            <div class="cert-sig-name">Eagle Academy</div>
+            <div class="cert-sig-line"></div>
+            <div class="cert-sig-label">Academy Director</div>
+          </div>
+          <div class="cert-sig-block" style="text-align:center">
+            <div class="cert-sig-name" id="cert_date_print" style="font-style:normal;font-weight:700;color:#1e1b8b;font-size:14px">—</div>
+            <div class="cert-sig-line"></div>
+            <div class="cert-sig-label">Date of Award</div>
+          </div>
+          <div class="cert-sig-block" style="text-align:right">
+            <div class="cert-sig-name">UK Freight Operations</div>
+            <div class="cert-sig-line"></div>
+            <div class="cert-sig-label">Programme Examiner</div>
+          </div>
+        </div>
+
+        <!-- Certificate ID -->
+        <div class="cert-id" id="cert_id_print">CERTIFICATE ID: EA-IFDC-000000</div>
+
+      </div><!-- cert-inner -->
+      <div class="cert-band-btm"></div>
+    </div><!-- cert-outer -->
+
+    <!-- ══ SCORE BREAKDOWN ══ -->
+    <div class="breakdown-card" id="breakdown_card">
+      <div style="font-size:17px;font-weight:800;margin-bottom:4px">📊 Exam Breakdown</div>
+      <div style="font-size:13px;color:var(--grey)">Performance by week</div>
+      <div class="bk-grid">
+        <div class="bk-box" style="background:rgba(249,115,22,0.08);border:1px solid rgba(249,115,22,0.2)">
+          <div class="bk-val" style="color:var(--orange)" id="bk_w1">—</div>
+          <div class="bk-topic">Week 1<br/>Foundations</div>
+          <div class="bk-bar-wrap"><div class="bk-bar" style="background:var(--orange)" id="bk_bar1"></div></div>
+          <div style="font-size:10px;color:var(--grey);margin-top:4px">/ 15</div>
+        </div>
+        <div class="bk-box" style="background:rgba(6,182,212,0.08);border:1px solid rgba(6,182,212,0.2)">
+          <div class="bk-val" style="color:var(--cyan)" id="bk_w2">—</div>
+          <div class="bk-topic">Week 2<br/>Operations</div>
+          <div class="bk-bar-wrap"><div class="bk-bar" style="background:var(--cyan)" id="bk_bar2"></div></div>
+          <div style="font-size:10px;color:var(--grey);margin-top:4px">/ 12</div>
+        </div>
+        <div class="bk-box" style="background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2)">
+          <div class="bk-val" style="color:var(--green)" id="bk_w3">—</div>
+          <div class="bk-topic">Week 3 🇬🇧<br/>UK Law</div>
+          <div class="bk-bar-wrap"><div class="bk-bar" style="background:var(--green)" id="bk_bar3"></div></div>
+          <div style="font-size:10px;color:var(--grey);margin-top:4px">/ 15</div>
+        </div>
+        <div class="bk-box" style="background:rgba(139,92,246,0.08);border:1px solid rgba(139,92,246,0.2)">
+          <div class="bk-val" style="color:#a78bfa" id="bk_w4">—</div>
+          <div class="bk-topic">Week 4<br/>Career</div>
+          <div class="bk-bar-wrap"><div class="bk-bar" style="background:#7c3aed" id="bk_bar4"></div></div>
+          <div style="font-size:10px;color:var(--grey);margin-top:4px">/ 8</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ══ SHARE ══ -->
+    <div class="share-card">
+      <div style="font-size:24px;margin-bottom:8px">📢 Share Your Achievement</div>
+      <p style="font-size:14px;color:rgba(255,255,255,0.7);max-width:540px;margin:0 auto 16px;line-height:1.7">Share your certification on LinkedIn and tag Eagle Academy. UK transport recruiters search LinkedIn daily for certified dispatchers.</p>
+      <div style="background:rgba(30,27,139,0.5);border:1px solid rgba(139,92,246,0.3);border-radius:12px;padding:16px 20px;max-width:560px;margin:0 auto 16px;font-size:13px;color:rgba(255,255,255,0.85);line-height:1.8;text-align:left" id="linkedin_post">
+        🎓 Excited to share that I've just earned my <strong>Eagle Academy International Freight Dispatcher Certification!</strong><br/><br/>
+        80 hours of intensive training in UK transport law, DVSA compliance, drivers' hours &amp; tachograph regulations, CMR documentation, Courier Exchange, UK pallet networks (Palletforce, Pall-Ex, TPN), KPI management and freight dispatch business operations.<br/><br/>
+        🇬🇧 UK-focused · 🚛 HGV Operations · 📋 DVSA Compliant · 📦 Courier Exchange Certified<br/><br/>
+        Ready to help UK carriers find loads, manage compliance, and grow their operations — remotely from India during UK business hours.<br/><br/>
+        #FreightDispatcher #UKLogistics #DVSA #CourierExchange #EagleAcademy #HGV #UKTransport
+      </div>
+      <button onclick="copyPost()" class="btn-print" style="margin-right:8px">📋 Copy LinkedIn Post</button>
+      <button onclick="window.print()" class="btn-print" style="background:linear-gradient(135deg,var(--green),#16a34a)">🖨️ Print Certificate</button>
+    </div>
+
+    <!-- ══ NEXT STEPS ══ -->
+    <div class="next-steps" style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:24px;margin-bottom:32px">
+      <div style="font-size:17px;font-weight:800;margin-bottom:16px">🚀 What To Do Right Now</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div style="background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:10px;padding:14px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px">1. Upload to LinkedIn</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.6">Print → scan → add to LinkedIn Certifications section. UK recruiters check this daily.</div>
+        </div>
+        <div style="background:rgba(139,92,246,0.06);border:1px solid rgba(139,92,246,0.2);border-radius:10px;padding:14px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px">2. Apply to UK Jobs</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.6">Totaljobs.com, CV-Library.co.uk, Indeed.co.uk — search "remote freight dispatcher UK".</div>
+        </div>
+        <div style="background:rgba(249,115,22,0.06);border:1px solid rgba(249,115,22,0.2);border-radius:10px;padding:14px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px">3. Find First UK Carrier</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.6">Facebook: "UK Owner Operators" group. Pitch commission-only today. Zero cost to them.</div>
+        </div>
+        <div style="background:rgba(6,182,212,0.06);border:1px solid rgba(6,182,212,0.2);border-radius:10px;padding:14px">
+          <div style="font-size:14px;font-weight:700;margin-bottom:4px">4. Set Up Your Tools</div>
+          <div style="font-size:12px;color:rgba(255,255,255,0.55);line-height:1.6">UK number (Vonage/CallHippo ~£15/mo), Courier Exchange membership, Google Sheets tracker.</div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- cert-page -->
+</div><!-- cert_section -->
+
+<script src="assets/app.js"></script>
+<script>
+function setLang(l,btn){document.querySelectorAll('.lang-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');}
+
+const GRADE_STYLES={
+  'Pass':{badgeClass:'grade-pass',icon:'🎓',text:'Certified',sub:'Eagle Academy',wm:'CERTIFIED',ctrlBg:'rgba(139,92,246,0.15)',ctrlColor:'#a78bfa'},
+  'Merit':{badgeClass:'grade-merit',icon:'🎖️',text:'Merit',sub:'Eagle Academy',wm:'MERIT',ctrlBg:'rgba(34,197,94,0.15)',ctrlColor:'var(--green)'},
+  'Distinction':{badgeClass:'grade-distinction',icon:'🏅',text:'Distinction',sub:'Eagle Academy',wm:'DISTINCTION',ctrlBg:'rgba(251,191,36,0.15)',ctrlColor:'var(--gold)'},
+  'Retake':{badgeClass:'grade-pass',icon:'📚',text:'Retake',sub:'Not yet passed',wm:'',ctrlBg:'rgba(239,68,68,0.12)',ctrlColor:'var(--red)'}
+};
+
+function buildCert(data){
+  // fill certificate
+  document.getElementById('cert_name_print').textContent = data.name || '—';
+  document.getElementById('cert_score_print').textContent = data.score && data.total ? data.score+'/'+data.total : (data.scoreStr || '—');
+  document.getElementById('cert_date_print').textContent = data.date || new Date().toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric'});
+
+  // grade styling
+  const gs = GRADE_STYLES[data.grade] || GRADE_STYLES['Pass'];
+  const gb = document.getElementById('cert_grade_badge');
+  gb.className = 'cert-grade-badge '+gs.badgeClass;
+  document.getElementById('cert_grade_icon').textContent = gs.icon;
+  document.getElementById('cert_grade_text').textContent = gs.text;
+  document.getElementById('cert_grade_sub').textContent = gs.sub;
+  document.getElementById('cert_wm').textContent = gs.wm;
+
+  // cert ID
+  const id = 'EA-IFDC-'+(data.name||'X').replace(/\s+/g,'').toUpperCase().slice(0,3)+(Date.now()%100000);
+  document.getElementById('cert_id_print').textContent = 'CERTIFICATE ID: '+id;
+
+  // controls bar
+  document.getElementById('ctrl_name_preview').textContent = data.name || '—';
+  const ct = document.getElementById('ctrl_grade_tag');
+  ct.textContent = data.grade || 'Certified';
+  ct.style.background = gs.ctrlBg;
+  ct.style.color = gs.ctrlColor;
+  ct.style.border = '1px solid '+gs.ctrlColor;
+
+  // breakdown bars
+  if(data.w1!==undefined){
+    document.getElementById('bk_w1').textContent = data.w1;
+    document.getElementById('bk_w2').textContent = data.w2;
+    document.getElementById('bk_w3').textContent = data.w3;
+    document.getElementById('bk_w4').textContent = data.w4;
+    document.getElementById('bk_bar1').style.width = Math.round(data.w1/15*100)+'%';
+    document.getElementById('bk_bar2').style.width = Math.round(data.w2/12*100)+'%';
+    document.getElementById('bk_bar3').style.width = Math.round(data.w3/15*100)+'%';
+    document.getElementById('bk_bar4').style.width = Math.round(data.w4/8*100)+'%';
+  } else {
+    document.getElementById('breakdown_card').style.display='none';
+  }
+
+  // linkedin post update
+  const lp = document.getElementById('linkedin_post');
+  if(lp && data.name){
+    const gradeStr = data.grade==='Distinction'?'with Distinction 🏅':data.grade==='Merit'?'with Merit 🎖️':'';
+    lp.innerHTML = `🎓 Excited to share that I've just earned my <strong>Eagle Academy International Freight Dispatcher Certification ${gradeStr}!</strong><br/><br/>Scored <strong>${data.score||'—'}/${data.total||50}</strong> across 80 hours of intensive training in UK transport law, DVSA compliance, tachograph regulations, CMR documentation, Courier Exchange, UK pallet networks and freight dispatch operations.<br/><br/>🇬🇧 UK-focused · 🚛 HGV Operations · 📋 DVSA Compliant · 📦 Courier Exchange<br/><br/>Ready to help UK carriers operate compliantly and profitably — remotely from India during UK business hours.<br/><br/>#FreightDispatcher #UKLogistics #DVSA #CourierExchange #EagleAcademy #HGV #UKTransport`;
+  }
+
+  // show cert section
+  document.getElementById('entry_section').style.display='none';
+  document.getElementById('cert_section').style.display='block';
+}
+
+function generateFromForm(){
+  const name = document.getElementById('mn_name').value.trim();
+  const grade = document.getElementById('mn_grade').value;
+  const scoreStr = document.getElementById('mn_score').value.trim();
+  const date = document.getElementById('mn_date').value.trim();
+  if(!name){alert('Please enter your name.');return;}
+  if(!grade){alert('Please select a grade.');return;}
+  const parts = scoreStr.split('/');
+  buildCert({name, grade, score:parts[0]||'—', total:parts[1]||50, scoreStr, date:date||new Date().toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric'})});
+}
+
+function copyPost(){
+  const lp = document.getElementById('linkedin_post');
+  const txt = lp.innerText || lp.textContent;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(txt).then(()=>{
+      const btn = event.target;btn.textContent='✅ Copied!';setTimeout(()=>btn.textContent='📋 Copy LinkedIn Post',2500);
+    });
+  } else {
+    const ta = document.createElement('textarea');ta.value=txt;document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);
+    const btn = event.target;btn.textContent='✅ Copied!';setTimeout(()=>btn.textContent='📋 Copy LinkedIn Post',2500);
+  }
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded',()=>{
+  let data = null;
+  try{data = JSON.parse(localStorage.getItem('ea_cert'));}catch(e){}
+
+  if(data && data.name && data.pct >= 70){
+    buildCert(data);
+  } else if(data && data.name && data.pct < 70){
+    // failed exam — show entry with note
+    document.getElementById('entry_section').style.display='block';
+    const note = document.createElement('div');
+    note.style.cssText='background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;padding:12px 16px;margin-bottom:16px;font-size:13px;color:var(--red);line-height:1.7';
+    note.innerHTML='<strong>Score: '+data.score+'/'+data.total+' ('+data.pct+'%)</strong> — Below 70%. Review your weak topics and <a href="exam.html" style="color:var(--orange)">retake the exam</a> to earn your certificate.';
+    document.querySelector('.entry-card').insertBefore(note, document.querySelector('.fi'));
+  } else {
+    // No exam data — show form
+    document.getElementById('entry_section').style.display='block';
+    // Pre-fill today's date
+    document.getElementById('mn_date').value = new Date().toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric'});
+  }
+});
+</script>
+</body>
+</html>
