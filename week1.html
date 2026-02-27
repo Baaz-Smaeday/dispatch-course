@@ -2182,8 +2182,8 @@ function toggleHindi(hiBlockId) {
 // ── Audio / TTS ──────────────────────────────────
 let currentUtterance = null;
 let currentBtnId = null;
-let currentLang = null;
-let currentTextId = null;
+let audioLang = null;
+let audioTextId = null;
 
 // Load voices (needed on some browsers)
 window.speechSynthesis.onvoiceschanged = () => { window.speechSynthesis.getVoices(); };
@@ -2202,7 +2202,7 @@ function speakTopic(lang, textId, btnId) {
 
   // Auto-show Hindi text when Hindi audio starts
   if (lang === 'hi') {
-    const hiBlock = textEl.closest('.topic-card')?.querySelector('.content-hi-block');
+    const hiBlock = textEl.closest('.topic-card') && textEl.closest('.topic-card').querySelector('.content-hi-block');
     if (hiBlock) hiBlock.classList.add('show');
   }
 
@@ -2234,8 +2234,8 @@ function speakTopic(lang, textId, btnId) {
 
   currentUtterance = utt;
   currentBtnId = btnId;
-  currentLang = lang;
-  currentTextId = textId;
+  audioLang = lang;
+  audioTextId = textId;
   window.speechSynthesis.speak(utt);
 }
 
