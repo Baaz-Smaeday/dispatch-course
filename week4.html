@@ -98,28 +98,154 @@
 
 @media(max-width:640px){.day-hero{flex-direction:column;padding:20px}.main-wrap{padding:20px 16px}}
 </style>
-<style>
-  /* Eagle Academy Brand Stripe */
-  .site-header::after {
-    content: '';
-    position: absolute;
-    bottom: -2px; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent 0%, #F47920 30%, #2B2BA8 60%, #F47920 80%, transparent 100%);
-    opacity: 0.8;
-  }
-  /* Enhanced card borders with brand blue */
-  .card {
-    border-color: rgba(43,43,168,0.35) !important;
-  }
-  .card:hover {
-    border-color: rgba(244,121,32,0.5) !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(244,121,32,0.2) !important;
-  }
-  /* XP bar Eagle brand */
-  .xp-fill {
-    background: linear-gradient(90deg, #F47920, #2B2BA8) !important;
-  }
+<style id="ea-light-theme">
+/* ═══ EAGLE ACADEMY CLASSROOM LIGHT THEME ═══ */
+
+/* BASE */
+html, body { background: #f0f2f8 !important; color: #1a1a5e !important; }
+.page-bg   { background: #f0f2f8 !important; }
+
+/* HEADER — stays Eagle Navy */
+.ea-header, .site-header {
+  background: #2B2BA8 !important;
+  border-bottom: 4px solid #F47920 !important;
+}
+.ea-header *, .site-header * { color: #ffffff !important; }
+.ea-nav-btn.active, .nav-tab.active { background: #F47920 !important; color: #ffffff !important; }
+.ea-logo-text .sub, .logo-text-sub { color: #F47920 !important; }
+
+/* TICKER — stays dark navy */
+.ticker-wrap { background: #16166a !important; }
+.ticker-item { color: rgba(255,255,255,0.90) !important; }
+
+/* STREAK BANNER */
+.streak-banner { background: linear-gradient(135deg, #1e1e8f, #2B2BA8) !important; color: #ffffff !important; }
+.streak-banner * { color: #ffffff !important; }
+
+/* WEEK HERO — stays navy */
+.week-hero, .day-hero-header {
+  background: linear-gradient(135deg, #2B2BA8 0%, #1e1e8f 100%) !important;
+  color: #ffffff !important;
+}
+.week-hero * { color: #ffffff !important; }
+.week-hero .week-hero-hi { color: #F47920 !important; }
+.week-hero .tag { color: #ffffff !important; }
+
+/* DAY TABS BAR */
+.day-tabs-wrap, [class*="day-tabs"] {
+  background: #2B2BA8 !important;
+  border: none !important;
+}
+.day-tab { color: rgba(255,255,255,0.75) !important; background: transparent !important; }
+.day-tab:hover { background: rgba(255,255,255,0.12) !important; color: #ffffff !important; }
+.day-tab.active { background: #F47920 !important; color: #ffffff !important; border-color: #d4661a !important; }
+.day-tab.complete { background: rgba(22,197,94,0.25) !important; color: #16a34a !important; }
+
+/* XP BAR */
+.xp-bar-wrap { background: #ffffff !important; border: 1px solid rgba(43,43,168,0.15) !important; }
+.xp-label { color: #F47920 !important; }
+.xp-val   { color: #2B2BA8 !important; }
+.xp-track { background: rgba(43,43,168,0.12) !important; }
+.xp-fill  { background: linear-gradient(90deg, #F47920, #2B2BA8) !important; }
+
+/* ALL CARDS — white with readable dark text */
+.card, .topic-card, .tool-card, .cc, .pdw,
+[class*="-card"], .quiz-wrap, .day-section,
+.lesson-box, .info-box-wrap, .result-card,
+div[style*="border-radius"][style*="background"] {
+  background: #ffffff !important;
+  color: #1a1a5e !important;
+}
+
+/* FORCE ALL TEXT DARK IN CONTENT AREA */
+.main-wrap *,
+.main-wrap h1, .main-wrap h2, .main-wrap h3, .main-wrap h4, .main-wrap h5,
+.main-wrap p, .main-wrap span, .main-wrap li, .main-wrap td, .main-wrap th,
+.main-wrap label, .main-wrap div {
+  color: #1a1a5e;
+}
+
+/* EXCEPTIONS — things that should stay coloured */
+.main-wrap .tag-orange, .main-wrap .tag-orange * { color: #c45e10 !important; }
+.main-wrap .tag-green,  .main-wrap .tag-green  * { color: #16a34a !important; }
+.main-wrap .tag-cyan,   .main-wrap .tag-cyan   * { color: #0891b2 !important; }
+.main-wrap .tag-red,    .main-wrap .tag-red    * { color: #dc2626 !important; }
+.main-wrap .text-orange, .main-wrap [style*="color: #F47920"], .main-wrap [style*="color:#F47920"] { color: #F47920 !important; }
+.main-wrap .btn-primary, .main-wrap .btn-primary * { color: #ffffff !important; }
+.main-wrap .btn-navy,    .main-wrap .btn-navy *    { color: #ffffff !important; }
+.main-wrap .btn-listen * { color: #0891b2 !important; }
+.main-wrap .btn-stop *   { color: #dc2626 !important; }
+
+/* Hindi text */
+.main-wrap [lang="hi"], .main-wrap .hi-text, .main-wrap span[style*="color: #F47920"],
+.main-wrap span[style*="color:#F47920"] { color: #F47920 !important; }
+
+/* Secondary/muted text */
+.main-wrap .text-muted, .main-wrap .text-grey,
+.main-wrap small { color: #6666aa !important; }
+
+/* Topic card letter icons A B C D */
+.topic-icon, .day-icon, .lesson-icon,
+[class*="topic-icon"], [class*="day-icon"],
+div[style*="width:44px"][style*="height:44px"],
+div[style*="width: 44px"][style*="height: 44px"],
+div[style*="border-radius:10px"][style*="font-weight:800"] { color: #ffffff !important; }
+
+/* Quiz options */
+.q-opt, .quiz-opt {
+  background: #f8f9ff !important;
+  color: #1a1a5e !important;
+  border-color: rgba(43,43,168,0.18) !important;
+}
+.q-opt:hover, .quiz-opt:hover { background: rgba(244,121,32,0.08) !important; border-color: rgba(244,121,32,0.50) !important; }
+.q-opt.correct { background: rgba(22,163,74,0.12) !important; color: #16a34a !important; border-color: #16a34a !important; }
+.q-opt.wrong   { background: rgba(220,38,38,0.10) !important; color: #dc2626 !important; border-color: #dc2626 !important; }
+
+/* Madam JI popup */
+#mj-popup {
+  background: #ffffff !important;
+  border: 1px solid rgba(43,43,168,0.20) !important;
+  box-shadow: 0 8px 40px rgba(43,43,168,0.20) !important;
+}
+#mj-popup .mj-hdr {
+  background: linear-gradient(135deg, #2B2BA8, #1e1e8f) !important;
+}
+#mj-popup .mj-hdr * { color: #ffffff !important; }
+#mj-popup .mj-msg.bot { background: #f4f6fb !important; color: #1a1a5e !important; border: 1px solid rgba(43,43,168,0.12) !important; }
+#mj-popup .mj-msg.user { background: #2B2BA8 !important; color: #ffffff !important; }
+#mj-popup #mj-input { background: #f8f9ff !important; color: #1a1a5e !important; border: 1px solid rgba(43,43,168,0.20) !important; }
+#mj-popup #mj-input::placeholder { color: #8888aa !important; }
+#mj-popup * { color: #1a1a5e; }
+#mj-popup .mj-hdr *, #mj-popup .mj-msg.user * { color: #ffffff !important; }
+#mj-popup .mj-chip { color: #2B2BA8 !important; background: rgba(43,43,168,0.08) !important; border-color: rgba(43,43,168,0.25) !important; }
+#mj-popup .mj-chip-hi { color: #F47920 !important; background: rgba(244,121,32,0.08) !important; }
+
+/* Tools popup */
+#tools-popup { background: #ffffff !important; color: #1a1a5e !important; border: 1px solid rgba(43,43,168,0.18) !important; }
+#tools-popup * { color: #1a1a5e !important; }
+#tools-popup .tools-hdr, #tools-popup .tools-hdr * { color: #ffffff !important; }
+
+/* PROGRESS BARS */
+.progress-track { background: rgba(43,43,168,0.12) !important; }
+.progress-fill  { background: linear-gradient(90deg, #F47920, #2B2BA8) !important; }
+
+/* INPUTS */
+input, textarea, select {
+  background: #f8f9ff !important;
+  color: #1a1a5e !important;
+  border: 1px solid rgba(43,43,168,0.20) !important;
+}
+input::placeholder, textarea::placeholder { color: #8888aa !important; }
+
+/* FOOTER */
+.site-footer { background: #ffffff !important; border-top: 1px solid rgba(43,43,168,0.12) !important; color: #6666aa !important; }
+
+/* TOAST */
+.toast { background: #ffffff !important; color: #1a1a5e !important; border-color: rgba(43,43,168,0.20) !important; }
+
+/* SCROLLBAR */
+::-webkit-scrollbar-track { background: #eef0f8 !important; }
+::-webkit-scrollbar-thumb { background: #2B2BA8 !important; }
 </style>
 </head>
 <body>
@@ -1361,7 +1487,7 @@ document.addEventListener('DOMContentLoaded',()=>{
 .mj-pop-key input { width: 100%; padding: 7px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(43,43,168,0.3); border-radius: 8px; color: white; font-family: monospace; font-size: 11px; outline: none; box-sizing: border-box; }
 .mj-pop-key input::placeholder { color: rgba(255,255,255,0.25); }
 .mj-pop-input { padding: 10px 12px; border-top: 1px solid rgba(43,43,168,0.15); display: flex; gap: 8px; flex-shrink: 0; }
-.mj-pop-input input { flex: 1; padding: 9px 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(43,43,168,0.25); border-radius: 10px; color: white; font-size: 13px; font-family: 'DM Sans',sans-serif; outline: none; }
+.mj-pop-input input { flex: 1; padding: 9px 12px; background: #f4f6fb; border: 1px solid rgba(43,43,168,0.25); border-radius: 10px; color: white; font-size: 13px; font-family: 'DM Sans',sans-serif; outline: none; }
 .mj-pop-input input:focus { border-color: rgba(43,43,168,0.6); }
 .mj-pop-input input::placeholder { color: rgba(255,255,255,0.2); }
 .mj-send { padding: 9px 14px; background: linear-gradient(135deg,#7c3aed,#4f46e5); border: none; border-radius: 10px; color: white; cursor: pointer; font-size: 15px; flex-shrink: 0; }
@@ -1514,7 +1640,7 @@ document.addEventListener('DOMContentLoaded',()=>{
     </div>
   </div>
   <div class="mj-pop-key" id="mj-key-row" style="display:none">
-    <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:6px;line-height:1.5;">
+    <div style="font-size:11px;color: #8888aa;margin-bottom:6px;line-height:1.5;">
       🔑 Get your free API key at <strong style="color:#c4b5fd">console.anthropic.com</strong> — costs ~£2/month for a class
     </div>
     <input id="mj-api-input" type="password" placeholder="sk-ant-… paste your API key here" oninput="mjSaveKey(this.value)" style="font-size:11px;"/>
