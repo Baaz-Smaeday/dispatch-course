@@ -966,15 +966,13 @@ input::placeholder, textarea::placeholder { color: #8888aa !important; }
       <span style="margin-left:auto;font-size:11px;color:var(--grey);font-family:var(--font-mono);">~10 min</span>
     </div>
     <!-- Replace src below with your YouTube embed URL -->
-    <div class="video-placeholder-box" id="video_d1" onclick="loadVideo('d1','https://www.youtube.com/embed/YOUR_VIDEO_ID_HERE')">
-      <div class="play-circle">▶</div>
-      <div class="video-info">
-        <div class="title">Day 1: Welcome to Dispatch World</div>
-        <div class="meta">🎬 Add your YouTube video ID to see this video</div>
-      </div>
-    </div>
-    <div class="video-add-note">
-      💡 Instructor: Replace <code>YOUR_VIDEO_ID_HERE</code> in the HTML with your YouTube video ID to activate this player
+    <div class="video-iframe-wrap">
+      <iframe
+        src="https://www.youtube.com/embed/xG8VKXGSzPA?rel=0&modestbranding=1&color=white"
+        title="Eagle Academy — Course Introduction"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowfullscreen loading="lazy">
+      </iframe>
     </div>
   </div>
 
