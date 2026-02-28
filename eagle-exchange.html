@@ -83,7 +83,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
 
 /* FILTERS */
 .board-filters{padding:12px 16px;background:var(--surf2);border-bottom:1px solid var(--border);display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-.filter-select{background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;outline:none}
+.filter-select{background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 10px;font-size:12px;font-weight:600;color:var(--text);cursor:pointer;font-family:'DM Sans',sans-serif;outline:none;max-width:240px}
 .filter-select:focus{border-color:var(--navy)}
 .filter-search{flex:1;min-width:120px;background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);padding:6px 12px;font-size:12px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none}
 .filter-search:focus{border-color:var(--navy)}
@@ -333,12 +333,19 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
     <div class="board-filters">
       <select class="filter-select" id="filter-vehicle" onchange="applyFilters()">
         <option value="">All Vehicles</option>
-        <option value="Curtainsider">Curtainsider</option>
-        <option value="Box Van">Box Van</option>
-        <option value="Flatbed">Flatbed</option>
-        <option value="Refrigerated">Refrigerated</option>
-        <option value="Tanker">Tanker</option>
-        <option value="Low Loader">Low Loader</option>
+        <option value="Small Van">Small Van (450kg · 1 pallet)</option>
+        <option value="Short Wheelbase">Short Wheelbase (900kg · 1 pallet)</option>
+        <option value="Mid Wheelbase">Mid Wheelbase (700kg · 2 pallets)</option>
+        <option value="Long Wheelbase">Long Wheelbase (1,250kg · 3 pallets)</option>
+        <option value="Extra Long Wheelbase">Extra Long Wheelbase (1,000kg · 4 pallets)</option>
+        <option value="Luton Curtainside">Luton Curtainside (1,000kg · 6 pallets)</option>
+        <option value="Luton + Tail Lift">Luton + Tail Lift (1,000kg · 6 pallets)</option>
+        <option value="7.5t Curtainside">7.5t Curtainside (2,500kg · 10 pallets)</option>
+        <option value="7.5t + Tail Lift">7.5t + Tail Lift (2,500kg · 10 pallets)</option>
+        <option value="12t Curtainside">12t Curtainside (5,850kg · 14 pallets)</option>
+        <option value="18t Curtainside">18t Curtainside (9,500kg · 16 pallets)</option>
+        <option value="26t Curtainside">26t Curtainside (15,000kg · 18 pallets)</option>
+        <option value="Artic Curtainside">Artic Curtainside (26,000kg · 26 pallets)</option>
       </select>
       <select class="filter-select" id="filter-region" onchange="applyFilters()">
         <option value="">All Regions</option>
