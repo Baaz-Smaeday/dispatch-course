@@ -891,10 +891,10 @@ input::placeholder, textarea::placeholder { color: #8888aa !important; }
       Dispatch Foundation
     </h1>
     <p style="font-size:15px;color:var(--grey);margin-bottom:4px;">
-      Master freight types, geography, load boards, RPM calculation and Hours of Service rules
+      Master freight types, UK geography, Courier Exchange, CPM calculation and Hours of Service rules
     </p>
     <p style="font-size:14px;color:var(--orange);font-family:var(--font-hindi);">
-      डिस्पैच की नींव — माल ढुलाई के प्रकार, भूगोल, लोड बोर्ड, RPM गणना और HOS नियम
+      डिस्पैच की नींव — माल ढुलाई के प्रकार, UK भूगोल, Courier Exchange, CPM गणना और HOS नियम
     </p>
     <div class="week-progress-bar" style="margin-top:20px;max-width:500px;">
       <div class="label"><span>Week Progress</span><span id="week_pct">0%</span></div>
@@ -1338,6 +1338,27 @@ input::placeholder, textarea::placeholder { color: #8888aa !important; }
     <div style="margin-top:14px;padding:10px 14px;background:rgba(244,121,32,0.1);border-radius:var(--radius-md);font-size:12px;color:var(--orange);">
       💡 Tip from Madam JI: The DVSA O-Licence register is free and public — bookmark it now. You will use it every time you vet a new UK carrier. A carrier without a valid O-Licence cannot legally carry freight. Never dispatch for them!
     </div>
+  </div>
+
+
+  <!-- EAGLE EXCHANGE BANNER -->
+  <div style="margin:24px 0;background:linear-gradient(135deg,#1a1a5e,#2B2BA8);border-radius:14px;padding:24px 28px;display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap;box-shadow:0 4px 24px rgba(43,43,168,0.25)">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div style="width:56px;height:56px;background:linear-gradient(135deg,#F47920,#d4661a);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0">🦅</div>
+      <div>
+        <div style="font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:#fff;letter-spacing:.3px">Ready to practise? Open Eagle Exchange</div>
+        <div style="font-size:13px;color:rgba(255,255,255,0.75);margin-top:3px">Live UK load board simulator · Real Baaz Sameday rates · Negotiate, book & track loads</div>
+        <div style="display:flex;gap:8px;margin-top:8px;flex-wrap:wrap">
+          <span style="background:rgba(244,121,32,0.2);border:1px solid rgba(244,121,32,0.4);color:#F47920;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px">📦 15 UK Loads</span>
+          <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px">💬 Live Negotiation</span>
+          <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px">🗺️ UK Route Tracking</span>
+          <span style="background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.8);font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px">🏆 Leaderboard</span>
+        </div>
+      </div>
+    </div>
+    <a href="eagle-exchange.html" style="background:linear-gradient(135deg,#F47920,#d4661a);color:#fff;font-family:'Syne',sans-serif;font-weight:800;font-size:14px;padding:14px 28px;border-radius:10px;text-decoration:none;white-space:nowrap;box-shadow:0 4px 16px rgba(244,121,32,0.4);flex-shrink:0;transition:all .2s" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">
+      Open Eagle Exchange →
+    </a>
   </div>
 
   <div class="day-nav">
@@ -2339,7 +2360,7 @@ input::placeholder, textarea::placeholder { color: #8888aa !important; }
       <div class="t-num">B</div>
       <div class="t-titles">
         <div class="t-en">RPM Calculation & Targets — Your Profitability Formula</div>
-        <div class="t-hi">RPM गणना और लक्ष्य — आपकी लाभप्रदता का सूत्र</div>
+        <div class="t-hi">UK CPM गणना और लक्ष्य — आपकी लाभप्रदता का सूत्र</div>
       </div>
       <span class="t-arrow">›</span>
     </button>
@@ -2427,7 +2448,7 @@ input::placeholder, textarea::placeholder { color: #8888aa !important; }
             </div>
           </div>
           <div class="q-item">
-            <div class="q-text">4. Why must deadhead miles be included in RPM calculation?</div>
+            <div class="q-text">4. Why must deadhead miles be included in CPM calculation?</div>
             <div class="q-opts">
               <button class="q-opt" onclick="checkAns(this,'qb_5_2','q4',false)">A. They are not needed — only loaded miles count</button>
               <button class="q-opt" onclick="checkAns(this,'qb_5_2','q4',true)">B. The carrier pays for deadhead fuel — it reduces actual profitability</button>
@@ -2563,7 +2584,7 @@ input::placeholder, textarea::placeholder { color: #8888aa !important; }
       </div>
     </div>
     <p style="font-size:14px;color:rgba(255,255,255,0.8);line-height:1.8;margin-bottom:16px;">
-      You have covered all 5 days of Week 1 Foundation. You now understand the industry structure, trailer types, US geography, time zones, HOS rules, DAT load boards, RPM calculation, and red flag identification. This is the foundation everything else builds on.
+      You have covered all 5 days of Week 1 Foundation. Now put your skills to the test on Eagle Exchange — the live UK load board simulator. You now understand the industry structure, trailer types, US geography, time zones, HOS rules, DAT load boards, RPM calculation, and red flag identification. This is the foundation everything else builds on.
     </p>
     <div style="display:flex;gap:12px;flex-wrap:wrap;">
       <a href="week2.html" class="btn btn-primary btn-lg">Continue to Week 2 →</a>
