@@ -282,9 +282,19 @@ input::placeholder, textarea::placeholder { color: #8888aa !important; }
       <div id="r_uk" data-seg="seg_rate">
         <label class="tl">Vehicle Type</label>
         <select class="tf" id="r_uk_vtype" onchange="setUKVehicleDefaults();calcUKRate()" style="margin-bottom:10px">
-          <option value="artic">🚛 Artic (44t) — £1.50/mile default</option>
-          <option value="rigid">🚚 Rigid HGV (18t) — £1.25/mile default</option>
-          <option value="van">🚐 LWB/XL Van — £0.85/mile default</option>
+          <option value="small_van">🚐 Small Van (450kg · 1 pallet)</option>
+          <option value="swb">🚐 Short Wheelbase (900kg · 1 pallet)</option>
+          <option value="mwb">🚐 Mid Wheelbase (700kg · 2 pallets)</option>
+          <option value="lwb">🚙 Long Wheelbase (1,250kg · 3 pallets)</option>
+          <option value="xlwb">🚙 Extra Long Wheelbase (1,000kg · 4 pallets)</option>
+          <option value="luton">🚛 Luton Curtainside (1,000kg · 6 pallets)</option>
+          <option value="luton_tl">🚛 Luton + Tail Lift (1,000kg · 6 pallets)</option>
+          <option value="t75">🚚 7.5t Curtainside (2,500kg · 10 pallets)</option>
+          <option value="t75_tl">🚚 7.5t + Tail Lift (2,500kg · 10 pallets)</option>
+          <option value="t12">🚚 12t Curtainside (5,850kg · 14 pallets)</option>
+          <option value="t18">🚚 18t Curtainside (9,500kg · 16 pallets)</option>
+          <option value="t26">🚛 26t Curtainside (15,000kg · 18 pallets)</option>
+          <option value="artic">🚛 Artic Curtainside (26,000kg · 26 pallets)</option>
         </select>
         <label class="tl">Load Rate (£)</label>
         <input type="number" class="tf" id="r_uk_rate" placeholder="e.g. 1200" oninput="calcUKRate()"/>
@@ -613,10 +623,25 @@ function segSwitch(segId,btn,showId){
 }
 
 /* ─── TOOL 1: UK/US Rate Calculator ─── */
+// Real Baaz Sameday rate sheet — mid-range per mile (avg of low/high for 50+ miles)
+const BAAZ_CPM = {
+  small_van:'1.00', swb:'1.10', mwb:'1.20', lwb:'1.30', xlwb:'1.40',
+  luton:'1.60', luton_tl:'1.75', t75:'2.50', t75_tl:'2.75',
+  t12:'3.00', t18:'3.25', t26:'3.50', artic:'3.75'
+};
+const BAAZ_MIN30 = {
+  small_van:50, swb:60, mwb:65, lwb:70, xlwb:75,
+  luton:95, luton_tl:100, t75:225, t75_tl:250,
+  t12:300, t18:350, t26:385, artic:445
+};
+const BAAZ_MIN50 = {
+  small_van:65, swb:75, mwb:80, lwb:85, xlwb:90,
+  luton:120, luton_tl:125, t75:275, t75_tl:300,
+  t12:350, t18:425, t26:450, artic:495
+};
 function setUKVehicleDefaults(){
   const v=document.getElementById('r_uk_vtype').value;
-  const defaults={artic:'1.50',rigid:'1.25',van:'0.85'};
-  document.getElementById('r_uk_cpm').value=defaults[v];
+  document.getElementById('r_uk_cpm').value = BAAZ_CPM[v] || '1.50';
 }
 function setUSVehicleDefaults(){
   const v=document.getElementById('r_us_vtype').value;
@@ -626,13 +651,32 @@ function setUSVehicleDefaults(){
 function calcUKRate(){
   const rate=parseFloat(document.getElementById('r_uk_rate').value)||0;
   const miles=parseFloat(document.getElementById('r_uk_miles').value)||0;
-  const cpm=parseFloat(document.getElementById('r_uk_cpm').value)||1.50;
+  const v=document.getElementById('r_uk_vtype').value;
+  const pmRate=parseFloat(BAAZ_CPM[v])||1.50;
   if(!rate||!miles)return;
-  const rpm=(rate/miles);const profit=rate-(cpm*miles);const profitPct=Math.round(profit/rate*100);
-  const el=document.getElementById('r_uk_result');el.style.display='block';
+  const rpm=rate/miles;
+  const cost=pmRate*miles;
+  const profit=rate-cost;
+  const profitPct=Math.round(profit/rate*100);
+  // Baaz min/market/target
+  let minRate, marketRate, targetRate;
+  const pmLow=parseFloat(BAAZ_CPM[v])-0.25, pmHigh=parseFloat(BAAZ_CPM[v])+0.25;
+  if(miles<=30){ minRate=BAAZ_MIN30[v]||0; marketRate=Math.round(minRate*1.15); targetRate=Math.round(minRate*1.30); }
+  else if(miles<=50){ minRate=BAAZ_MIN50[v]||0; marketRate=Math.round(minRate*1.12); targetRate=Math.round(minRate*1.25); }
+  else { const ex=miles-50; minRate=Math.round((BAAZ_MIN50[v]||0)+ex*pmLow); marketRate=Math.round((BAAZ_MIN50[v]||0)+ex*parseFloat(BAAZ_CPM[v])); targetRate=Math.round((BAAZ_MIN50[v]||0)+ex*pmHigh); }
+  const score = rate<=minRate ? Math.round(rate/minRate*30) : rate>=targetRate ? 100 : rate>=marketRate ? Math.round(60+(rate-marketRate)/(targetRate-marketRate)*40) : Math.round(30+(rate-minRate)/(marketRate-minRate)*30);
+  const scoreColor = score>=80?'#16a34a':score>=60?'#2B2BA8':score>=30?'#d97706':'#dc2626';
+  const el=document.getElementById('r_uk_result'); el.style.display='block';
   document.getElementById('r_uk_rpm').textContent='£'+rpm.toFixed(2)+'/mile';
-  document.getElementById('r_uk_sub').textContent=`Revenue: £${rate.toFixed(0)} | Cost: £${(cpm*miles).toFixed(0)} | Gross Profit: £${profit.toFixed(0)} (${profitPct}%)`;
-  el.className='result-box'+(rpm>=2.5?' result-good':rpm>=1.8?' result-warn':' result-bad');
+  document.getElementById('r_uk_sub').innerHTML=
+    `Revenue: £${rate.toFixed(0)} | Est. Cost: £${cost.toFixed(0)} | Gross Profit: £${profit.toFixed(0)} (${profitPct}%)<br/>
+    <span style="font-size:11px;margin-top:6px;display:block">
+      <span style="color:#dc2626">🔴 Min: £${minRate}</span> &nbsp;
+      <span style="color:#d97706">🟡 Market: £${marketRate}</span> &nbsp;
+      <span style="color:#16a34a">🟢 Target: £${targetRate}</span> &nbsp;&nbsp;
+      <strong style="color:${scoreColor}">Score: ${score}/100</strong>
+    </span>`;
+  el.className='result-box'+(rpm>=parseFloat(BAAZ_CPM[v])?' result-good':rpm>=(parseFloat(BAAZ_CPM[v])-0.5)?' result-warn':' result-bad');
 }
 function calcUSRate(){
   const rate=parseFloat(document.getElementById('r_us_rate').value)||0;
