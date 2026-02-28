@@ -30,7 +30,7 @@ body{background:var(--navy-dark)}
 .exam-sticky{position:sticky;top:64px;z-index:50;background:rgba(3,4,26,0.95);backdrop-filter:blur(16px);border-bottom:1px solid rgba(139,92,246,0.2);padding:12px 24px;margin:0 -24px 28px}
 .exam-sticky-inner{max-width:860px;margin:0 auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .timer-box{background:rgba(139,92,246,0.15);border:1px solid rgba(139,92,246,0.4);border-radius:10px;padding:8px 18px;font-family:var(--font-mono);font-size:22px;font-weight:900;color:var(--purple2);min-width:100px;text-align:center}
-.timer-box.warn{border-color:var(--orange);color:var(--orange);background:rgba(249,115,22,0.12)}
+.timer-box.warn{border-color:var(--orange);color:var(--orange);background:rgba(244,121,32,0.12)}
 .timer-box.danger{border-color:var(--red);color:var(--red);background:rgba(239,68,68,0.12);animation:pulseOrange 1s ease infinite}
 .progress-text{font-size:13px;color:var(--grey)}
 .progress-text span{color:var(--purple2);font-weight:700}
@@ -85,6 +85,29 @@ body{background:var(--navy-dark)}
 .tr-bar{height:100%;border-radius:99px;transition:width .8s ease}
 .tr-score{font-size:11px;color:var(--grey)}
 @media(max-width:560px){.topic-results{grid-template-columns:1fr}.score-strip{grid-template-columns:1fr 1fr}}
+</style>
+<style>
+  /* Eagle Academy Brand Stripe */
+  .site-header::after {
+    content: '';
+    position: absolute;
+    bottom: -2px; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent 0%, #F47920 30%, #2B2BA8 60%, #F47920 80%, transparent 100%);
+    opacity: 0.8;
+  }
+  /* Enhanced card borders with brand blue */
+  .card {
+    border-color: rgba(43,43,168,0.35) !important;
+  }
+  .card:hover {
+    border-color: rgba(244,121,32,0.5) !important;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(244,121,32,0.2) !important;
+  }
+  /* XP bar Eagle brand */
+  .xp-fill {
+    background: linear-gradient(90deg, #F47920, #2B2BA8) !important;
+  }
 </style>
 </head>
 <body>
@@ -161,107 +184,107 @@ body{background:var(--navy-dark)}
   <div class="exam-page" style="padding-top:0">
 
     <!-- WEEK 1 SECTION -->
-    <div class="section-divider"><div class="sl"></div><h3>Week 1 — Foundations</h3><span class="section-tag" style="background:rgba(249,115,22,0.15);color:var(--orange);border:1px solid rgba(249,115,22,0.3)">15 Questions</span><div class="sl"></div></div>
+    <div class="section-divider"><div class="sl"></div><h3>Week 1 — Foundations</h3><span class="section-tag" style="background:rgba(244,121,32,0.15);color:var(--orange);border:1px solid rgba(244,121,32,0.3)">15 Questions</span><div class="sl"></div></div>
 
-    <div class="eq" id="eq1"><div class="eq-meta"><div class="q-num">1</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Dispatch Role</span></div><div class="eq-text">A freight dispatcher works directly for:</div><div class="eq-opts">
+    <div class="eq" id="eq1"><div class="eq-meta"><div class="q-num">1</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">Dispatch Role</span></div><div class="eq-text">A freight dispatcher works directly for:</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,1,false)">A. The broker</button>
       <button class="eo" onclick="pick(this,1,false)">B. The shipper</button>
       <button class="eo" onclick="pick(this,1,true)">C. The carrier (truck owner)</button>
       <button class="eo" onclick="pick(this,1,false)">D. The 3PL company</button>
     </div></div>
 
-    <div class="eq" id="eq2"><div class="eq-meta"><div class="q-num">2</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Trailer Types</span></div><div class="eq-text">Which trailer type requires temperature control and is used for food and pharmaceuticals?</div><div class="eq-opts">
+    <div class="eq" id="eq2"><div class="eq-meta"><div class="q-num">2</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">Trailer Types</span></div><div class="eq-text">Which trailer type requires temperature control and is used for food and pharmaceuticals?</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,2,false)">A. Dry Van</button>
       <button class="eo" onclick="pick(this,2,true)">B. Reefer (Refrigerated)</button>
       <button class="eo" onclick="pick(this,2,false)">C. Flatbed</button>
       <button class="eo" onclick="pick(this,2,false)">D. Step Deck</button>
     </div></div>
 
-    <div class="eq" id="eq3"><div class="eq-meta"><div class="q-num">3</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">USA HOS</span></div><div class="eq-text">Maximum daily driving hours for a USA truck driver under FMCSA rules is:</div><div class="eq-opts">
+    <div class="eq" id="eq3"><div class="eq-meta"><div class="q-num">3</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">USA HOS</span></div><div class="eq-text">Maximum daily driving hours for a USA truck driver under FMCSA rules is:</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,3,false)">A. 9 hours</button>
       <button class="eo" onclick="pick(this,3,false)">B. 10 hours</button>
       <button class="eo" onclick="pick(this,3,true)">C. 11 hours</button>
       <button class="eo" onclick="pick(this,3,false)">D. 14 hours</button>
     </div></div>
 
-    <div class="eq" id="eq4"><div class="eq-meta"><div class="q-num">4</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">RPM</span></div><div class="eq-text">A load pays $2,400 for 800 miles. What is the RPM?</div><div class="eq-opts">
+    <div class="eq" id="eq4"><div class="eq-meta"><div class="q-num">4</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">RPM</span></div><div class="eq-text">A load pays $2,400 for 800 miles. What is the RPM?</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,4,false)">A. $2.00</button>
       <button class="eo" onclick="pick(this,4,false)">B. $2.25</button>
       <button class="eo" onclick="pick(this,4,true)">C. $3.00</button>
       <button class="eo" onclick="pick(this,4,false)">D. $3.50</button>
     </div></div>
 
-    <div class="eq" id="eq5"><div class="eq-meta"><div class="q-num">5</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Load Boards</span></div><div class="eq-text">DAT is the #1 freight load board in the USA. Approximately how many loads are posted annually?</div><div class="eq-opts">
+    <div class="eq" id="eq5"><div class="eq-meta"><div class="q-num">5</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">Load Boards</span></div><div class="eq-text">DAT is the #1 freight load board in the USA. Approximately how many loads are posted annually?</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,5,false)">A. 10 million</button>
       <button class="eo" onclick="pick(this,5,false)">B. 100 million</button>
       <button class="eo" onclick="pick(this,5,true)">C. 500 million+</button>
       <button class="eo" onclick="pick(this,5,false)">D. 1 billion</button>
     </div></div>
 
-    <div class="eq" id="eq6"><div class="eq-meta"><div class="q-num">6</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Red Flags</span></div><div class="eq-text">Which of these is a load board RED FLAG — meaning you should NOT book the load?</div><div class="eq-opts">
+    <div class="eq" id="eq6"><div class="eq-meta"><div class="q-num">6</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">Red Flags</span></div><div class="eq-text">Which of these is a load board RED FLAG — meaning you should NOT book the load?</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,6,false)">A. Broker credit score of 95</button>
       <button class="eo" onclick="pick(this,6,true)">B. Broker credit score below 70 on DAT</button>
       <button class="eo" onclick="pick(this,6,false)">C. Standard 30-day payment terms</button>
       <button class="eo" onclick="pick(this,6,false)">D. FTL dry van load</button>
     </div></div>
 
-    <div class="eq" id="eq7"><div class="eq-meta"><div class="q-num">7</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">USA Geography</span></div><div class="eq-text">The most active freight lane in the USA is:</div><div class="eq-opts">
+    <div class="eq" id="eq7"><div class="eq-meta"><div class="q-num">7</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">USA Geography</span></div><div class="eq-text">The most active freight lane in the USA is:</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,7,true)">A. Chicago (IL) ↔ Los Angeles (CA)</button>
       <button class="eo" onclick="pick(this,7,false)">B. New York ↔ Seattle</button>
       <button class="eo" onclick="pick(this,7,false)">C. Miami ↔ Denver</button>
       <button class="eo" onclick="pick(this,7,false)">D. Dallas ↔ Phoenix</button>
     </div></div>
 
-    <div class="eq" id="eq8"><div class="eq-meta"><div class="q-num">8</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Time Zones</span></div><div class="eq-text">IST (India Standard Time) is how many hours ahead of USA Eastern Standard Time (EST)?</div><div class="eq-opts">
+    <div class="eq" id="eq8"><div class="eq-meta"><div class="q-num">8</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">Time Zones</span></div><div class="eq-text">IST (India Standard Time) is how many hours ahead of USA Eastern Standard Time (EST)?</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,8,false)">A. +5 hours</button>
       <button class="eo" onclick="pick(this,8,false)">B. +8 hours</button>
       <button class="eo" onclick="pick(this,8,true)">C. +10 hours 30 minutes</button>
       <button class="eo" onclick="pick(this,8,false)">D. +13 hours 30 minutes</button>
     </div></div>
 
-    <div class="eq" id="eq9"><div class="eq-meta"><div class="q-num">9</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">HOS</span></div><div class="eq-text">USA 14-Hour Window Rule means:</div><div class="eq-opts">
+    <div class="eq" id="eq9"><div class="eq-meta"><div class="q-num">9</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">HOS</span></div><div class="eq-text">USA 14-Hour Window Rule means:</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,9,false)">A. Driver can drive for 14 consecutive hours</button>
       <button class="eo" onclick="pick(this,9,true)">B. All driving must be completed within 14 hours of starting the shift</button>
       <button class="eo" onclick="pick(this,9,false)">C. Driver must rest after 14 hours of on-duty time only</button>
       <button class="eo" onclick="pick(this,9,false)">D. 14 hours applies only to flatbed drivers</button>
     </div></div>
 
-    <div class="eq" id="eq10"><div class="eq-meta"><div class="q-num">10</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Industry Structure</span></div><div class="eq-text">What is a 3PL company?</div><div class="eq-opts">
+    <div class="eq" id="eq10"><div class="eq-meta"><div class="q-num">10</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">Industry Structure</span></div><div class="eq-text">What is a 3PL company?</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,10,false)">A. A company that owns 3 trucks or fewer</button>
       <button class="eo" onclick="pick(this,10,true)">B. Third-Party Logistics — a company managing the full supply chain</button>
       <button class="eo" onclick="pick(this,10,false)">C. A government transport agency</button>
       <button class="eo" onclick="pick(this,10,false)">D. A load board platform</button>
     </div></div>
 
-    <div class="eq" id="eq11"><div class="eq-meta"><div class="q-num">11</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Trailer Types</span></div><div class="eq-text">Which UK trailer type has flexible curtain sides for side loading — very common on UK roads?</div><div class="eq-opts">
+    <div class="eq" id="eq11"><div class="eq-meta"><div class="q-num">11</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">Trailer Types</span></div><div class="eq-text">Which UK trailer type has flexible curtain sides for side loading — very common on UK roads?</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,11,false)">A. Dry Van</button>
       <button class="eo" onclick="pick(this,11,true)">B. Curtainsider</button>
       <button class="eo" onclick="pick(this,11,false)">C. Flatbed</button>
       <button class="eo" onclick="pick(this,11,false)">D. Tanker</button>
     </div></div>
 
-    <div class="eq" id="eq12"><div class="eq-meta"><div class="q-num">12</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">RPM Target</span></div><div class="eq-text">The minimum acceptable RPM for a dry van load in the USA is:</div><div class="eq-opts">
+    <div class="eq" id="eq12"><div class="eq-meta"><div class="q-num">12</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">RPM Target</span></div><div class="eq-text">The minimum acceptable RPM for a dry van load in the USA is:</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,12,false)">A. $1.00–1.50</button>
       <button class="eo" onclick="pick(this,12,false)">B. $1.50–2.00</button>
       <button class="eo" onclick="pick(this,12,true)">C. $2.50+</button>
       <button class="eo" onclick="pick(this,12,false)">D. $5.00+</button>
     </div></div>
 
-    <div class="eq" id="eq13"><div class="eq-meta"><div class="q-num">13</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">FTL vs LTL</span></div><div class="eq-text">FTL (Full Truckload) means:</div><div class="eq-opts">
+    <div class="eq" id="eq13"><div class="eq-meta"><div class="q-num">13</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">FTL vs LTL</span></div><div class="eq-text">FTL (Full Truckload) means:</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,13,false)">A. Multiple shippers share one truck</button>
       <button class="eo" onclick="pick(this,13,true)">B. One shipper fills the entire trailer</button>
       <button class="eo" onclick="pick(this,13,false)">C. The truck is less than 75% full</button>
       <button class="eo" onclick="pick(this,13,false)">D. Driver owns the freight</button>
     </div></div>
 
-    <div class="eq" id="eq14"><div class="eq-meta"><div class="q-num">14</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">FMCSA</span></div><div class="eq-text">Before dispatching for a US carrier, you must verify their authority at:</div><div class="eq-opts">
+    <div class="eq" id="eq14"><div class="eq-meta"><div class="q-num">14</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">FMCSA</span></div><div class="eq-text">Before dispatching for a US carrier, you must verify their authority at:</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,14,false)">A. DAT Load Board</button>
       <button class="eo" onclick="pick(this,14,false)">B. Courier Exchange</button>
       <button class="eo" onclick="pick(this,14,true)">C. FMCSA website (li.fmcsa.dot.gov)</button>
       <button class="eo" onclick="pick(this,14,false)">D. Companies House</button>
     </div></div>
 
-    <div class="eq" id="eq15"><div class="eq-meta"><div class="q-num">15</div><span class="q-tag" style="background:rgba(249,115,22,0.12);color:var(--orange);border:1px solid rgba(249,115,22,0.25)">Reefer Temp</span></div><div class="eq-text">Standard temperature for frozen food in a reefer trailer is:</div><div class="eq-opts">
+    <div class="eq" id="eq15"><div class="eq-meta"><div class="q-num">15</div><span class="q-tag" style="background:rgba(244,121,32,0.12);color:var(--orange);border:1px solid rgba(244,121,32,0.25)">Reefer Temp</span></div><div class="eq-text">Standard temperature for frozen food in a reefer trailer is:</div><div class="eq-opts">
       <button class="eo" onclick="pick(this,15,false)">A. 34–38°F</button>
       <button class="eo" onclick="pick(this,15,true)">B. -10 to 0°F</button>
       <button class="eo" onclick="pick(this,15,false)">C. 55–65°F</button>
@@ -543,7 +566,7 @@ body{background:var(--navy-dark)}
   </div>
 
   <div class="score-strip">
-    <div class="ss-box" style="background:rgba(249,115,22,0.1);border:1px solid rgba(249,115,22,0.2)">
+    <div class="ss-box" style="background:rgba(244,121,32,0.1);border:1px solid rgba(244,121,32,0.2)">
       <div class="ss-val" style="color:var(--orange)" id="ss_w1">—</div>
       <div class="ss-lbl">Week 1<br/>/ 15</div>
     </div>
@@ -675,7 +698,7 @@ function submitExam(){
 #mj-fab {
   position: fixed !important; bottom: 88px !important; right: 20px !important;
   z-index: 99999 !important; width: 64px; height: 64px; border-radius: 50%;
-  background: linear-gradient(135deg, #7c3aed, #4f46e5);
+  background: linear-gradient(135deg, #16166a, #2B2BA8);
   border: 2px solid rgba(168,85,247,0.5);
   outline: none; font-family: inherit;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
@@ -686,8 +709,8 @@ function submitExam(){
 #mj-fab:hover {
   transform: scale(1.12) !important;
   animation: none !important;
-  background: linear-gradient(135deg, #9333ea, #6366f1) !important;
-  box-shadow: 0 0 0 12px rgba(124,58,237,0.12), 0 8px 36px rgba(124,58,237,0.8) !important;
+  background: linear-gradient(135deg, #1e1e88, #3535c0) !important;
+  box-shadow: 0 0 0 12px rgba(43,43,168,0.12), 0 8px 36px rgba(43,43,168,0.8) !important;
 }
 /* Cycle wrapper — clips content to circle */
 .mj-cycle-wrap {
@@ -769,15 +792,15 @@ function submitExam(){
   50%      { transform: translateY(-7px); }
 }
 @keyframes mjColorCycle {
-  0%,100% { box-shadow: 0 4px 24px rgba(124,58,237,0.5); border-color: rgba(168,85,247,0.6); }
+  0%,100% { box-shadow: 0 4px 24px rgba(43,43,168,0.5); border-color: rgba(168,85,247,0.6); }
   33%     { box-shadow: 0 4px 28px rgba(99,102,241,0.7), 0 0 0 6px rgba(99,102,241,0.1); border-color: rgba(99,102,241,0.8); }
   66%     { box-shadow: 0 4px 28px rgba(219,39,119,0.7), 0 0 0 6px rgba(219,39,119,0.1); border-color: rgba(219,39,119,0.8); }
 }
 #mj-popup {
   position: fixed !important; bottom: 156px !important; right: 20px !important;
   z-index: 99998 !important; width: 360px; max-height: 540px;
-  background: rgba(15,12,61,0.98);
-  border: 1px solid rgba(124,58,237,0.4); border-radius: 20px;
+  background: rgba(14,14,74,0.98);
+  border: 1px solid rgba(43,43,168,0.4); border-radius: 20px;
   box-shadow: 0 16px 56px rgba(0,0,0,0.6);
   display: flex; flex-direction: column;
   transform: translateY(20px) scale(0.95); opacity: 0; pointer-events: none;
@@ -785,39 +808,39 @@ function submitExam(){
   backdrop-filter: blur(20px);
 }
 #mj-popup.open { transform: translateY(0) scale(1) !important; opacity: 1 !important; pointer-events: all !important; }
-.mj-pop-head { padding: 14px 16px; border-bottom: 1px solid rgba(124,58,237,0.2); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.mj-pop-orb { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#7c3aed,#f97316); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.mj-pop-head { padding: 14px 16px; border-bottom: 1px solid rgba(43,43,168,0.2); display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.mj-pop-orb { width: 36px; height: 36px; border-radius: 50%; background: linear-gradient(135deg,#7c3aed,#F47920); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
 .mj-pop-name { font-weight: 700; font-size: 13px; color: #f0f2f8; }
 .mj-pop-sub { font-size: 10px; color: rgba(168,85,247,0.9); font-family: monospace; letter-spacing: .5px; }
 .mj-pop-close { margin-left: auto; background: none; border: none; color: rgba(255,255,255,0.4); font-size: 18px; cursor: pointer; padding: 4px; line-height: 1; }
 .mj-pop-close:hover { color: white; }
 .mj-pop-msgs { flex: 1; overflow-y: auto; padding: 12px; display: flex; flex-direction: column; gap: 8px; max-height: 300px; scrollbar-width: thin; }
 .mj-msg { max-width: 85%; padding: 9px 12px; border-radius: 12px; font-size: 13px; line-height: 1.5; font-family: 'DM Sans',sans-serif; }
-.mj-msg.bot  { background: rgba(124,58,237,0.15); border: 1px solid rgba(124,58,237,0.2); color: #e2d9f3; border-bottom-left-radius: 3px; align-self: flex-start; }
-.mj-msg.user { background: rgba(249,115,22,0.15); border: 1px solid rgba(249,115,22,0.2); color: #fde8d8; border-bottom-right-radius: 3px; align-self: flex-end; }
+.mj-msg.bot  { background: rgba(43,43,168,0.15); border: 1px solid rgba(43,43,168,0.2); color: #e2d9f3; border-bottom-left-radius: 3px; align-self: flex-start; }
+.mj-msg.user { background: rgba(244,121,32,0.15); border: 1px solid rgba(244,121,32,0.2); color: #fde8d8; border-bottom-right-radius: 3px; align-self: flex-end; }
 .mj-msg.typing { display: flex; gap: 4px; align-items: center; padding: 12px; }
 .mj-dot { width: 7px; height: 7px; border-radius: 50%; background: #a855f7; animation: mjDotB .8s ease-in-out infinite; }
 .mj-dot:nth-child(2){animation-delay:.15s} .mj-dot:nth-child(3){animation-delay:.3s}
 @keyframes mjDotB { 0%,80%,100%{transform:scale(.6);opacity:.4} 40%{transform:scale(1);opacity:1} }
-.mj-pop-key { padding: 8px 12px; border-top: 1px solid rgba(124,58,237,0.15); flex-shrink: 0; }
-.mj-pop-key input { width: 100%; padding: 7px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(124,58,237,0.3); border-radius: 8px; color: white; font-family: monospace; font-size: 11px; outline: none; box-sizing: border-box; }
+.mj-pop-key { padding: 8px 12px; border-top: 1px solid rgba(43,43,168,0.15); flex-shrink: 0; }
+.mj-pop-key input { width: 100%; padding: 7px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(43,43,168,0.3); border-radius: 8px; color: white; font-family: monospace; font-size: 11px; outline: none; box-sizing: border-box; }
 .mj-pop-key input::placeholder { color: rgba(255,255,255,0.25); }
-.mj-pop-input { padding: 10px 12px; border-top: 1px solid rgba(124,58,237,0.15); display: flex; gap: 8px; flex-shrink: 0; }
-.mj-pop-input input { flex: 1; padding: 9px 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(124,58,237,0.25); border-radius: 10px; color: white; font-size: 13px; font-family: 'DM Sans',sans-serif; outline: none; }
-.mj-pop-input input:focus { border-color: rgba(124,58,237,0.6); }
+.mj-pop-input { padding: 10px 12px; border-top: 1px solid rgba(43,43,168,0.15); display: flex; gap: 8px; flex-shrink: 0; }
+.mj-pop-input input { flex: 1; padding: 9px 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(43,43,168,0.25); border-radius: 10px; color: white; font-size: 13px; font-family: 'DM Sans',sans-serif; outline: none; }
+.mj-pop-input input:focus { border-color: rgba(43,43,168,0.6); }
 .mj-pop-input input::placeholder { color: rgba(255,255,255,0.2); }
 .mj-send { padding: 9px 14px; background: linear-gradient(135deg,#7c3aed,#4f46e5); border: none; border-radius: 10px; color: white; cursor: pointer; font-size: 15px; flex-shrink: 0; }
 .mj-chips { display: flex; flex-wrap: wrap; gap: 5px; padding: 2px 0 6px; }
-.mj-chip { padding: 5px 11px; border-radius: 999px; border: 1px solid rgba(124,58,237,0.35); background: rgba(124,58,237,0.1); color: #c4b5fd; font-size: 11px; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: all .15s; }
-.mj-chip:hover { background: rgba(124,58,237,0.3); transform: scale(1.04); }
-.mj-chip-hi { border-color: rgba(249,115,22,0.4) !important; background: rgba(249,115,22,0.08) !important; color: #fed7aa !important; font-family: 'Noto Sans Devanagari', 'DM Sans', sans-serif !important; }
-.mj-chip-hi:hover { background: rgba(249,115,22,0.2) !important; }
+.mj-chip { padding: 5px 11px; border-radius: 999px; border: 1px solid rgba(43,43,168,0.35); background: rgba(43,43,168,0.1); color: #c4b5fd; font-size: 11px; cursor: pointer; font-family: 'DM Sans',sans-serif; transition: all .15s; }
+.mj-chip:hover { background: rgba(43,43,168,0.3); transform: scale(1.04); }
+.mj-chip-hi { border-color: rgba(244,121,32,0.4) !important; background: rgba(244,121,32,0.08) !important; color: #fed7aa !important; font-family: 'Noto Sans Devanagari', 'DM Sans', sans-serif !important; }
+.mj-chip-hi:hover { background: rgba(244,121,32,0.2) !important; }
 .mj-chip-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.35); letter-spacing: .8px; text-transform: uppercase; padding: 4px 0 2px; font-family: 'DM Sans', sans-serif; }
 #tools-fab {
   position: fixed !important; bottom: 20px !important; left: 20px !important;
   z-index: 99999 !important; width: 64px; height: 64px; border-radius: 50%;
-  background: linear-gradient(135deg, #f97316, #ea6c0a);
-  border: 2px solid rgba(249,115,22,0.5);
+  background: linear-gradient(135deg, #F47920, #d4661a);
+  border: 2px solid rgba(244,121,32,0.5);
   outline: none; font-family: inherit; overflow: hidden;
   cursor: pointer; display: flex; align-items: center; justify-content: center;
   animation: toolsBounce 2.5s ease-in-out 1.2s infinite, toolsColorCycle 4s ease-in-out 0.8s infinite;
@@ -826,8 +849,8 @@ function submitExam(){
 #tools-fab:hover {
   transform: scale(1.12) !important;
   animation: none !important;
-  background: linear-gradient(135deg, #fb923c, #f97316) !important;
-  box-shadow: 0 0 0 12px rgba(249,115,22,0.1), 0 8px 36px rgba(249,115,22,0.8) !important;
+  background: linear-gradient(135deg, #f79240, #F47920) !important;
+  box-shadow: 0 0 0 12px rgba(244,121,32,0.1), 0 8px 36px rgba(244,121,32,0.8) !important;
 }
 .tools-inner {
   display: flex; flex-direction: column;
@@ -872,42 +895,42 @@ function submitExam(){
   50%      { transform: translateY(-7px); }
 }
 @keyframes toolsColorCycle {
-  0%,100% { box-shadow: 0 4px 24px rgba(249,115,22,0.5); border-color: rgba(249,115,22,0.6); }
+  0%,100% { box-shadow: 0 4px 24px rgba(244,121,32,0.5); border-color: rgba(244,121,32,0.6); }
   33%     { box-shadow: 0 4px 28px rgba(245,158,11,0.7), 0 0 0 6px rgba(245,158,11,0.1); border-color: rgba(245,158,11,0.8); }
   66%     { box-shadow: 0 4px 28px rgba(239,68,68,0.7), 0 0 0 6px rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.8); }
 }
 #tools-popup {
   position: fixed !important; bottom: 88px !important; left: 20px !important;
   z-index: 99998 !important; width: 320px;
-  background: rgba(15,12,61,0.98);
-  border: 1px solid rgba(249,115,22,0.3); border-radius: 20px;
+  background: rgba(14,14,74,0.98);
+  border: 1px solid rgba(244,121,32,0.3); border-radius: 20px;
   box-shadow: 0 16px 56px rgba(0,0,0,0.6);
   transform: translateY(20px) scale(0.95); opacity: 0; pointer-events: none;
   transition: all .25s cubic-bezier(.22,1,.36,1);
   backdrop-filter: blur(20px); overflow: hidden;
 }
 #tools-popup.open { transform: translateY(0) scale(1) !important; opacity: 1 !important; pointer-events: all !important; }
-.tp-head { padding: 13px 16px; border-bottom: 1px solid rgba(249,115,22,0.15); display: flex; align-items: center; justify-content: space-between; }
+.tp-head { padding: 13px 16px; border-bottom: 1px solid rgba(244,121,32,0.15); display: flex; align-items: center; justify-content: space-between; }
 .tp-head-title { font-weight: 700; font-size: 13px; color: #f0f2f8; display: flex; align-items: center; gap: 7px; }
 .tp-close { background: none; border: none; color: rgba(255,255,255,0.4); font-size: 17px; cursor: pointer; }
 .tp-close:hover { color: white; }
 .tp-link { display: flex; align-items: center; gap: 12px; padding: 11px 16px; text-decoration: none; color: #f0f2f8; transition: background .15s; border-bottom: 1px solid rgba(255,255,255,0.05); }
 .tp-link:last-of-type { border-bottom: none; }
-.tp-link:hover { background: rgba(249,115,22,0.08); }
+.tp-link:hover { background: rgba(244,121,32,0.08); }
 .tp-icon { width: 34px; height: 34px; border-radius: 9px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
 .tp-name { font-size: 13px; font-weight: 600; }
 .tp-desc { font-size: 10px; color: rgba(255,255,255,0.35); margin-top: 1px; font-family: monospace; }
-.tp-all { display: block; text-align: center; padding: 10px; font-size: 12px; font-weight: 600; color: #f97316; text-decoration: none; background: rgba(249,115,22,0.06); }
-.tp-all:hover { background: rgba(249,115,22,0.12); }
+.tp-all { display: block; text-align: center; padding: 10px; font-size: 12px; font-weight: 600; color: #F47920; text-decoration: none; background: rgba(244,121,32,0.06); }
+.tp-all:hover { background: rgba(244,121,32,0.12); }
 .fab-tooltip {
   position: fixed !important; z-index: 99999 !important;
-  background: rgba(15,12,61,0.96); border-radius: 999px;
+  background: rgba(14,14,74,0.96); border-radius: 999px;
   font-size: 12px; font-weight: 700; font-family: 'DM Sans',sans-serif;
   padding: 6px 14px; white-space: nowrap; pointer-events: none;
   opacity: 0; transition: opacity .2s;
 }
-#mj-tooltip  { right: 84px; bottom: 100px; border: 1px solid rgba(124,58,237,0.5); color: #e9d5ff; }
-#tools-tooltip { left: 84px; bottom: 32px; border: 1px solid rgba(249,115,22,0.5); color: #fed7aa; }
+#mj-tooltip  { right: 84px; bottom: 100px; border: 1px solid rgba(43,43,168,0.5); color: #e9d5ff; }
+#tools-tooltip { left: 84px; bottom: 32px; border: 1px solid rgba(244,121,32,0.5); color: #fed7aa; }
 #mj-fab:hover    ~ #mj-tooltip    { opacity: 1; }
 #tools-fab:hover ~ #tools-tooltip { opacity: 1; }
 @media(max-width:480px){
@@ -1033,23 +1056,23 @@ function submitExam(){
   </div>
 </div>
 <style>
-.tp-tabs { display:flex; gap:0; border-bottom:1px solid rgba(249,115,22,0.15); }
+.tp-tabs { display:flex; gap:0; border-bottom:1px solid rgba(244,121,32,0.15); }
 .tp-tab { flex:1; padding:8px 4px; background:none; border:none; color:rgba(255,255,255,0.4); font-size:11px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; transition:all .15s; border-bottom:2px solid transparent; }
-.tp-tab.active { color:var(--orange,#f97316); border-bottom-color:var(--orange,#f97316); }
+.tp-tab.active { color:var(--orange,#F47920); border-bottom-color:var(--orange,#F47920); }
 .tp-tab:hover { color:rgba(255,255,255,0.8); }
 .tp-panel { padding:14px 16px; }
 .tp-field-row { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; gap:8px; }
 .tp-field-row label { font-size:12px; color:rgba(255,255,255,0.6); white-space:nowrap; }
 .tp-field-row input { width:110px; padding:6px 10px; background:rgba(255,255,255,0.07); border:1px solid rgba(255,255,255,0.15); border-radius:8px; color:white; font-size:13px; font-family:'DM Sans',sans-serif; outline:none; text-align:right; }
-.tp-field-row input:focus { border-color:rgba(249,115,22,0.5); }
-.tp-calc-btn { width:100%; padding:9px; background:linear-gradient(135deg,#f97316,#ea6c0a); border:none; border-radius:10px; color:white; font-size:13px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; margin-top:4px; transition:filter .15s; }
+.tp-field-row input:focus { border-color:rgba(244,121,32,0.5); }
+.tp-calc-btn { width:100%; padding:9px; background:linear-gradient(135deg,#F47920,#d4661a); border:none; border-radius:10px; color:white; font-size:13px; font-weight:700; cursor:pointer; font-family:'DM Sans',sans-serif; margin-top:4px; transition:filter .15s; }
 .tp-calc-btn:hover { filter:brightness(1.1); }
 .tp-result { margin-top:10px; padding:10px 12px; border-radius:10px; font-size:12px; font-weight:600; line-height:1.6; display:none; }
 .tp-result.ok  { background:rgba(34,197,94,0.12); border:1px solid rgba(34,197,94,0.3); color:#86efac; display:block; }
 .tp-result.bad { background:rgba(239,68,68,0.12); border:1px solid rgba(239,68,68,0.3); color:#fca5a5; display:block; }
 .tp-result.info { background:rgba(6,182,212,0.1); border:1px solid rgba(6,182,212,0.25); color:#67e8f9; display:block; }
-.tp-all-link { font-size:11px; color:rgba(249,115,22,0.8); text-decoration:none; margin-left:auto; margin-right:8px; font-weight:600; }
-.tp-all-link:hover { color:#f97316; }
+.tp-all-link { font-size:11px; color:rgba(244,121,32,0.8); text-decoration:none; margin-left:auto; margin-right:8px; font-weight:600; }
+.tp-all-link:hover { color:#F47920; }
 </style>
 <script>
 function tpTab(btn, panelId) {
