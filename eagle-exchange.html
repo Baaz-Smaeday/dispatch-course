@@ -299,17 +299,28 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
   </div>
 </div>
 
+<!-- TAB BAR — directly in HTML, no JS injection needed -->
+<div class="ex-tabs" id="main-tabs">
+  <button class="ex-tab active" id="tab-btn-loadboard" onclick="switchTab('loadboard',this)">📦 Load Board</button>
+  <button class="ex-tab" id="tab-btn-tracking" onclick="switchTab('tracking',this)">🗺️ Track Load <span class="ex-tab-badge" id="tracking-badge" style="display:none">LIVE</span></button>
+  <button class="ex-tab" id="tab-btn-leaderboard" onclick="switchTab('leaderboard',this)">🏆 Leaderboard</button>
+  <button class="ex-tab" id="tab-btn-ratebook" onclick="switchTab('ratebook',this)">📋 Rate Sheet</button>
+  <button class="ex-tab" onclick="showShiftReport()" style="margin-left:auto;color:var(--orange);border-bottom-color:transparent">📊 End of Shift Report</button>
+</div>
+
+<!-- ══ TAB: LOAD BOARD ══ -->
+<div class="tab-panel active" id="tab-loadboard" style="padding:0">
 <!-- MAIN LAYOUT -->
 <div class="ex-wrap">
   <!-- STATS CARDS -->
   <div class="stats-bar">
     <div class="stat-card">
       <div class="stat-icon" style="background:rgba(43,43,168,0.10)">🚚</div>
-      <div><div class="stat-val" id="st-available">15</div><div class="stat-lbl">Loads Available</div></div>
+      <div><div class="stat-val" id="st-available">39</div><div class="stat-lbl">Loads Available</div></div>
     </div>
     <div class="stat-card">
       <div class="stat-icon" style="background:rgba(220,38,38,0.10)">🔴</div>
-      <div><div class="stat-val" id="st-urgent">3</div><div class="stat-lbl">Urgent Loads</div></div>
+      <div><div class="stat-val" id="st-urgent">7</div><div class="stat-lbl">Urgent Loads</div></div>
     </div>
     <div class="stat-card">
       <div class="stat-icon" style="background:rgba(22,163,74,0.10)">✅</div>
@@ -364,7 +375,7 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
         <option value="distance">Sort: Distance</option>
       </select>
       <input class="filter-search" id="filter-search" placeholder="Search city, vehicle…" oninput="applyFilters()"/>
-      <span class="filter-count" id="filter-count">15 loads</span>
+      <span class="filter-count" id="filter-count">39 loads</span>
     </div>
     <div class="load-list" id="load-list"></div>
   </div>
@@ -379,6 +390,60 @@ html,body{background:var(--bg);color:var(--text);font-family:'DM Sans',sans-seri
     </div>
     <div id="detail-content" style="display:none"></div>
   </div>
+</div>
+</div><!-- end tab-loadboard -->
+
+<!-- ══ TAB: TRACKING ══ -->
+<div class="tab-panel" id="tab-tracking">
+  <div class="tracking-wrap" id="tracking-content">
+    <div class="no-tracking">
+      <div class="big">🗺️</div>
+      <p><strong>No load being tracked yet</strong><br/>Book a load first, then click<br/>"🗺️ Track This Load" on the consignment note.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TAB: LEADERBOARD ══ -->
+<div class="tab-panel" id="tab-leaderboard">
+  <div class="lb-wrap">
+    <div class="lb-panel">
+      <div class="lb-header">
+        <div><div class="lb-title">🏆 Eagle Exchange Leaderboard</div><div class="lb-sub">Top dispatchers in your classroom today</div></div>
+        <button class="lb-reset" onclick="clearLeaderboard()">Reset Board</button>
+      </div>
+      <div class="lb-body" id="lb-body"><div class="lb-empty">No scores yet — book loads and earn XP to appear here!</div></div>
+    </div>
+    <div>
+      <div class="join-panel" style="margin-bottom:16px">
+        <div class="join-title">📝 Join the Leaderboard</div>
+        <div class="join-sub">Enter your name to save your score and compete with classmates</div>
+        <input class="join-input" id="lb-name-input" placeholder="Your name (e.g. Priya Sharma)" maxlength="30"/>
+        <button class="join-btn" onclick="submitToLeaderboard()">🦅 Submit My Score</button>
+        <div class="my-score-card" id="my-score-card">
+          <div class="my-score-name" id="my-score-name"></div>
+          <div class="my-score-stats">
+            <div class="my-stat"><div class="mv" id="my-xp">0</div><div class="ml">XP</div></div>
+            <div class="my-stat"><div class="mv" id="my-loads">0</div><div class="ml">Loads</div></div>
+            <div class="my-stat"><div class="mv" id="my-revenue">£0</div><div class="ml">Revenue</div></div>
+            <div class="my-stat"><div class="mv" id="my-grade">—</div><div class="ml">Grade</div></div>
+          </div>
+        </div>
+        <div class="tips-box">
+          <div class="tips-title">💡 How to earn more XP</div>
+          <div class="tip-item"><span>⚡</span><span>Negotiate above offered rate: +80–120 XP</span></div>
+          <div class="tip-item"><span>📋</span><span>Book a load: +50 XP per booking</span></div>
+          <div class="tip-item"><span>🚨</span><span>Handle incident correctly: +40 XP</span></div>
+          <div class="tip-item"><span>✅</span><span>Complete check-call: +20 XP</span></div>
+          <div class="tip-item"><span>📦</span><span>Book urgent load: +25 bonus XP</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ TAB: RATE SHEET ══ -->
+<div class="tab-panel" id="tab-ratebook">
+  <div id="ratebook-content"></div>
 </div>
 
 <!-- BOOKING MODAL -->
@@ -572,21 +637,71 @@ function calcNegoScore(vehicle, miles, negotiated){
 
 // All loads — vehicles & rates from real Baaz Sameday sheet
 const ALL_LOADS = [
-  {id:'EX001',from:'Birmingham',fromRegion:'Midlands',to:'Glasgow',    miles:305,vehicle:'26t Curtainside',  weight:'15,000kg',pallets:'18 std / 20 euro',goods:'Automotive Parts',      col:'08:00',del:'18:00',urgent:false,broker:0, notes:'Strapping required. Tail-lift NOT needed. Direct delivery.'},
-  {id:'EX002',from:'London',    fromRegion:'London',  to:'Manchester',  miles:212,vehicle:'18t Curtainside',  weight:'9,500kg', pallets:'16 std / 18 euro',goods:'Fresh Produce (Chilled)',col:'06:30',del:'12:00',urgent:true, broker:1, notes:'Temp sensitive — keep doors closed. Delivery by 12:00 hard deadline.'},
-  {id:'EX003',from:'Bristol',   fromRegion:'South West',to:'Leeds',     miles:208,vehicle:'7.5t Curtainside', weight:'2,500kg', pallets:'10 std / 12 euro',goods:'Retail Clothing',         col:'09:00',del:'16:00',urgent:false,broker:2, notes:'2 drop points in Leeds. Extra stop charge applies.'},
-  {id:'EX004',from:'Manchester',fromRegion:'North',   to:'Southampton', miles:247,vehicle:'26t Curtainside',  weight:'15,000kg',pallets:'18 std / 20 euro',goods:'Steel Coils',             col:'07:00',del:'15:30',urgent:false,broker:5, notes:'Coil bolsters required. Strapping to be checked at loading.'},
-  {id:'EX005',from:'Leeds',     fromRegion:'North',   to:'London',      miles:204,vehicle:'18t Curtainside',  weight:'9,500kg', pallets:'16 std / 18 euro',goods:'Dairy Products',          col:'05:00',del:'11:00',urgent:true, broker:0, notes:'URGENT — Dock 7 only. Driver must be on site by 11:00.'},
-  {id:'EX006',from:'Glasgow',   fromRegion:'Scotland',to:'Birmingham',  miles:303,vehicle:'26t Curtainside',  weight:'15,000kg',pallets:'18 std / 20 euro',goods:'Whisky Barrels',          col:'10:00',del:'20:00',urgent:false,broker:7, notes:'Fragile — max 2 straps per barrel. Very careful loading required.'},
-  {id:'EX007',from:'London',    fromRegion:'London',  to:'Edinburgh',   miles:414,vehicle:'12t Curtainside',  weight:'5,850kg', pallets:'14 std / 16 euro',goods:'Construction Equipment',  col:'07:30',del:'18:00',urgent:false,broker:5, notes:'Oversized item. Check height restrictions M1/M6.'},
-  {id:'EX008',from:'Cardiff',   fromRegion:'Wales',   to:'Sheffield',   miles:178,vehicle:'7.5t + Tail Lift', weight:'2,500kg', pallets:'10 std / 12 euro',goods:'Electrical Components',   col:'09:30',del:'15:00',urgent:false,broker:2, notes:'Tail lift and pump truck required at delivery.'},
-  {id:'EX009',from:'Newcastle', fromRegion:'North',   to:'Bristol',     miles:308,vehicle:'26t Curtainside',  weight:'15,000kg',pallets:'18 std / 20 euro',goods:'FMCG Goods',              col:'06:00',del:'17:00',urgent:false,broker:6, notes:'⚠️ CHECK CX RATING — broker has flagged payment history.'},
-  {id:'EX010',from:'Southampton',fromRegion:'South West',to:'Glasgow',  miles:448,vehicle:'Artic Curtainside',weight:'26,000kg',pallets:'26 std / 30 euro',goods:'Port Freight (Seafood)',  col:'04:00',del:'14:00',urgent:true, broker:4, notes:'Urgent — vessel just docked. Temperature: 0-2°C. Time critical.'},
-  {id:'EX011',from:'Birmingham',fromRegion:'Midlands',to:'Edinburgh',   miles:320,vehicle:'Artic Curtainside',weight:'26,000kg',pallets:'26 std / 30 euro',goods:'Retail Distribution',     col:'08:30',del:'19:00',urgent:false,broker:1, notes:'Full artic. Loading bay clearance required at Edinburgh depot.'},
-  {id:'EX012',from:'Liverpool', fromRegion:'North',   to:'London',      miles:218,vehicle:'18t Curtainside',  weight:'9,500kg', pallets:'16 std / 18 euro',goods:'Retail Products',         col:'11:00',del:'19:30',urgent:false,broker:9, notes:''},
-  {id:'EX013',from:'Manchester',fromRegion:'North',   to:'Cardiff',     miles:198,vehicle:'Luton + Tail Lift',weight:'1,000kg', pallets:'6 std / 7 euro',  goods:'Medical Supplies',        col:'08:00',del:'13:00',urgent:false,broker:0, notes:'White glove handling. Tail lift mandatory. Sign for each item.'},
-  {id:'EX014',from:'Felixstowe',fromRegion:'London',  to:'Birmingham',  miles:148,vehicle:'12t Curtainside',  weight:'5,850kg', pallets:'14 std / 16 euro',goods:'Port Containers',         col:'10:30',del:'16:00',urgent:false,broker:10,notes:'Driver must have valid port DCSA card. Booking ref required at gate.'},
-  {id:'EX015',from:'Bristol',   fromRegion:'South West',to:'Glasgow',   miles:383,vehicle:'Artic Curtainside',weight:'26,000kg',pallets:'26 std / 30 euro',goods:'Agricultural Machinery',  col:'07:00',del:'20:00',urgent:false,broker:8, notes:'⚠️ POOR CX RATING — verify payment terms before accepting this load.'},
+
+  // ── SMALL VAN (450kg · 1 pallet) ──────────────────────────────────────
+  {id:'EX001',from:'London',     fromRegion:'London',    to:'Oxford',       miles:60, vehicle:'Small Van',          weight:'450kg',   pallets:'1 std / 1 euro', goods:'Legal Documents',        col:'09:00',del:'11:30',urgent:true, broker:5, notes:'URGENT — court deadline. Documents must arrive by 11:30. Call on arrival.'},
+  {id:'EX002',from:'Birmingham', fromRegion:'Midlands',  to:'Coventry',     miles:19, vehicle:'Small Van',          weight:'350kg',   pallets:'1 std / 1 euro', goods:'IT Equipment',           col:'10:00',del:'11:30',urgent:false,broker:0, notes:'Fragile — handle with care. Signature required on delivery.'},
+  {id:'EX003',from:'Manchester', fromRegion:'North',     to:'Stockport',    miles:8,  vehicle:'Small Van',          weight:'200kg',   pallets:'1 std / 1 euro', goods:'Pharmacy Samples',       col:'11:00',del:'12:00',urgent:false,broker:2, notes:'Temperature sensitive. Do not leave in direct sunlight.'},
+
+  // ── SHORT WHEELBASE (900kg · 1 pallet) ────────────────────────────────
+  {id:'EX004',from:'Leeds',      fromRegion:'North',     to:'Bradford',     miles:9,  vehicle:'Short Wheelbase',    weight:'800kg',   pallets:'1 std / 2 euro', goods:'Catering Supplies',      col:'07:00',del:'08:30',urgent:true, broker:9, notes:'URGENT — restaurant opening today. Call 30 mins before arrival.'},
+  {id:'EX005',from:'Bristol',    fromRegion:'South West',to:'Bath',         miles:13, vehicle:'Short Wheelbase',    weight:'750kg',   pallets:'1 std / 2 euro', goods:'Florist Stock',          col:'05:00',del:'07:00',urgent:false,broker:2, notes:'Perishable flowers. Early morning delivery essential.'},
+  {id:'EX006',from:'London',     fromRegion:'London',    to:'Guildford',    miles:29, vehicle:'Short Wheelbase',    weight:'900kg',   pallets:'1 std / 2 euro', goods:'Exhibition Materials',   col:'08:00',del:'10:00',urgent:false,broker:5, notes:'Exhibition setup at 10:00 sharp. Access via loading bay C.'},
+
+  // ── MID WHEELBASE (700kg · 2 pallets) ────────────────────────────────
+  {id:'EX007',from:'Nottingham', fromRegion:'Midlands',  to:'Leicester',    miles:27, vehicle:'Mid Wheelbase',      weight:'650kg',   pallets:'2 std / 2 euro', goods:'Retail Fixtures',        col:'09:30',del:'11:30',urgent:false,broker:3, notes:'2 pallets of shop shelving. Unloading assistance available at delivery.'},
+  {id:'EX008',from:'Cardiff',    fromRegion:'Wales',     to:'Newport',      miles:12, vehicle:'Mid Wheelbase',      weight:'700kg',   pallets:'2 std / 2 euro', goods:'Office Furniture',       col:'10:00',del:'12:00',urgent:false,broker:7, notes:'Assembly team waiting on site. Do not delay.'},
+  {id:'EX009',from:'Edinburgh',  fromRegion:'Scotland',  to:'Stirling',     miles:35, vehicle:'Mid Wheelbase',      weight:'600kg',   pallets:'2 std / 2 euro', goods:'Bakery Equipment',       col:'06:00',del:'08:00',urgent:false,broker:11,notes:'New bakery opening. Equipment must arrive before staff start.'},
+
+  // ── LONG WHEELBASE (1,250kg · 3 pallets) ─────────────────────────────
+  {id:'EX010',from:'Birmingham', fromRegion:'Midlands',  to:'Wolverhampton',miles:15, vehicle:'Long Wheelbase',     weight:'1200kg',  pallets:'3 std / 3 euro', goods:'Plumbing Supplies',      col:'07:30',del:'09:00',urgent:false,broker:0, notes:'Trade counter delivery. Driver must check in with site manager.'},
+  {id:'EX011',from:'London',     fromRegion:'London',    to:'Luton',        miles:30, vehicle:'Long Wheelbase',     weight:'1100kg',  pallets:'3 std / 3 euro', goods:'Event Equipment',        col:'08:00',del:'10:00',urgent:true, broker:5, notes:'URGENT — event starts at 12:00. Must be on site by 10:00 for setup.'},
+  {id:'EX012',from:'Sheffield',  fromRegion:'North',     to:'Rotherham',    miles:7,  vehicle:'Long Wheelbase',     weight:'1250kg',  pallets:'3 std / 3 euro', goods:'Steel Components',       col:'06:00',del:'07:30',urgent:false,broker:9, notes:'Early start — factory shift begins at 07:30. Gate code: 4821.'},
+
+  // ── EXTRA LONG WHEELBASE (1,000kg · 4 pallets) ───────────────────────
+  {id:'EX013',from:'Glasgow',    fromRegion:'Scotland',  to:'Edinburgh',    miles:46, vehicle:'Extra Long Wheelbase',weight:'950kg',  pallets:'4 std / 5 euro', goods:'Whisky Merchandise',     col:'09:00',del:'11:30',urgent:false,broker:7, notes:'Visitor centre delivery. Fragile boxes — no stacking above 2 high.'},
+  {id:'EX014',from:'Manchester', fromRegion:'North',     to:'Preston',      miles:31, vehicle:'Extra Long Wheelbase',weight:'1000kg', pallets:'4 std / 5 euro', goods:'Clothing Stock',         col:'10:00',del:'12:00',urgent:false,broker:1, notes:'Fashion retailer — bar-coded pallets. Scan each pallet on delivery.'},
+  {id:'EX015',from:'Bristol',    fromRegion:'South West',to:'Swindon',      miles:38, vehicle:'Extra Long Wheelbase',weight:'850kg',  pallets:'4 std / 5 euro', goods:'Electronics',            col:'08:30',del:'10:30',urgent:false,broker:10,notes:'High value load. Driver must not leave vehicle unattended.'},
+
+  // ── LUTON CURTAINSIDE (1,000kg · 6 pallets) ──────────────────────────
+  {id:'EX016',from:'London',     fromRegion:'London',    to:'Cambridge',    miles:58, vehicle:'Luton Curtainside',  weight:'1000kg',  pallets:'6 std / 7 euro', goods:'University Equipment',   col:'09:00',del:'12:00',urgent:false,broker:5, notes:'University receiving dock — book-in required. Call 01223 xxxxxx.'},
+  {id:'EX017',from:'Leeds',      fromRegion:'North',     to:'York',         miles:24, vehicle:'Luton Curtainside',  weight:'900kg',   pallets:'6 std / 7 euro', goods:'Hospitality Supplies',   col:'07:00',del:'09:00',urgent:false,broker:0, notes:'Hotel delivery — use rear loading bay. No parking on front.'},
+  {id:'EX018',from:'Birmingham', fromRegion:'Midlands',  to:'Stoke',        miles:43, vehicle:'Luton Curtainside',  weight:'1000kg',  pallets:'6 std / 7 euro', goods:'Pottery & Ceramics',     col:'10:00',del:'12:30',urgent:false,broker:3, notes:'Fragile ceramics — do not tilt pallets. Shrink wrap must stay intact.'},
+
+  // ── LUTON + TAIL LIFT (1,000kg · 6 pallets) ──────────────────────────
+  {id:'EX019',from:'Manchester', fromRegion:'North',     to:'Chester',      miles:38, vehicle:'Luton + Tail Lift',  weight:'1000kg',  pallets:'6 std / 7 euro', goods:'Medical Supplies',       col:'08:00',del:'10:30',urgent:true, broker:0, notes:'Hospital delivery — tail lift essential. Report to goods-in, not A&E.'},
+  {id:'EX020',from:'London',     fromRegion:'London',    to:'Brighton',     miles:52, vehicle:'Luton + Tail Lift',  weight:'900kg',   pallets:'6 std / 7 euro', goods:'Retail Furniture',       col:'09:30',del:'12:00',urgent:false,broker:5, notes:'Tail lift and pump truck needed — no forklift at delivery address.'},
+  {id:'EX021',from:'Cardiff',    fromRegion:'Wales',     to:'Swansea',      miles:39, vehicle:'Luton + Tail Lift',  weight:'950kg',   pallets:'6 std / 7 euro', goods:'Catering Equipment',     col:'07:00',del:'09:30',urgent:false,broker:7, notes:'New restaurant fit-out. Tail lift required — street delivery only.'},
+
+  // ── 7.5t CURTAINSIDE (2,500kg · 10 pallets) ──────────────────────────
+  {id:'EX022',from:'Bristol',    fromRegion:'South West',to:'Leeds',        miles:208,vehicle:'7.5t Curtainside',  weight:'2,500kg', pallets:'10 std / 12 euro',goods:'Retail Clothing',        col:'09:00',del:'16:00',urgent:false,broker:2, notes:'2 drop points in Leeds. Extra stop charge applies — confirm with broker.'},
+  {id:'EX023',from:'London',     fromRegion:'London',    to:'Norwich',      miles:115,vehicle:'7.5t Curtainside',  weight:'2,200kg', pallets:'10 std / 12 euro',goods:'Supermarket Stock',      col:'04:00',del:'10:00',urgent:true, broker:1, notes:'URGENT — overnight replenishment. Dock 3 only. Night shift receiving.'},
+  {id:'EX024',from:'Glasgow',    fromRegion:'Scotland',  to:'Dundee',       miles:58, vehicle:'7.5t Curtainside',  weight:'2,000kg', pallets:'10 std / 12 euro',goods:'Building Materials',     col:'07:00',del:'10:00',urgent:false,broker:11,notes:'Construction site — hi-vis and hard hat required. Sign in at site office.'},
+
+  // ── 7.5t + TAIL LIFT (2,500kg · 10 pallets) ──────────────────────────
+  {id:'EX025',from:'Cardiff',    fromRegion:'Wales',     to:'Sheffield',    miles:178,vehicle:'7.5t + Tail Lift',  weight:'2,500kg', pallets:'10 std / 12 euro',goods:'Electrical Components',  col:'09:30',del:'15:00',urgent:false,broker:2, notes:'Tail lift and pump truck required at both collection AND delivery.'},
+  {id:'EX026',from:'Birmingham', fromRegion:'Midlands',  to:'Exeter',       miles:152,vehicle:'7.5t + Tail Lift',  weight:'2,300kg', pallets:'10 std / 12 euro',goods:'Fitness Equipment',      col:'08:00',del:'14:00',urgent:false,broker:0, notes:'Gym equipment — heavy items. Tail lift essential. 2-man team at delivery.'},
+  {id:'EX027',from:'Leeds',      fromRegion:'North',     to:'London',       miles:204,vehicle:'7.5t + Tail Lift',  weight:'2,400kg', pallets:'10 std / 12 euro',goods:'Trade Show Displays',    col:'06:00',del:'14:00',urgent:true, broker:5, notes:'URGENT — ExCeL London setup by 14:00. Tail lift needed. Stand D42.'},
+
+  // ── 12t CURTAINSIDE (5,850kg · 14 pallets) ───────────────────────────
+  {id:'EX028',from:'Felixstowe', fromRegion:'London',    to:'Birmingham',   miles:148,vehicle:'12t Curtainside',   weight:'5,850kg', pallets:'14 std / 16 euro',goods:'Port Containers',        col:'10:30',del:'16:00',urgent:false,broker:10,notes:'Port container — valid DCSA card required. Booking ref at gate.'},
+  {id:'EX029',from:'London',     fromRegion:'London',    to:'Edinburgh',    miles:414,vehicle:'12t Curtainside',   weight:'5,500kg', pallets:'14 std / 16 euro',goods:'Construction Equipment', col:'07:30',del:'18:00',urgent:false,broker:5, notes:'Oversized items on 2 pallets. Check M1 height restrictions.'},
+  {id:'EX030',from:'Manchester', fromRegion:'North',     to:'Plymouth',     miles:285,vehicle:'12t Curtainside',   weight:'5,200kg', pallets:'14 std / 16 euro',goods:'Automotive Parts',       col:'06:00',del:'16:00',urgent:false,broker:3, notes:'Trade parts depot. Book-in required — call 01752 xxxxxx day before.'},
+
+  // ── 18t CURTAINSIDE (9,500kg · 16 pallets) ───────────────────────────
+  {id:'EX031',from:'London',     fromRegion:'London',    to:'Manchester',   miles:212,vehicle:'18t Curtainside',   weight:'9,500kg', pallets:'16 std / 18 euro',goods:'Fresh Produce (Chilled)',col:'06:30',del:'12:00',urgent:true, broker:1, notes:'Temp sensitive — keep curtains closed. Delivery by 12:00 hard deadline.'},
+  {id:'EX032',from:'Leeds',      fromRegion:'North',     to:'London',       miles:204,vehicle:'18t Curtainside',   weight:'9,000kg', pallets:'16 std / 18 euro',goods:'Dairy Products',         col:'05:00',del:'11:00',urgent:true, broker:0, notes:'URGENT — Dock 7 only. Driver must be on site by 11:00. No exceptions.'},
+  {id:'EX033',from:'Liverpool',  fromRegion:'North',     to:'London',       miles:218,vehicle:'18t Curtainside',   weight:'9,200kg', pallets:'16 std / 18 euro',goods:'Retail Products',        col:'11:00',del:'19:30',urgent:false,broker:9, notes:'Midweek replenishment. Delivery window 17:00–19:30. Do not arrive early.'},
+
+  // ── 26t CURTAINSIDE (15,000kg · 18 pallets) ──────────────────────────
+  {id:'EX034',from:'Birmingham', fromRegion:'Midlands',  to:'Glasgow',      miles:305,vehicle:'26t Curtainside',   weight:'15,000kg',pallets:'18 std / 20 euro',goods:'Automotive Parts',       col:'08:00',del:'18:00',urgent:false,broker:0, notes:'Strapping required. Tail-lift NOT needed. Direct timed delivery.'},
+  {id:'EX035',from:'Manchester', fromRegion:'North',     to:'Southampton',  miles:247,vehicle:'26t Curtainside',   weight:'14,800kg',pallets:'18 std / 20 euro',goods:'Steel Coils',            col:'07:00',del:'15:30',urgent:false,broker:5, notes:'Coil bolsters required. Driver to check strapping every 2 hours.'},
+  {id:'EX036',from:'Newcastle',  fromRegion:'North',     to:'Bristol',      miles:308,vehicle:'26t Curtainside',   weight:'15,000kg',pallets:'18 std / 20 euro',goods:'FMCG Goods',             col:'06:00',del:'17:00',urgent:false,broker:6, notes:'⚠️ CHECK CX RATING — broker has flagged payment issues. Verify before booking.'},
+
+  // ── ARTIC CURTAINSIDE (26,000kg · 26 pallets) ────────────────────────
+  {id:'EX037',from:'Southampton',fromRegion:'South West',to:'Glasgow',      miles:448,vehicle:'Artic Curtainside', weight:'26,000kg',pallets:'26 std / 30 euro',goods:'Port Freight (Seafood)',  col:'04:00',del:'14:00',urgent:true, broker:4, notes:'URGENT — vessel just docked at port. Temperature: 0-2°C. Time critical.'},
+  {id:'EX038',from:'Birmingham', fromRegion:'Midlands',  to:'Edinburgh',    miles:320,vehicle:'Artic Curtainside', weight:'25,000kg',pallets:'26 std / 30 euro',goods:'Retail Distribution',    col:'08:30',del:'19:00',urgent:false,broker:1, notes:'Full artic load. Loading bay clearance confirmed at Edinburgh depot.'},
+  {id:'EX039',from:'Bristol',    fromRegion:'South West',to:'Glasgow',      miles:383,vehicle:'Artic Curtainside', weight:'26,000kg',pallets:'26 std / 30 euro',goods:'Agricultural Machinery', col:'07:00',del:'20:00',urgent:false,broker:8, notes:'⚠️ POOR CX RATING — verify payment terms BEFORE accepting. Do not book without confirmation.'},
 ];
 
 // Mark booked loads
@@ -719,7 +834,7 @@ function renderDetail(){
         <span class="detail-arrow">→</span>
         <span class="detail-city">${l.to}</span>
       </div>
-      <div class="detail-rate-big">£${offeredRate.toLocaleString()}</div>
+      <div class="detail-rate-big">£${offered.toLocaleString()}</div>
       <div class="detail-cpm-big" style="color:${cpmColor}">Market: £${cpm}/mi · ${l.miles} miles</div>
       ${l.urgent ? '<div class="detail-urgency">⚡ URGENT LOAD</div>' : ''}
     </div>
@@ -1115,6 +1230,7 @@ function generateCN(){
 
   document.getElementById('st-booked').textContent = session.booked;
   document.getElementById('st-available').textContent = ALL_LOADS.length - bookedIds.length;
+  document.getElementById('st-urgent').textContent = ALL_LOADS.filter(l=>l.urgent&&!bookedIds.includes(l.id)).length;
 
   renderLoadList();
   document.getElementById('cn-modal').classList.add('show');
@@ -1174,8 +1290,8 @@ setInterval(()=>{
 .ex-tab-badge{background:var(--orange);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle}
 
 /* ── TAB PANELS ──────────────────────────── */
-.tab-panel{display:none;max-width:1400px;margin:0 auto;padding:20px}
-.tab-panel.active{display:block}
+.tab-panel{display:none}.tab-panel.active{display:block}.tab-panel-inner{max-width:1400px;margin:0 auto;padding:20px}
+
 
 /* ── UK TRACKING MAP ─────────────────────── */
 .tracking-wrap{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
@@ -1353,67 +1469,6 @@ setInterval(()=>{
      INJECT TAB BAR AFTER TICKER (via JS)
 ═══════════════════════════════════════════ -->
 
-<!-- TRACKING TAB PANEL -->
-<div class="tab-panel" id="tab-tracking">
-  <div class="tracking-wrap" id="tracking-content">
-    <div class="no-tracking">
-      <div class="big">🗺️</div>
-      <p><strong>No load being tracked</strong><br/>Book a load on the Load Board first,<br/>then return here to track your driver.</p>
-    </div>
-  </div>
-</div>
-
-<!-- LEADERBOARD TAB PANEL -->
-<div class="tab-panel" id="tab-leaderboard">
-  <div class="lb-wrap">
-    <!-- LEADERBOARD TABLE -->
-    <div class="lb-panel">
-      <div class="lb-header">
-        <div>
-          <div class="lb-title">🏆 Eagle Exchange Leaderboard</div>
-          <div class="lb-sub">Top dispatchers in your classroom today</div>
-        </div>
-        <button class="lb-reset" onclick="clearLeaderboard()">Reset Board</button>
-      </div>
-      <div class="lb-body" id="lb-body">
-        <div class="lb-empty">No scores yet — book loads and earn XP to appear here!</div>
-      </div>
-    </div>
-    <!-- JOIN + MY SCORE -->
-    <div>
-      <div class="join-panel" style="margin-bottom:16px">
-        <div class="join-title">📝 Join the Leaderboard</div>
-        <div class="join-sub">Enter your name to save your score and compete with classmates</div>
-        <input class="join-input" id="lb-name-input" placeholder="Your name (e.g. Priya Sharma)" maxlength="30"/>
-        <button class="join-btn" onclick="submitToLeaderboard()">🦅 Submit My Score</button>
-        <div class="my-score-card" id="my-score-card">
-          <div class="my-score-name" id="my-score-name"></div>
-          <div class="my-score-stats">
-            <div class="my-stat"><div class="mv" id="my-xp">0</div><div class="ml">XP</div></div>
-            <div class="my-stat"><div class="mv" id="my-loads">0</div><div class="ml">Loads</div></div>
-            <div class="my-stat"><div class="mv" id="my-revenue">£0</div><div class="ml">Revenue</div></div>
-            <div class="my-stat"><div class="mv" id="my-grade">—</div><div class="ml">Grade</div></div>
-          </div>
-        </div>
-        <div class="tips-box">
-          <div class="tips-title">💡 How to earn more XP</div>
-          <div class="tip-item"><span>⚡</span><span>Negotiate above offered rate: +80–120 XP</span></div>
-          <div class="tip-item"><span>📋</span><span>Book a load: +50 XP per booking</span></div>
-          <div class="tip-item"><span>🚨</span><span>Handle incident correctly: +40 XP</span></div>
-          <div class="tip-item"><span>✅</span><span>Complete check-call: +20 XP</span></div>
-          <div class="tip-item"><span>🔴</span><span>Reject bad CX broker: +30 XP</span></div>
-          <div class="tip-item"><span>📦</span><span>Book urgent load: +25 bonus XP</span></div>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-
-<!-- RATE BOOK PANEL -->
-<div class="tab-panel" id="tab-ratebook">
-  <div id="ratebook-content"></div>
-</div>
-
 <!-- INCIDENT MODAL -->
 <div class="incident-overlay" id="incident-overlay">
   <div class="incident-card" id="incident-card">
@@ -1434,38 +1489,6 @@ setInterval(()=>{
 //  LEADERBOARD & END OF SHIFT REPORT
 // ═══════════════════════════════════════════════════
 
-// ── INJECT TAB BAR ────────────────────────────────
-(function injectTabs(){
-  const ticker = document.querySelector('.ex-ticker');
-  const tabBar = document.createElement('div');
-  tabBar.className = 'ex-tabs';
-  tabBar.innerHTML = `
-    <button class="ex-tab active" onclick="switchTab('loadboard',this)">📦 Load Board</button>
-    <button class="ex-tab" onclick="switchTab('tracking',this)" id="tab-btn-tracking">🗺️ Track Load <span class="ex-tab-badge" id="tracking-badge" style="display:none">LIVE</span></button>
-    <button class="ex-tab" onclick="switchTab('leaderboard',this)">🏆 Leaderboard</button>
-    <button class="ex-tab" onclick="switchTab('ratebook',this)">📋 Rate Sheet</button>
-    <button class="ex-tab" onclick="showShiftReport()" style="margin-left:auto;color:var(--orange)">📊 End of Shift Report</button>`;
-  ticker.after(tabBar);
-
-  // Wrap existing ex-wrap in loadboard tab
-  const exWrap = document.querySelector('.ex-wrap');
-  const sessionBarWrap = exWrap.previousElementSibling;
-  const lbDiv = document.createElement('div');
-  lbDiv.className = 'tab-panel active';
-  lbDiv.id = 'tab-loadboard';
-  // Move session bar + ex-wrap into tab
-  lbDiv.style.padding = '0';
-  const container = document.createElement('div');
-  container.style.cssText = 'max-width:1400px;margin:0 auto;padding:0 20px 20px';
-  lbDiv.appendChild(container);
-  exWrap.parentNode.insertBefore(lbDiv, exWrap);
-  container.appendChild(sessionBarWrap);
-  container.appendChild(exWrap);
-
-  // Insert tracking and leaderboard panels after
-  lbDiv.after(document.getElementById('tab-leaderboard'));
-  document.getElementById('tab-leaderboard').after(document.getElementById('tab-tracking'));
-})();
 
 function switchTab(name, btn){
   document.querySelectorAll('.ex-tab').forEach(t=>t.classList.remove('active'));
@@ -1926,11 +1949,7 @@ generateCN = function(){
         closeModal('cn-modal');
         startTracking(currentLoad.id);
         // Switch to tracking tab
-        document.querySelectorAll('.ex-tab').forEach(t=>t.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
-        document.querySelector('[onclick*="tracking"]').classList.add('active');
-        document.getElementById('tab-tracking').classList.add('active');
-        renderTracking();
+        switchTab('tracking', null);
       };
       footer.insertBefore(trackBtn, footer.children[1]);
     }
