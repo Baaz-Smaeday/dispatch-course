@@ -98,6 +98,14 @@
 .send-btn{width:46px;height:46px;border-radius:14px;background:linear-gradient(135deg,var(--mj-purple),#4f46e5);border:none;color:white;font-size:18px;cursor:pointer;transition:all .2s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
 .send-btn:hover{filter:brightness(1.15);transform:translateY(-1px);box-shadow:0 6px 20px var(--mj-glow)}
 .send-btn:disabled{opacity:.4;cursor:default;transform:none}
+/* MIC BUTTON */
+.mic-btn{width:46px;height:46px;border-radius:14px;background:rgba(139,92,246,0.1);border:1.5px solid rgba(139,92,246,0.3);color:var(--mj-purple2);font-size:20px;cursor:pointer;transition:all .2s;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.mic-btn:hover{background:rgba(139,92,246,0.2);transform:translateY(-1px)}
+.mic-btn.listening{background:linear-gradient(135deg,#dc2626,#b91c1c);border-color:#dc2626;color:#fff;animation:mic-pulse 1s ease-in-out infinite}
+@keyframes mic-pulse{0%,100%{box-shadow:0 0 0 0 rgba(220,38,38,0.4)}50%{box-shadow:0 0 0 8px rgba(220,38,38,0)}}
+.voice-status{font-size:11px;color:#dc2626;font-weight:700;text-align:center;min-height:16px;margin-top:4px;display:none}
+.voice-status.show{display:block}
+
 .lang-row{display:flex;align-items:center;gap:8px;margin-top:8px;flex-wrap:wrap}
 .lang-row span{font-size:11px;color:rgba(255,255,255,0.3)}
 .mode-chip{padding:4px 11px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.1);border-radius:99px;color: #8888aa;font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font-main);transition:all .2s}
@@ -403,8 +411,10 @@ input::placeholder, textarea::placeholder { color: #8888aa !important; }
       <div class="chat-input-row">
         <textarea class="chat-textarea" id="chat_input" placeholder="Ask Madam JI anything about UK freight dispatch…" rows="1"
           onkeydown="handleKey(event)" oninput="autoResize(this)"></textarea>
+        <button class="mic-btn" id="mic_btn" onclick="toggleMic()" title="Speak your question">🎤</button>
         <button class="send-btn" id="send_btn" onclick="sendMessage()" title="Send">▶</button>
       </div>
+      <div class="voice-status" id="voice-status">🎤 Listening… speak now</div>
       <div class="lang-row">
         <span>Mode:</span>
         <button class="mode-chip act" id="mode_en" onclick="setMode('english',this)">🇬🇧 English</button>
@@ -1319,7 +1329,7 @@ function mjSearch(query) {
   {k:['intermodal','intermodal kya','container','rail freight','port freight','drayage'],
   a:'Intermodal freight uses multiple transport modes — typically ocean ship + rail + truck.\n\nThe journey: Container arrives at port by ship, drayage truck moves it to rail yard, rail carries it across country, local truck delivers to destination.\n\nDrayage = short local truck move connecting transport modes (port to rail, rail to warehouse)'},
   
-  {k:['curtainsider','curtain trailer','tautliner','uk trailer','side curtain'],
+  {k:['curtainsider','curtain trailer','tautliner','uk trailer','side curtain','curtain side','curtainside van','curtainside rate','curtain van','what is curtainside','curtainside kya','curtainsider kya hai','side curtain van','luton curtainside','7.5t curtainside','18t curtainside','26t curtainside'],
   a:'Curtainsider (Tautliner) is the most common trailer type in UK and Europe — not common in USA.\n\nThe sides are made of sliding curtain fabric instead of solid walls.\n\nAdvantages: Easy forklift loading from sides, faster loading\nCarries: Palletised goods, building materials, retail deliveries\n\nVery common in UK pallet network deliveries!'},
   
   {k:['low loader','low bed','heavy haulage','oversized load','abnormal load','wide load'],
@@ -1444,7 +1454,7 @@ function mjSearch(query) {
   {k:['incident','breakdown','accident','incident kya','road incident','emergency','incident handle','m6 closure','driver breakdown'],
   a:'Eagle Exchange Incident Scenarios — Real Life Practice!\n\nJourney ke dauran random incidents trigger ho sakte hain:\n\n🚧 M6 Motorway Closure — diversion arrange karna\n🔧 Truck Breakdown — recovery + transship decision\n⏱️ Shipper Not Ready — detention clock start karna\n📦 Damaged Goods — CMR note + insurance\n⛽ Driver Fuel Crisis — card payment arrange karna\n🌧️ Severe Weather — driver safety priority\n\nHar incident mein 4 options hote hain — ek correct, ek partial, do wrong.\n\nScoring:\n✅ Correct response: +40 XP\n⚠️ Partial: +15 XP\n❌ Wrong: +8 XP\n\nSabse important lesson: Driver safety ALWAYS delivery target se pehle aata hai!\n\nIncidents ko seriously lo — real job mein yahi situations face karoge!'},
 
-  {k:['baaz sameday','baaz rate','baaz vehicles','rate sheet','baaz sameday rates','rate card','vehicle rates','uk rates'],
+  {k:['baaz sameday','baaz rate','baaz vehicles','rate sheet','baaz sameday rates','rate card','vehicle rates','uk rates','small van rate','small van kya','small van cost','van rate uk','luton rate','artic rate','7.5t rate','18t rate','26t rate','wheelbase rate','what is rate','rate kya hai','per mile rate','uk vehicle rate','how much rate','rate kitna','vehicle type rate','which vehicle','which van'],
   a:'Baaz Sameday Ltd — Official Rate Sheet Jo Eagle Exchange Use Karta Hai:\n\nAddress: 10 Hill Street, Cleckheaton, BD19 3NP\nTel: +44 113 868 9400\nVAT: GB 425184700\n\n13 Vehicle Types aur unke rates:\n\n🚐 Small Van (450kg) — £50 upto 30mi, £65 upto 50mi, £1/mi after\n🚐 Short Wheelbase (900kg) — £60/£75, £1.10/mi\n🚐 Mid Wheelbase (700kg) — £65/£80, £1.20/mi\n🚙 Long Wheelbase (1,250kg) — £70/£85, £1.30/mi\n🚙 Extra Long (1,000kg) — £75/£90, £1.40/mi\n🚛 Luton Curtainside (1t) — £95/£120, £1.60/mi\n🚛 Luton + Tail Lift (1t) — £100/£125, £1.75/mi\n🚚 7.5t Curtainside (2.5t) — £225/£275, £2-3/mi\n🚚 7.5t + Tail Lift (2.5t) — £250/£300, £2.25-3.25/mi\n🚚 12t Curtainside (5.85t) — £300/£350, £2.50-3.50/mi\n🚚 18t Curtainside (9.5t) — £350/£425, £2.75-3.75/mi\n🚛 26t Curtainside (15t) — £385/£450, £3-4/mi\n🚛 Artic (26t) — £445/£495, £3.25-4.25/mi\n\nRate Sheet Eagle Exchange ke Rate Sheet tab pe bhi dekh sakte ho!'},
 
   {k:['extra stop','extra stop charge','multiple drops','2 drops','second delivery','additional stop','stop charge'],
@@ -1468,7 +1478,14 @@ function mjSearch(query) {
   {k:['xeagle commission','xeagle fee','8 percent','company fee','dispatch fee','commission kya','how much commission'],
   a:'Xeagle Ltd Commission — 8% Fee Structure!\n\nXeagle Ltd (jo Eagle Academy run karta hai) UK mein freight dispatch karta hai.\n\nEagle Exchange mein:\n- Har load book karne par 8% commission track hota hai\n- Example: £1,200 load → £96 Xeagle fee\n- Session report mein total fee dikhti hai\n\nReal UK dispatch commission rates:\n- Independent dispatchers: 5-10% of load rate\n- Dispatch companies: Usually 8-12%\n- Some charge flat monthly fee instead\n\nBaaz Sameday ke saath kaam karte waqt:\n- Rate negotiate karo\n- 8% apne paas rakho\n- Baaki carrier ko do\n\nExample calculation:\n- Load rate: £850\n- Xeagle 8%: £68\n- Carrier receives: £782\n\nDispatcher bano = revenue generate karo bina truck chalaye! Yahi is career ki khoobsurati hai.'}
 
-    ]; // end MJ_KB
+  
+  {k:['small van','small van rate','small van kya','450kg van','1 pallet van','small van cost','small van uk','van rate','van delivery','small van dispatch'],
+  a:'Small Van — Baaz Sameday Rate Sheet:\n\n🚐 Small Van (450kg capacity · 1 standard pallet)\n\nRates:\n- Up to 30 miles: £50 minimum flat rate\n- Up to 50 miles: £65 minimum flat rate\n- Over 50 miles: £1.00 per mile\n- Extra stop: +£10\n\nReal example:\n- London to Oxford (60 miles): £65 + (10mi × £1.00) = £75 minimum\n- Target rate: £75 × 1.30 = £97\n\nBest for: Documents, small parcels, IT equipment, pharmacy samples, 1-2 boxes\n\nEagle Exchange pe Small Van loads: Legal documents, IT equipment, pharmacy samples\n\nSmall van = UK mein sबसे common same-day delivery vehicle!'},
+
+  {k:['curtainside','curtain side','side curtain van','curtain side van','curtainside manes','curtainside matlab','curtainside kya hota','what is curtain side','luton curtainside','7.5t curtainside','18t curtainside','26t curtainside','curtainside rate uk'],
+  a:'Curtainside Van / Truck — UK Freight Ka Common Vehicle!\n\nCurtainside = vehicle jinke sides pe sliding curtain fabric hota hai (solid walls ki jagah).\n\n✅ Why curtainside is popular in UK:\n- Forklift loading from the SIDE possible (not just rear)\n- Faster loading and unloading\n- Pallet deliveries bahut easy hoti hain\n- UK pallet networks mainly curtainside use karte hain\n\nBaaz Sameday Curtainside Range:\n🚛 Luton Curtainside: 1,000kg · 6 pallets · £95 min ≤30mi\n🚚 7.5t Curtainside: 2,500kg · 10 pallets · £225 min ≤30mi\n🚚 12t Curtainside: 5,850kg · 14 pallets · £300 min ≤30mi\n🚚 18t Curtainside: 9,500kg · 16 pallets · £350 min ≤30mi\n🚛 26t Curtainside: 15,000kg · 18 pallets · £385 min ≤30mi\n🚛 Artic Curtainside: 26,000kg · 26 pallets · £445 min ≤30mi\n\nDifference from USA: USA mein mainly dry van (box trailer) use hota hai — UK mein curtainside standard hai!'},
+
+  ]; // end MJ_KB
   
   function mjSearch(query) {
     if (!query) return null;
@@ -1569,6 +1586,73 @@ function mjSearch(query) {
     d.innerHTML = html;
     document.getElementById('mj-msgs').appendChild(d); mjScroll();
   }
+
+// ── SPEECH RECOGNITION (SPEAK TO ASK) ─────────────────────────────
+let recognition = null;
+let isListening = false;
+
+function initRecognition(){
+  const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SpeechRecognition){ 
+    document.getElementById('mic_btn').title = 'Speech not supported in this browser — use Chrome';
+    document.getElementById('mic_btn').style.opacity = '0.4';
+    return null;
+  }
+  const r = new SpeechRecognition();
+  r.continuous = false;
+  r.interimResults = true;
+  r.maxAlternatives = 1;
+  
+  r.onstart = () => {
+    isListening = true;
+    document.getElementById('mic_btn').classList.add('listening');
+    document.getElementById('mic_btn').textContent = '🔴';
+    const st = document.getElementById('voice-status');
+    st.textContent = '🎤 Listening… speak now';
+    st.classList.add('show');
+  };
+  r.onresult = (e) => {
+    const transcript = Array.from(e.results).map(r=>r[0].transcript).join('');
+    document.getElementById('chat_input').value = transcript;
+    if(e.results[e.results.length-1].isFinal){
+      document.getElementById('voice-status').textContent = '✅ Got it! Press send or speak again.';
+      setTimeout(()=>stopMic(), 500);
+    }
+  };
+  r.onerror = (e) => {
+    document.getElementById('voice-status').textContent = e.error === 'no-speech' ? '⚠️ No speech detected — try again' : '⚠️ Error: ' + e.error;
+    stopMic();
+  };
+  r.onend = () => { stopMic(); };
+  return r;
+}
+
+function stopMic(){
+  isListening = false;
+  const btn = document.getElementById('mic_btn');
+  btn.classList.remove('listening');
+  btn.textContent = '🎤';
+  setTimeout(()=>{
+    const st = document.getElementById('voice-status');
+    st.classList.remove('show');
+  }, 2000);
+}
+
+function toggleMic(){
+  if(!recognition) recognition = initRecognition();
+  if(!recognition){ 
+    alert('Speech recognition not supported. Please use Google Chrome.');
+    return; 
+  }
+  if(isListening){
+    recognition.stop();
+    stopMic();
+  } else {
+    // Set language based on mode
+    recognition.lang = (typeof responseMode !== 'undefined' && responseMode === 'hindi') ? 'hi-IN' : 'en-GB';
+    try{ recognition.start(); } catch(e){ console.log(e); }
+  }
+}
   function mjScroll(){ var m=document.getElementById('mj-msgs'); if(m) m.scrollTop=m.scrollHeight; }
   document.addEventListener('click',function(e){
     var mf=document.getElementById('mj-fab'), mp=document.getElementById('mj-popup');
