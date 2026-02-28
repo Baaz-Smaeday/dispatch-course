@@ -1007,3 +1007,946 @@ setInterval(()=>{
 </script>
 </body>
 </html>
+<!-- ═══════════════════════════════════════════
+     EAGLE EXCHANGE PART 2 — STYLES
+═══════════════════════════════════════════ -->
+<style id="part2-styles">
+
+/* ── TABS ─────────────────────────────────── */
+.ex-tabs{max-width:1400px;margin:0 auto;padding:0 20px;display:flex;gap:4px;border-bottom:2px solid var(--border);background:var(--surface);position:sticky;top:65px;z-index:200;box-shadow:0 2px 8px rgba(43,43,168,0.06)}
+.ex-tab{padding:12px 20px;font-size:13px;font-weight:700;color:var(--text3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-2px;transition:all .2s;font-family:'DM Sans',sans-serif;background:none;border-top:none;border-left:none;border-right:none;white-space:nowrap}
+.ex-tab:hover{color:var(--navy)}
+.ex-tab.active{color:var(--navy);border-bottom-color:var(--orange)}
+.ex-tab-badge{background:var(--orange);color:#fff;font-size:9px;font-weight:800;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle}
+
+/* ── TAB PANELS ──────────────────────────── */
+.tab-panel{display:none;max-width:1400px;margin:0 auto;padding:20px}
+.tab-panel.active{display:block}
+
+/* ── UK TRACKING MAP ─────────────────────── */
+.tracking-wrap{display:grid;grid-template-columns:1fr 380px;gap:20px;align-items:start}
+@media(max-width:1000px){.tracking-wrap{grid-template-columns:1fr}}
+.map-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh-sm);overflow:hidden}
+.map-header{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:14px 20px;display:flex;align-items:center;justify-content:space-between}
+.map-title{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:#fff}
+.map-subtitle{font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px}
+.map-status-pill{font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px}
+.map-status-pill.moving{background:rgba(22,163,74,0.25);color:#4ade80;animation:pulse-green 2s ease-in-out infinite}
+.map-status-pill.idle{background:rgba(255,255,255,0.1);color:rgba(255,255,255,0.6)}
+@keyframes pulse-green{0%,100%{opacity:1}50%{opacity:.6}}
+.map-body{padding:16px;position:relative}
+
+/* UK SVG MAP */
+.uk-map-svg{width:100%;max-width:520px;margin:0 auto;display:block}
+.map-road{stroke:#cbd5e1;stroke-width:2;fill:none;stroke-linecap:round}
+.map-road.active-route{stroke:var(--orange);stroke-width:3;stroke-dasharray:8 4;animation:dash-move 1.5s linear infinite}
+@keyframes dash-move{to{stroke-dashoffset:-24}}
+.map-city-dot{fill:var(--navy);stroke:#fff;stroke-width:2;cursor:pointer;transition:all .2s}
+.map-city-dot:hover{fill:var(--orange);r:7}
+.map-city-dot.origin{fill:var(--green);r:8}
+.map-city-dot.destination{fill:var(--orange);r:8}
+.map-city-label{font-family:'Syne',sans-serif;font-size:11px;font-weight:700;fill:var(--text);pointer-events:none}
+.map-motorway{stroke:#e2e8f0;stroke-width:1.5;fill:none}
+.truck-marker{font-size:20px;transition:all 0.5s ease}
+
+/* JOURNEY PROGRESS */
+.journey-bar{padding:14px 16px;border-top:1px solid var(--border);background:var(--surf2)}
+.journey-route{display:flex;align-items:center;gap:8px;margin-bottom:10px}
+.j-city{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:var(--navy)}
+.j-arrow{color:var(--orange);font-size:16px}
+.j-miles{font-size:11px;color:var(--text3);margin-left:auto}
+.journey-track{height:8px;background:rgba(43,43,168,0.12);border-radius:4px;overflow:hidden;position:relative;margin-bottom:8px}
+.journey-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--orange));border-radius:4px;transition:width 1s ease}
+.journey-truck{position:absolute;top:-6px;font-size:18px;transition:left 1s ease;transform:translateX(-50%)}
+.journey-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.j-stat{text-align:center;background:#fff;border:1px solid var(--border);border-radius:var(--r-sm);padding:8px 4px}
+.j-stat .jv{font-family:'Syne',sans-serif;font-weight:800;font-size:15px;color:var(--navy)}
+.j-stat .jl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px}
+
+/* CHECK CALLS */
+.cc-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh-sm)}
+.cc-header{background:linear-gradient(135deg,#0891b2,#0e7490);padding:14px 16px;border-radius:var(--r) var(--r) 0 0}
+.cc-title{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:#fff}
+.cc-sub{font-size:11px;color:rgba(255,255,255,0.75);margin-top:2px}
+.cc-body{padding:16px}
+.cc-log{max-height:260px;overflow-y:auto;display:flex;flex-direction:column;gap:8px;margin-bottom:12px;scrollbar-width:thin}
+.cc-entry{padding:10px 12px;border-radius:var(--r-sm);font-size:12px;line-height:1.5}
+.cc-entry.system{background:rgba(43,43,168,0.06);color:var(--navy);border-left:3px solid var(--navy)}
+.cc-entry.driver{background:rgba(8,145,178,0.08);color:#0e7490;border-left:3px solid #0891b2}
+.cc-entry.dispatcher{background:rgba(22,163,74,0.08);color:var(--green);border-left:3px solid var(--green);text-align:right}
+.cc-entry.incident{background:rgba(220,38,38,0.08);color:var(--red);border-left:3px solid var(--red)}
+.cc-entry.resolved{background:rgba(22,163,74,0.06);color:var(--green)}
+.cc-input-row{display:flex;gap:8px}
+.cc-input{flex:1;background:var(--surf2);border:1.5px solid var(--border);border-radius:var(--r-sm);padding:8px 12px;font-size:13px;color:var(--text);font-family:'DM Sans',sans-serif;outline:none}
+.cc-input:focus{border-color:#0891b2}
+.cc-send{background:linear-gradient(135deg,#0891b2,#0e7490);color:#fff;border:none;border-radius:var(--r-sm);padding:8px 14px;font-size:12px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif;white-space:nowrap}
+.cc-next{width:100%;margin-top:10px;background:linear-gradient(135deg,var(--orange),var(--og-dk));color:#fff;border:none;border-radius:var(--r-sm);padding:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Syne',sans-serif;display:none}
+.cc-done-msg{text-align:center;padding:16px;font-size:13px;color:var(--text3)}
+
+/* INCIDENT MODAL */
+.incident-overlay{position:fixed;inset:0;background:rgba(220,38,38,0.15);backdrop-filter:blur(3px);z-index:600;display:none;align-items:center;justify-content:center;padding:20px}
+.incident-overlay.show{display:flex;animation:incidentIn .3s ease}
+@keyframes incidentIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+.incident-card{background:var(--surface);border-radius:16px;width:100%;max-width:520px;box-shadow:0 20px 60px rgba(220,38,38,0.25);border:2px solid rgba(220,38,38,0.3);overflow:hidden}
+.incident-header{background:linear-gradient(135deg,#dc2626,#b91c1c);padding:20px 24px;display:flex;align-items:center;gap:12px}
+.incident-icon{font-size:32px}
+.incident-htext .ititle{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:#fff}
+.incident-htext .isub{font-size:12px;color:rgba(255,255,255,0.8);margin-top:2px}
+.incident-body{padding:20px 24px}
+.incident-situation{background:rgba(220,38,38,0.06);border-left:3px solid var(--red);padding:12px 16px;border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:13px;color:var(--text);line-height:1.6;margin-bottom:16px;font-weight:500}
+.incident-question{font-size:13px;font-weight:700;color:var(--navy);margin-bottom:12px}
+.incident-options{display:flex;flex-direction:column;gap:8px}
+.incident-option{padding:12px 16px;border:2px solid var(--border);border-radius:var(--r-sm);cursor:pointer;font-size:13px;font-weight:600;color:var(--text);background:var(--surf2);transition:all .2s;text-align:left;font-family:'DM Sans',sans-serif;line-height:1.4}
+.incident-option:hover{border-color:var(--orange);background:rgba(244,121,32,0.06)}
+.incident-option.correct{border-color:var(--green);background:var(--green-bg);color:var(--green);cursor:default}
+.incident-option.wrong{border-color:var(--red);background:var(--red-bg);color:var(--red);cursor:default}
+.incident-option.neutral{border-color:var(--amber);background:var(--amber-bg);color:var(--amber);cursor:default}
+.incident-feedback{margin-top:14px;padding:12px 16px;border-radius:var(--r-sm);font-size:13px;font-weight:600;display:none}
+.incident-feedback.show{display:block}
+.incident-feedback.good{background:var(--green-bg);color:var(--green)}
+.incident-feedback.ok{background:var(--amber-bg);color:var(--amber)}
+.incident-feedback.poor{background:var(--red-bg);color:var(--red)}
+.incident-continue{width:100%;margin-top:14px;background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border:none;border-radius:var(--r-sm);padding:12px;font-size:13px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif;display:none}
+.incident-continue.show{display:block}
+
+/* NO LOAD TRACKING */
+.no-tracking{padding:60px 20px;text-align:center;color:var(--text3)}
+.no-tracking .big{font-size:48px;margin-bottom:12px}
+
+/* ── LEADERBOARD ─────────────────────────── */
+.lb-wrap{display:grid;grid-template-columns:1fr 340px;gap:20px}
+@media(max-width:900px){.lb-wrap{grid-template-columns:1fr}}
+.lb-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh-sm);overflow:hidden}
+.lb-header{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:16px 20px;display:flex;align-items:center;justify-content:space-between}
+.lb-title{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:#fff}
+.lb-sub{font-size:11px;color:rgba(255,255,255,0.7);margin-top:2px}
+.lb-reset{background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.2);color:rgba(255,255,255,0.8);padding:5px 12px;border-radius:var(--r-sm);font-size:11px;font-weight:700;cursor:pointer;font-family:'DM Sans',sans-serif}
+.lb-body{padding:16px}
+.lb-entry{display:flex;align-items:center;gap:12px;padding:12px 16px;border-radius:var(--r-sm);margin-bottom:6px;background:var(--surf2);border:1px solid var(--border);transition:all .2s}
+.lb-entry:hover{border-color:rgba(43,43,168,0.25);background:#fff}
+.lb-entry.me{border-color:var(--orange);background:rgba(244,121,32,0.06)}
+.lb-rank{font-family:'Syne',sans-serif;font-weight:800;font-size:18px;color:var(--text3);width:32px;text-align:center;flex-shrink:0}
+.lb-rank.gold{color:#f59e0b}
+.lb-rank.silver{color:#94a3b8}
+.lb-rank.bronze{color:#b45309}
+.lb-crown{font-size:20px;width:32px;text-align:center;flex-shrink:0}
+.lb-name{font-weight:700;font-size:14px;color:var(--navy);flex:1}
+.lb-name .lb-badge{font-size:10px;font-weight:700;padding:2px 6px;border-radius:8px;margin-left:6px;background:rgba(43,43,168,0.1);color:var(--navy)}
+.lb-name .lb-me-tag{font-size:10px;color:var(--orange);font-weight:700;margin-left:6px}
+.lb-stats{text-align:right}
+.lb-xp{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--orange)}
+.lb-detail{font-size:11px;color:var(--text3)}
+.lb-empty{padding:40px;text-align:center;color:var(--text3);font-size:13px}
+
+/* JOIN PANEL */
+.join-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--r);box-shadow:var(--sh-sm);padding:24px}
+.join-title{font-family:'Syne',sans-serif;font-weight:800;font-size:16px;color:var(--navy);margin-bottom:6px}
+.join-sub{font-size:13px;color:var(--text3);margin-bottom:20px}
+.join-input{width:100%;background:var(--surf2);border:2px solid var(--border);border-radius:var(--r-sm);padding:12px 16px;font-size:15px;font-weight:700;color:var(--navy);font-family:'DM Sans',sans-serif;outline:none;margin-bottom:10px;transition:border-color .2s}
+.join-input:focus{border-color:var(--orange)}
+.join-btn{width:100%;background:linear-gradient(135deg,var(--orange),var(--og-dk));color:#fff;border:none;border-radius:var(--r-sm);padding:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:'Syne',sans-serif;margin-bottom:16px}
+.my-score-card{background:linear-gradient(135deg,var(--navy),var(--navy2));border-radius:var(--r-sm);padding:16px;color:#fff;margin-bottom:16px;display:none}
+.my-score-card.show{display:block}
+.my-score-name{font-family:'Syne',sans-serif;font-weight:800;font-size:18px}
+.my-score-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px}
+.my-stat{background:rgba(255,255,255,0.1);border-radius:var(--r-sm);padding:10px;text-align:center}
+.my-stat .mv{font-family:'Syne',sans-serif;font-weight:800;font-size:20px;color:var(--orange)}
+.my-stat .ml{font-size:10px;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:.4px}
+.tips-box{background:var(--surf2);border:1px solid var(--border);border-radius:var(--r-sm);padding:16px}
+.tips-title{font-size:12px;font-weight:800;color:var(--navy);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px}
+.tip-item{font-size:12px;color:var(--text2);padding:4px 0;border-bottom:1px solid var(--border);display:flex;gap:8px}
+.tip-item:last-child{border-bottom:none}
+
+/* ── END OF SHIFT REPORT ─────────────────── */
+.report-overlay{position:fixed;inset:0;background:rgba(26,26,94,0.6);backdrop-filter:blur(6px);z-index:700;display:none;align-items:center;justify-content:center;padding:20px}
+.report-overlay.show{display:flex}
+.report-modal{background:var(--surface);border-radius:16px;width:100%;max-width:620px;max-height:92vh;overflow-y:auto;box-shadow:0 20px 80px rgba(26,26,94,0.4)}
+.report-header{background:linear-gradient(135deg,var(--navy),var(--navy2));padding:24px;text-align:center;border-radius:16px 16px 0 0;position:relative}
+.report-eagle{font-size:48px;margin-bottom:8px}
+.report-title{font-family:'Syne',sans-serif;font-weight:800;font-size:22px;color:#fff}
+.report-date{font-size:12px;color:rgba(255,255,255,0.7);margin-top:4px}
+.report-grade-badge{display:inline-block;background:var(--orange);color:#fff;font-family:'Syne',sans-serif;font-weight:800;font-size:18px;padding:6px 20px;border-radius:20px;margin-top:12px}
+.report-body{padding:24px}
+.report-section{margin-bottom:20px}
+.report-section-title{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--text3);margin-bottom:10px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.report-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.report-stat{background:var(--surf2);border:1px solid var(--border);border-radius:var(--r-sm);padding:14px;text-align:center}
+.report-stat .rv{font-family:'Syne',sans-serif;font-weight:800;font-size:24px;color:var(--navy)}
+.report-stat .rl{font-size:11px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;margin-top:2px}
+.report-stat.highlight .rv{color:var(--orange)}
+.report-breakdown{background:var(--surf2);border:1px solid var(--border);border-radius:var(--r-sm);overflow:hidden}
+.rb-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid var(--border);font-size:13px}
+.rb-row:last-child{border-bottom:none}
+.rb-row .rb-label{color:var(--text2);font-weight:600}
+.rb-row .rb-val{font-weight:800;color:var(--navy);font-family:'Syne',sans-serif}
+.rb-row .rb-val.good{color:var(--green)}
+.rb-row .rb-val.ok{color:var(--amber)}
+.rb-row .rb-val.poor{color:var(--red)}
+.verdict-box{border-radius:var(--r-sm);padding:16px;text-align:center;margin-bottom:16px}
+.verdict-box.excellent{background:var(--green-bg);border:1px solid rgba(22,163,74,0.3)}
+.verdict-box.good{background:var(--amber-bg);border:1px solid rgba(217,119,6,0.3)}
+.verdict-box.poor{background:var(--red-bg);border:1px solid rgba(220,38,38,0.3)}
+.verdict-emoji{font-size:32px;margin-bottom:6px}
+.verdict-text{font-family:'Syne',sans-serif;font-weight:800;font-size:16px}
+.verdict-sub{font-size:12px;color:var(--text3);margin-top:4px}
+.report-footer{padding:16px 24px;border-top:1px solid var(--border);display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn-report-print{background:linear-gradient(135deg,var(--navy),var(--navy2));color:#fff;border:none;padding:11px 20px;border-radius:var(--r-sm);cursor:pointer;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif}
+.btn-report-close{background:linear-gradient(135deg,var(--orange),var(--og-dk));color:#fff;border:none;padding:11px 20px;border-radius:var(--r-sm);cursor:pointer;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif}
+.btn-report-lb{background:linear-gradient(135deg,var(--green),#15803d);color:#fff;border:none;padding:11px 20px;border-radius:var(--r-sm);cursor:pointer;font-size:13px;font-weight:700;font-family:'DM Sans',sans-serif}
+</style>
+
+<!-- ═══════════════════════════════════════════
+     INJECT TAB BAR AFTER TICKER (via JS)
+═══════════════════════════════════════════ -->
+
+<!-- TRACKING TAB PANEL -->
+<div class="tab-panel" id="tab-tracking">
+  <div class="tracking-wrap" id="tracking-content">
+    <div class="no-tracking">
+      <div class="big">🗺️</div>
+      <p><strong>No load being tracked</strong><br/>Book a load on the Load Board first,<br/>then return here to track your driver.</p>
+    </div>
+  </div>
+</div>
+
+<!-- LEADERBOARD TAB PANEL -->
+<div class="tab-panel" id="tab-leaderboard">
+  <div class="lb-wrap">
+    <!-- LEADERBOARD TABLE -->
+    <div class="lb-panel">
+      <div class="lb-header">
+        <div>
+          <div class="lb-title">🏆 Eagle Exchange Leaderboard</div>
+          <div class="lb-sub">Top dispatchers in your classroom today</div>
+        </div>
+        <button class="lb-reset" onclick="clearLeaderboard()">Reset Board</button>
+      </div>
+      <div class="lb-body" id="lb-body">
+        <div class="lb-empty">No scores yet — book loads and earn XP to appear here!</div>
+      </div>
+    </div>
+    <!-- JOIN + MY SCORE -->
+    <div>
+      <div class="join-panel" style="margin-bottom:16px">
+        <div class="join-title">📝 Join the Leaderboard</div>
+        <div class="join-sub">Enter your name to save your score and compete with classmates</div>
+        <input class="join-input" id="lb-name-input" placeholder="Your name (e.g. Priya Sharma)" maxlength="30"/>
+        <button class="join-btn" onclick="submitToLeaderboard()">🦅 Submit My Score</button>
+        <div class="my-score-card" id="my-score-card">
+          <div class="my-score-name" id="my-score-name"></div>
+          <div class="my-score-stats">
+            <div class="my-stat"><div class="mv" id="my-xp">0</div><div class="ml">XP</div></div>
+            <div class="my-stat"><div class="mv" id="my-loads">0</div><div class="ml">Loads</div></div>
+            <div class="my-stat"><div class="mv" id="my-revenue">£0</div><div class="ml">Revenue</div></div>
+            <div class="my-stat"><div class="mv" id="my-grade">—</div><div class="ml">Grade</div></div>
+          </div>
+        </div>
+        <div class="tips-box">
+          <div class="tips-title">💡 How to earn more XP</div>
+          <div class="tip-item"><span>⚡</span><span>Negotiate above offered rate: +80–120 XP</span></div>
+          <div class="tip-item"><span>📋</span><span>Book a load: +50 XP per booking</span></div>
+          <div class="tip-item"><span>🚨</span><span>Handle incident correctly: +40 XP</span></div>
+          <div class="tip-item"><span>✅</span><span>Complete check-call: +20 XP</span></div>
+          <div class="tip-item"><span>🔴</span><span>Reject bad CX broker: +30 XP</span></div>
+          <div class="tip-item"><span>📦</span><span>Book urgent load: +25 bonus XP</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- INCIDENT MODAL -->
+<div class="incident-overlay" id="incident-overlay">
+  <div class="incident-card" id="incident-card">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<!-- END OF SHIFT REPORT MODAL -->
+<div class="report-overlay" id="report-overlay">
+  <div class="report-modal" id="report-modal">
+    <!-- populated by JS -->
+  </div>
+</div>
+
+<script id="part2-script">
+// ═══════════════════════════════════════════════════
+//  EAGLE EXCHANGE PART 2 — TRACKING, INCIDENTS,
+//  LEADERBOARD & END OF SHIFT REPORT
+// ═══════════════════════════════════════════════════
+
+// ── INJECT TAB BAR ────────────────────────────────
+(function injectTabs(){
+  const ticker = document.querySelector('.ex-ticker');
+  const tabBar = document.createElement('div');
+  tabBar.className = 'ex-tabs';
+  tabBar.innerHTML = `
+    <button class="ex-tab active" onclick="switchTab('loadboard',this)">📦 Load Board</button>
+    <button class="ex-tab" onclick="switchTab('tracking',this)" id="tab-btn-tracking">🗺️ Track Load <span class="ex-tab-badge" id="tracking-badge" style="display:none">LIVE</span></button>
+    <button class="ex-tab" onclick="switchTab('leaderboard',this)">🏆 Leaderboard</button>
+    <button class="ex-tab" onclick="showShiftReport()" style="margin-left:auto;color:var(--orange)">📊 End of Shift Report</button>`;
+  ticker.after(tabBar);
+
+  // Wrap existing ex-wrap in loadboard tab
+  const exWrap = document.querySelector('.ex-wrap');
+  const sessionBarWrap = exWrap.previousElementSibling;
+  const lbDiv = document.createElement('div');
+  lbDiv.className = 'tab-panel active';
+  lbDiv.id = 'tab-loadboard';
+  // Move session bar + ex-wrap into tab
+  lbDiv.style.padding = '0';
+  const container = document.createElement('div');
+  container.style.cssText = 'max-width:1400px;margin:0 auto;padding:0 20px 20px';
+  lbDiv.appendChild(container);
+  exWrap.parentNode.insertBefore(lbDiv, exWrap);
+  container.appendChild(sessionBarWrap);
+  container.appendChild(exWrap);
+
+  // Insert tracking and leaderboard panels after
+  lbDiv.after(document.getElementById('tab-leaderboard'));
+  document.getElementById('tab-leaderboard').after(document.getElementById('tab-tracking'));
+})();
+
+function switchTab(name, btn){
+  document.querySelectorAll('.ex-tab').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const panel = document.getElementById('tab-'+name);
+  if(panel) panel.classList.add('active');
+  if(name==='leaderboard') renderLeaderboard();
+  if(name==='tracking') renderTracking();
+}
+
+// ── TRACKING STATE ────────────────────────────────
+let tracking = {
+  active: false,
+  load: null,
+  progress: 0,       // 0–100
+  milesGone: 0,
+  startTime: null,
+  incidents: [],
+  incidentsResolved: 0,
+  incidentScore: 0,   // 0=poor, 1=ok, 2=good per incident
+  checkCalls: 0,
+  checkCallLog: [],
+  completed: false,
+  intervalId: null,
+};
+
+// UK CITY COORDINATES on a 400×500 SVG viewport
+const UK_CITIES = {
+  'London':      {x:285, y:390, label:'London'},
+  'Birmingham':  {x:240, y:300, label:'Birmingham'},
+  'Manchester':  {x:220, y:235, label:'Manchester'},
+  'Leeds':       {x:250, y:220, label:'Leeds'},
+  'Glasgow':     {x:190, y:110, label:'Glasgow'},
+  'Edinburgh':   {x:215, y:130, label:'Edinburgh'},
+  'Bristol':     {x:195, y:360, label:'Bristol'},
+  'Cardiff':     {x:185, y:370, label:'Cardiff'},
+  'Southampton': {x:255, y:400, label:'Southampton'},
+  'Sheffield':   {x:255, y:240, label:'Sheffield'},
+  'Newcastle':   {x:255, y:175, label:'Newcastle'},
+  'Liverpool':   {x:205, y:245, label:'Liverpool'},
+  'Felixstowe':  {x:320, y:345, label:'Felixstowe'},
+  'Nottingham':  {x:260, y:275, label:'Nottingham'},
+  'Coventry':    {x:250, y:310, label:'Coventry'},
+};
+
+const MOTORWAYS = [
+  // M1: London → Leeds
+  [{x:280,y:380},{x:268,y:340},{x:260,y:300},{x:255,y:260},{x:252,y:230}],
+  // M6: Birmingham → Glasgow
+  [{x:240,y:305},{x:228,y:265},{x:220,y:240},{x:210,y:200},{x:200,y:160},{x:192,y:120}],
+  // M25: London orbital
+  [{x:260,y:410},{x:290,y:405},{x:315,y:390},{x:300,y:370},{x:265,y:378}],
+  // M4: London → Bristol
+  [{x:265,y:388},{x:235,y:385},{x:205,y:375},{x:195,y:363}],
+];
+
+function renderTracking(){
+  const panel = document.getElementById('tracking-content');
+  if(!tracking.active && !tracking.completed){
+    panel.innerHTML = `<div class="no-tracking"><div class="big">🗺️</div><p><strong>No load being tracked</strong><br/>Book a load on the Load Board first,<br/>then click "Track This Load" after booking.</p></div>`;
+    return;
+  }
+  const l = tracking.load;
+  const from = UK_CITIES[l.from] || {x:240,y:300};
+  const to   = UK_CITIES[l.to]   || {x:285,y:390};
+  const pct  = tracking.progress;
+  const truckX = from.x + (to.x - from.x) * (pct/100);
+  const truckY = from.y + (to.y - from.y) * (pct/100);
+  const elapsed = tracking.startTime ? Math.round((Date.now()-tracking.startTime)/60000) : 0;
+  const eta = Math.max(0, Math.round((l.miles / 50) * 60 * (1 - pct/100)));
+
+  // Build motorway/road lines
+  const mwLines = MOTORWAYS.map(pts=>{
+    const d = pts.map((p,i)=>(i===0?`M${p.x},${p.y}`:`L${p.x},${p.y}`)).join(' ');
+    return `<path d="${d}" class="map-motorway"/>`;
+  }).join('');
+
+  // Active route line
+  const routeD = `M${from.x},${from.y} L${to.x},${to.y}`;
+
+  // All city dots
+  const cityDots = Object.entries(UK_CITIES).map(([name,c])=>{
+    const isFrom = name===l.from, isTo = name===l.to;
+    const cls = isFrom?'origin':isTo?'destination':'';
+    return `
+      <circle class="map-city-dot ${cls}" cx="${c.x}" cy="${c.y}" r="${isFrom||isTo?7:5}"/>
+      <text class="map-city-label" x="${c.x+10}" y="${c.y+4}">${name}</text>`;
+  }).join('');
+
+  const cpmNum = (l.rate / l.miles).toFixed(2);
+  const statusText = tracking.completed ? 'DELIVERED ✅' : 'EN ROUTE 🚛';
+
+  panel.innerHTML = `
+  <div class="tracking-wrap">
+    <div class="map-panel">
+      <div class="map-header">
+        <div>
+          <div class="map-title">🗺️ ${l.from} → ${l.to}</div>
+          <div class="map-subtitle">${l.vehicle} · ${l.goods} · ${l.miles} miles</div>
+        </div>
+        <div class="map-status-pill ${tracking.completed?'idle':'moving'}">${statusText}</div>
+      </div>
+      <div class="map-body">
+        <svg class="uk-map-svg" viewBox="70 80 320 370" xmlns="http://www.w3.org/2000/svg">
+          <!-- UK outline simplified -->
+          <path d="M180,90 L200,85 L220,95 L240,88 L255,95 L270,90 L285,100 L295,115 L290,135 L280,155 L285,170 L278,185 L290,200 L295,220 L290,240 L300,255 L305,275 L310,295 L305,315 L315,335 L320,355 L315,370 L305,385 L290,400 L270,415 L250,420 L235,415 L220,420 L205,415 L195,405 L185,395 L180,410 L170,405 L175,388 L168,375 L160,360 L165,345 L158,330 L155,310 L162,295 L155,275 L150,255 L155,235 L148,215 L145,195 L150,175 L145,155 L148,135 L155,115 L165,100 Z" fill="#e8eef8" stroke="#cbd5e1" stroke-width="1.5"/>
+          <!-- Motorways -->
+          ${mwLines}
+          <!-- Active route -->
+          <path d="${routeD}" class="map-road active-route"/>
+          <!-- Cities -->
+          ${cityDots}
+          <!-- TRUCK -->
+          ${!tracking.completed ? `<text x="${truckX-10}" y="${truckY+6}" font-size="20" class="truck-marker">🚛</text>` : `<text x="${to.x-10}" y="${to.y+6}" font-size="20">✅</text>`}
+          <!-- Labels for route cities -->
+          <circle cx="${from.x}" cy="${from.y}" r="9" fill="none" stroke="var(--green)" stroke-width="2"/>
+          <circle cx="${to.x}"   cy="${to.y}"   r="9" fill="none" stroke="var(--orange)" stroke-width="2"/>
+        </svg>
+      </div>
+      <div class="journey-bar">
+        <div class="journey-route">
+          <span class="j-city">${l.from}</span>
+          <span class="j-arrow">→</span>
+          <span class="j-city">${l.to}</span>
+          <span class="j-miles">${l.miles} miles total</span>
+        </div>
+        <div class="journey-track">
+          <div class="journey-fill" style="width:${pct}%"></div>
+          <div class="journey-truck" style="left:${pct}%">🚛</div>
+        </div>
+        <div class="journey-stats">
+          <div class="j-stat"><div class="jv">${Math.round(l.miles*pct/100)}mi</div><div class="jl">Covered</div></div>
+          <div class="j-stat"><div class="jv">${Math.round(l.miles*(1-pct/100))}mi</div><div class="jl">Remaining</div></div>
+          <div class="j-stat"><div class="jv">${elapsed}m</div><div class="jl">Elapsed</div></div>
+          <div class="j-stat"><div class="jv">${tracking.completed?'Done':eta+'m'}</div><div class="jl">ETA</div></div>
+        </div>
+      </div>
+    </div>
+    <!-- CHECK CALLS PANEL -->
+    <div class="cc-panel">
+      <div class="cc-header">
+        <div class="cc-title">📞 Check-Calls & Updates</div>
+        <div class="cc-sub">Stay in contact with your driver throughout the journey</div>
+      </div>
+      <div class="cc-body">
+        <div class="cc-log" id="cc-log">
+          ${tracking.checkCallLog.map(e=>`<div class="cc-entry ${e.type}">${e.text}</div>`).join('')}
+          ${tracking.checkCallLog.length===0?'<div class="cc-entry system">Journey started. Driver en route from '+l.from+'. Call for regular check-calls!</div>':''}
+        </div>
+        ${tracking.completed ?
+          `<div class="cc-done-msg">✅ Load delivered! Generate your shift report below.</div>
+           <button class="cc-next show" onclick="showShiftReport()">📊 View End of Shift Report</button>` :
+          `<div class="cc-input-row">
+            <input class="cc-input" id="cc-input" placeholder="Type your check-call message…" onkeydown="if(event.key==='Enter')sendCheckCall()"/>
+            <button class="cc-send" onclick="sendCheckCall()">Send 📞</button>
+          </div>
+          <button class="cc-next show" style="margin-top:8px;background:linear-gradient(135deg,#16a34a,#15803d)" onclick="advanceJourney()">⏩ Advance Journey (simulate 20%)</button>`
+        }
+      </div>
+    </div>
+  </div>`;
+}
+
+const CHECK_CALL_REPLIES = [
+  "All good here, boss. Just passed {checkpoint}. On track for {eta}.",
+  "Running smoothly. Traffic clear on the M6. Should make delivery no problem.",
+  "Just stopped for a 45-minute break as required. Back on road in {eta}.",
+  "Delivery point confirmed — they're expecting me at {eta}. All good.",
+  "Just loaded. Truck is sealed and paperwork signed. Heading your way now.",
+  "Bit of traffic near {checkpoint} but nothing major. Still making good time.",
+];
+
+const CHECKPOINTS = ['Birmingham','Manchester','Sheffield','the M25','Leeds','Bristol','Coventry','the M6 junction'];
+
+function sendCheckCall(){
+  const input = document.getElementById('cc-input');
+  const msg = input.value.trim();
+  if(!msg) return;
+  const l = tracking.load;
+  const eta = Math.max(5, Math.round((l.miles/50)*60*(1-tracking.progress/100)));
+  const cp = CHECKPOINTS[Math.floor(Math.random()*CHECKPOINTS.length)];
+  const reply = CHECK_CALL_REPLIES[Math.floor(Math.random()*CHECK_CALL_REPLIES.length)]
+    .replace('{checkpoint}', cp).replace('{eta}', eta+'min');
+
+  tracking.checkCallLog.push({type:'dispatcher', text:'You: '+msg});
+  tracking.checkCallLog.push({type:'driver', text:'Driver: '+reply});
+  tracking.checkCalls++;
+  session.xp += 20;
+  updateSessionBar();
+  input.value = '';
+  showToast('📞','Check-call complete','+20 XP');
+  renderTracking();
+  // scroll log to bottom
+  setTimeout(()=>{
+    const log = document.getElementById('cc-log');
+    if(log) log.scrollTop = log.scrollHeight;
+  }, 100);
+}
+
+function advanceJourney(){
+  if(tracking.completed) return;
+  tracking.progress = Math.min(100, tracking.progress + 20);
+  tracking.milesGone = Math.round(tracking.load.miles * tracking.progress / 100);
+  if(tracking.progress >= 100){
+    tracking.completed = true;
+    tracking.active = false;
+    clearInterval(tracking.intervalId);
+    tracking.checkCallLog.push({type:'resolved', text:'✅ DELIVERED — Driver has successfully delivered to '+tracking.load.to+'. Paperwork signed.'});
+    session.xp += 60;
+    updateSessionBar();
+    document.getElementById('tracking-badge').style.display = 'none';
+    showToast('🎉','Load delivered successfully!','+60 XP');
+  } else {
+    // Maybe trigger incident
+    if(Math.random() < 0.45 && tracking.incidents.length < 4){
+      setTimeout(()=>triggerIncident(), 800);
+    }
+  }
+  renderTracking();
+}
+
+// ── INCIDENT SYSTEM ───────────────────────────────
+const INCIDENTS = [
+  {
+    icon:'🚧', title:'M6 Motorway Closure', sub:'Major incident reported',
+    situation:'Your driver has just called — the M6 is completely closed near Junction 15 due to a multi-vehicle accident. Police say it will be closed for at least 2 hours. The delivery deadline is in 3 hours and the detour adds 45 minutes.',
+    question:'What do you do as the dispatcher?',
+    options:[
+      {text:'Contact the broker immediately — explain the situation, provide updated ETA, and send driver on the A34 diversion. Update all parties in writing.', score:'good', label:'✅ Correct'},
+      {text:'Tell the driver to wait on the motorway until it reopens — it might clear sooner than expected.', score:'poor', label:'❌ Wrong'},
+      {text:'Call the broker but do not mention the delay — wait to see if driver makes it in time.', score:'poor', label:'❌ Wrong'},
+      {text:'Email the broker only — no need to call. They will see it eventually.', score:'neutral', label:'⚠️ Partial'},
+    ],
+    feedback:{
+      good:'Perfect! Proactive communication is the dispatcher\'s most important skill. Broker informed, alternative route sent, ETA updated. This is professional dispatch.',
+      poor:'Never keep the broker in the dark. Late communication = damaged relationship and possible penalty charges.',
+      neutral:'Email is not enough for urgent situations. Always call first, then follow up in writing.'
+    }
+  },
+  {
+    icon:'🔧', title:'Truck Breakdown', sub:'Driver needs urgent assistance',
+    situation:'Your driver has broken down on the A1 near Peterborough. The load is 24 tonnes of chilled dairy products. Recovery is 90 minutes away. The delivery window closes in 4 hours.',
+    question:'What is your priority action as dispatcher?',
+    options:[
+      {text:'Call the broker, explain breakdown, arrange recovery, and check if a replacement vehicle is available to transship the load. Document everything.', score:'good', label:'✅ Correct'},
+      {text:'Wait for the driver to sort it out — it\'s their truck, not your problem.', score:'poor', label:'❌ Wrong'},
+      {text:'Call the broker and say the driver is "running slightly late" without mentioning the breakdown.', score:'poor', label:'❌ Wrong'},
+      {text:'Call broker, wait for recovery, do not mention transship option — see what happens.', score:'neutral', label:'⚠️ Partial'},
+    ],
+    feedback:{
+      good:'Excellent! Breakdown protocol: inform broker immediately, arrange recovery, consider transship, document everything. Chilled goods especially need urgent action.',
+      poor:'Dispatchers are responsible for communication and problem-solving. Never ignore or hide a breakdown.',
+      neutral:'Good you called, but not mentioning the transship option when the delivery is time-critical shows lack of experience.'
+    }
+  },
+  {
+    icon:'⏱️', title:'Shipper Not Ready', sub:'Collection delayed at origin',
+    situation:'Driver arrived at collection at 08:00 as booked. It is now 10:15 — the shipper says the load won\'t be ready until 12:00. This puts the delivery window at serious risk. Detention charges may apply after 2 free hours.',
+    question:'What is the correct dispatcher response?',
+    options:[
+      {text:'Log the arrival time, notify broker of delay, confirm detention clock started at 08:00, get written confirmation from shipper, and recalculate delivery ETA.', score:'good', label:'✅ Correct'},
+      {text:'Tell driver to wait patiently — nothing you can do from India.', score:'poor', label:'❌ Wrong'},
+      {text:'Cancel the load and find a new one — this is too much trouble.', score:'poor', label:'❌ Wrong'},
+      {text:'Notify broker of delay but forget to log detention time — follow up later.', score:'neutral', label:'⚠️ Partial'},
+    ],
+    feedback:{
+      good:'Spot on! Detention time must be logged from driver\'s arrival. Written confirmation protects the carrier. Broker must be notified immediately — they may have delivery rebooked.',
+      poor:'Dispatchers manage situations remotely — you have tools and processes for exactly this. Never just wait.',
+      neutral:'You notified the broker, good — but missing the detention log costs the carrier money. Always document arrival time.'
+    }
+  },
+  {
+    icon:'📦', title:'Damaged Goods Discovered', sub:'Driver reports damage at delivery',
+    situation:'Your driver has arrived at the delivery point. The consignee is refusing to accept 4 pallets — they say the goods are damaged. Driver is unsure if the damage happened in transit or was pre-existing. Consignee wants to reject the entire load.',
+    question:'What do you instruct the driver to do?',
+    options:[
+      {text:'Driver photographs all damage, gets consignee to sign CMR with damage noted (not full rejection). Contact broker and carrier\'s insurer immediately. Do not leave until note is signed.', score:'good', label:'✅ Correct'},
+      {text:'Accept full rejection, bring everything back, and deal with it later.', score:'poor', label:'❌ Wrong'},
+      {text:'Tell driver to argue with the consignee until they accept the full load.', score:'poor', label:'❌ Wrong'},
+      {text:'Driver photographs damage and leaves — send email to broker later.', score:'neutral', label:'⚠️ Partial'},
+    ],
+    feedback:{
+      good:'Perfect protocol! Photography + signed CMR note with damage notation protects the carrier legally. Never allow full rejection without documentation. Insurer notified immediately.',
+      poor:'Full rejection without documentation is a disaster for the carrier. Always get a signed damage note.',
+      neutral:'Photography is right but leaving without a signed note is a serious mistake. That note is your legal protection.'
+    }
+  },
+  {
+    icon:'⛽', title:'Driver Fuel Crisis', sub:'Unexpected cost issue',
+    situation:'Your driver has called — he forgot to fill up before starting and is now almost out of fuel on the M1, 40 miles from the nearest services. He has no company card and insufficient personal funds to fill the 44-tonne vehicle.',
+    question:'How do you handle this situation?',
+    options:[
+      {text:'Find the nearest fuel station, arrange for carrier to make a card payment over phone, log the incident, and remind driver of pre-trip checklist for future loads.', score:'good', label:'✅ Correct'},
+      {text:'Tell driver this is his problem — he should have filled up before starting.', score:'poor', label:'❌ Wrong'},
+      {text:'Call the broker to explain the situation and ask for help.', score:'neutral', label:'⚠️ Partial'},
+      {text:'Find alternative driver for the load immediately.', score:'poor', label:'❌ Wrong'},
+    ],
+    feedback:{
+      good:'Good problem-solving! You found a solution, arranged payment, and used this as a training moment. Pro dispatchers prevent problems with checklists, not just react to them.',
+      poor:'Leaving a driver stranded puts the delivery and the carrier at risk. Problem-solving is your job.',
+      neutral:'The broker doesn\'t need to know about this internal issue. Handle it with the carrier directly.'
+    }
+  },
+  {
+    icon:'🌧️', title:'Severe Weather Warning', sub:'Safety alert issued',
+    situation:'Met Office has issued a red weather warning for heavy snow across Scotland. Your driver is 80 miles from Glasgow with a 4-hour delivery window. The A74(M) may close. Temperature is -4°C.',
+    question:'What is your response?',
+    options:[
+      {text:'Check road conditions on Traffic Scotland, advise driver to proceed carefully or park safely if roads unsafe. Notify broker of potential delay. Driver safety is the priority.', score:'good', label:'✅ Correct'},
+      {text:'Push driver to continue at normal speed — the delivery must make it on time.', score:'poor', label:'❌ Wrong'},
+      {text:'Cancel the load and rebook for tomorrow without informing broker first.', score:'poor', label:'❌ Wrong'},
+      {text:'Call broker to warn them but leave the decision entirely to the driver without any guidance.', score:'neutral', label:'⚠️ Partial'},
+    ],
+    feedback:{
+      good:'Driver safety ALWAYS comes first. UK law is clear — drivers must not be pressured to drive in unsafe conditions. Broker informed, roads checked, driver supported. This is professional dispatch.',
+      poor:'Pressuring a driver to continue in dangerous conditions is illegal and deeply unethical. Driver safety is always above delivery targets.',
+      neutral:'Informing the broker is right, but not providing any guidance to the driver shows a gap in your incident management.'
+    }
+  },
+];
+
+let pendingIncident = null;
+
+function triggerIncident(){
+  const available = INCIDENTS.filter((_,i)=>!tracking.incidents.includes(i));
+  if(!available.length) return;
+  const idx = Math.floor(Math.random()*INCIDENTS.length);
+  if(tracking.incidents.includes(idx)) return;
+  tracking.incidents.push(idx);
+  const inc = INCIDENTS[idx];
+  pendingIncident = inc;
+  renderIncident(inc);
+  document.getElementById('incident-overlay').classList.add('show');
+  tracking.checkCallLog.push({type:'incident', text:'🚨 INCIDENT: '+inc.title+' — Respond immediately!'});
+}
+
+function renderIncident(inc){
+  document.getElementById('incident-card').innerHTML = `
+    <div class="incident-header">
+      <div class="incident-icon">${inc.icon}</div>
+      <div class="incident-htext">
+        <div class="ititle">🚨 ${inc.title}</div>
+        <div class="isub">${inc.sub}</div>
+      </div>
+    </div>
+    <div class="incident-body">
+      <div class="incident-situation">${inc.situation}</div>
+      <div class="incident-question">${inc.question}</div>
+      <div class="incident-options">
+        ${inc.options.map((o,i)=>`
+          <button class="incident-option" onclick="answerIncident(${i})">${o.text}</button>
+        `).join('')}
+      </div>
+      <div class="incident-feedback" id="inc-feedback"></div>
+      <button class="incident-continue" id="inc-continue" onclick="closeIncident()">Continue Journey →</button>
+    </div>`;
+}
+
+function answerIncident(idx){
+  const inc = pendingIncident;
+  const chosen = inc.options[idx];
+  const score = chosen.score;
+
+  // Style all options
+  document.querySelectorAll('.incident-option').forEach((btn,i)=>{
+    btn.disabled = true;
+    if(i===idx) btn.classList.add(score==='good'?'correct':score==='neutral'?'neutral':'wrong');
+  });
+
+  const fb = document.getElementById('inc-feedback');
+  fb.textContent = inc.feedback[score];
+  fb.className = 'incident-feedback show ' + (score==='good'?'good':score==='neutral'?'ok':'poor');
+
+  document.getElementById('inc-continue').classList.add('show');
+
+  let xpEarned = 0;
+  if(score==='good'){ xpEarned=40; tracking.incidentScore+=2; }
+  else if(score==='neutral'){ xpEarned=15; tracking.incidentScore+=1; }
+  else { xpEarned=5; }
+  tracking.incidentsResolved++;
+  session.xp += xpEarned;
+  updateSessionBar();
+  showToast(score==='good'?'✅':score==='neutral'?'⚠️':'❌',
+    score==='good'?'Correct response!':score==='neutral'?'Partially correct':'Incorrect response',
+    '+'+xpEarned+' XP');
+  tracking.checkCallLog.push({type:score==='good'?'resolved':score==='neutral'?'system':'incident',
+    text: (score==='good'?'✅ Well handled: ':score==='neutral'?'⚠️ Partial response: ':'❌ Poor response: ') + inc.title});
+}
+
+function closeIncident(){
+  document.getElementById('incident-overlay').classList.remove('show');
+  pendingIncident = null;
+  renderTracking();
+}
+
+// ── START TRACKING (called after booking) ─────────
+function startTracking(loadId){
+  const l = ALL_LOADS.find(ld=>ld.id===loadId);
+  if(!l) return;
+  tracking.active = true;
+  tracking.load = l;
+  tracking.progress = 0;
+  tracking.milesGone = 0;
+  tracking.startTime = Date.now();
+  tracking.incidents = [];
+  tracking.incidentsResolved = 0;
+  tracking.incidentScore = 0;
+  tracking.checkCalls = 0;
+  tracking.checkCallLog = [];
+  tracking.completed = false;
+  clearInterval(tracking.intervalId);
+
+  // Show tracking badge on tab
+  document.getElementById('tracking-badge').style.display = 'inline';
+
+  // Auto-advance every 45 seconds
+  tracking.intervalId = setInterval(()=>{
+    if(!tracking.active) return;
+    tracking.progress = Math.min(100, tracking.progress + 8);
+    tracking.milesGone = Math.round(l.miles * tracking.progress / 100);
+    if(tracking.progress >= 100){
+      tracking.completed = true;
+      tracking.active = false;
+      clearInterval(tracking.intervalId);
+      tracking.checkCallLog.push({type:'resolved', text:'✅ DELIVERED — '+l.to+'. Paperwork signed.'});
+      session.xp += 60;
+      updateSessionBar();
+      document.getElementById('tracking-badge').style.display = 'none';
+      showToast('🎉','Load delivered!','+60 XP');
+      renderTracking();
+    } else {
+      if(Math.random() < 0.3 && tracking.incidents.length < 3){
+        triggerIncident();
+      }
+    }
+    // Refresh if tracking tab is active
+    if(document.getElementById('tab-tracking').classList.contains('active')) renderTracking();
+  }, 45000);
+
+  showToast('🚛','Tracking started — switch to Track Load tab','');
+}
+
+// Patch generateCN to add Track button
+const _origGenerateCN = generateCN;
+generateCN = function(){
+  _origGenerateCN.apply(this, arguments);
+  // After CN modal appears, patch the "Find Next Load" button to also offer tracking
+  setTimeout(()=>{
+    const footer = document.querySelector('.cn-footer');
+    if(footer && currentLoad){
+      const trackBtn = document.createElement('button');
+      trackBtn.className = 'btn-confirm';
+      trackBtn.style.cssText = 'background:linear-gradient(135deg,#0891b2,#0e7490);border:none;padding:10px 16px;border-radius:8px;cursor:pointer;font-size:13px;font-weight:700;font-family:DM Sans,sans-serif;color:#fff';
+      trackBtn.textContent = '🗺️ Track This Load';
+      trackBtn.onclick = ()=>{
+        closeModal('cn-modal');
+        startTracking(currentLoad.id);
+        // Switch to tracking tab
+        document.querySelectorAll('.ex-tab').forEach(t=>t.classList.remove('active'));
+        document.querySelectorAll('.tab-panel').forEach(p=>p.classList.remove('active'));
+        document.querySelector('[onclick*="tracking"]').classList.add('active');
+        document.getElementById('tab-tracking').classList.add('active');
+        renderTracking();
+      };
+      footer.insertBefore(trackBtn, footer.children[1]);
+    }
+  }, 300);
+};
+
+// ── LEADERBOARD ───────────────────────────────────
+function getLeaderboard(){
+  return JSON.parse(localStorage.getItem('ex_leaderboard') || '[]');
+}
+function saveLeaderboard(lb){
+  localStorage.setItem('ex_leaderboard', JSON.stringify(lb));
+}
+
+function submitToLeaderboard(){
+  const name = document.getElementById('lb-name-input').value.trim();
+  if(!name){ showToast('⚠️','Enter your name first',''); return; }
+
+  const grade = getGrade();
+  const entry = {
+    name, xp:session.xp, loads:session.booked,
+    revenue:session.revenue, negoWins:session.negoWins,
+    grade, timestamp: Date.now()
+  };
+
+  let lb = getLeaderboard();
+  // Remove existing entry for same name
+  lb = lb.filter(e=>e.name.toLowerCase()!==name.toLowerCase());
+  lb.push(entry);
+  lb.sort((a,b)=>b.xp-a.xp);
+  lb = lb.slice(0,20); // top 20
+  saveLeaderboard(lb);
+
+  // Update my score card
+  document.getElementById('my-score-card').classList.add('show');
+  document.getElementById('my-score-name').textContent = '🦅 '+name;
+  document.getElementById('my-xp').textContent = session.xp;
+  document.getElementById('my-loads').textContent = session.booked;
+  document.getElementById('my-revenue').textContent = '£'+session.revenue.toLocaleString();
+  document.getElementById('my-grade').textContent = grade;
+
+  renderLeaderboard(name);
+  showToast('🏆','Score submitted to leaderboard!','+0 XP');
+}
+
+function getGrade(){
+  const {booked, xp, negoWins} = session;
+  if(xp >= 600 && negoWins >= 4) return '👑 Eagle Pro';
+  if(xp >= 400 && booked >= 5)   return '⭐ Senior';
+  if(xp >= 200 && booked >= 3)   return '🟢 Dispatcher';
+  if(booked >= 1)                return '🟡 Rookie';
+  return '— Ungraded';
+}
+
+function renderLeaderboard(myName){
+  const lb = getLeaderboard();
+  const body = document.getElementById('lb-body');
+  if(!lb.length){
+    body.innerHTML = '<div class="lb-empty">No scores yet — book loads and earn XP to appear here!</div>';
+    return;
+  }
+  const crowns = ['🥇','🥈','🥉'];
+  const rankClass = ['gold','silver','bronze'];
+  body.innerHTML = lb.map((e,i)=>{
+    const isMe = myName && e.name.toLowerCase()===myName.toLowerCase();
+    const crown = i<3 ? `<div class="lb-crown">${crowns[i]}</div>` : `<div class="lb-rank ${rankClass[i]||''}">${i+1}</div>`;
+    return `
+    <div class="lb-entry ${isMe?'me':''}">
+      ${crown}
+      <div class="lb-name">
+        ${e.name}
+        ${isMe?'<span class="lb-me-tag">← YOU</span>':''}
+        <span class="lb-badge">${e.grade}</span>
+      </div>
+      <div class="lb-stats">
+        <div class="lb-xp">⚡ ${e.xp} XP</div>
+        <div class="lb-detail">${e.loads} loads · £${e.revenue.toLocaleString()}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function clearLeaderboard(){
+  if(confirm('Clear the entire leaderboard? This cannot be undone.'))
+  { saveLeaderboard([]); renderLeaderboard(); showToast('🗑️','Leaderboard cleared',''); }
+}
+
+// ── END OF SHIFT REPORT ───────────────────────────
+function showShiftReport(){
+  const grade = getGrade();
+  const negoScore = session.negoWins > 0 ? Math.round((session.negoWins / Math.max(session.booked,1))*100)+'%' : '0%';
+  const incScore = tracking.incidentsResolved > 0 ? Math.round((tracking.incidentScore / (tracking.incidentsResolved*2))*100)+'%' : 'N/A';
+  const cpm = session.revenue > 0 && tracking.load ? (session.revenue / (tracking.load.miles || 1)).toFixed(2) : 'N/A';
+
+  const verdict = session.xp >= 400 ? 'excellent' : session.xp >= 150 ? 'good' : 'poor';
+  const verdictData = {
+    excellent: {emoji:'🏆', text:'Outstanding Session!', sub:'You have the skills of a professional UK freight dispatcher. Excellent negotiation, proactive communication, and incident handling.'},
+    good:      {emoji:'⭐', text:'Good Performance', sub:'Solid foundation. Keep practising negotiation and incident response. You are on track to become a confident dispatcher.'},
+    poor:      {emoji:'📚', text:'Keep Practising', sub:'Every dispatcher starts somewhere. Focus on negotiating above offered rates and completing more loads. Review your incident responses with the instructor.'},
+  };
+  const vd = verdictData[verdict];
+
+  const xpBreakdown = [
+    {label:'Loads booked', val: session.booked*50, note: session.booked+' × 50 XP'},
+    {label:'Negotiation wins', val: session.negoWins*80, note: session.negoWins+' wins × 80 XP avg'},
+    {label:'Check-calls made', val: tracking.checkCalls*20, note: tracking.checkCalls+' × 20 XP'},
+    {label:'Incidents handled', val: tracking.incidentsResolved*25, note: tracking.incidentsResolved+' × avg 25 XP'},
+    {label:'Load delivered', val: tracking.completed?60:0, note: tracking.completed?'Journey completed':'Not completed'},
+  ];
+
+  const today = new Date().toLocaleDateString('en-GB', {weekday:'long',year:'numeric',month:'long',day:'numeric'});
+
+  document.getElementById('report-modal').innerHTML = `
+    <div class="report-header">
+      <div class="report-eagle">🦅</div>
+      <div class="report-title">End of Shift Report</div>
+      <div class="report-date">${today} · Eagle Exchange Training Session</div>
+      <div class="report-grade-badge">${grade}</div>
+    </div>
+    <div class="report-body">
+      <div class="verdict-box ${verdict}">
+        <div class="verdict-emoji">${vd.emoji}</div>
+        <div class="verdict-text">${vd.text}</div>
+        <div class="verdict-sub">${vd.sub}</div>
+      </div>
+      <div class="report-section">
+        <div class="report-section-title">Session Summary</div>
+        <div class="report-grid">
+          <div class="report-stat highlight"><div class="rv">⚡ ${session.xp}</div><div class="rl">Total XP Earned</div></div>
+          <div class="report-stat"><div class="rv">${session.booked}</div><div class="rl">Loads Booked</div></div>
+          <div class="report-stat"><div class="rv">£${session.revenue.toLocaleString()}</div><div class="rl">Revenue Secured</div></div>
+          <div class="report-stat"><div class="rv">£${Math.round(session.revenue*0.08).toLocaleString()}</div><div class="rl">Xeagle Fee (8%)</div></div>
+        </div>
+      </div>
+      <div class="report-section">
+        <div class="report-section-title">Performance Breakdown</div>
+        <div class="report-breakdown">
+          <div class="rb-row"><span class="rb-label">Negotiation Success Rate</span><span class="rb-val ${parseInt(negoScore)>=50?'good':parseInt(negoScore)>=25?'ok':'poor'}">${negoScore}</span></div>
+          <div class="rb-row"><span class="rb-label">Best Rate Above Offer</span><span class="rb-val good">${session.bestRateAbove>0?'+£'+session.bestRateAbove:'No negotiations above offer'}</span></div>
+          <div class="rb-row"><span class="rb-label">Incident Response Score</span><span class="rb-val ${incScore==='N/A'?'':'good'}">${incScore}</span></div>
+          <div class="rb-row"><span class="rb-label">Check-Calls Made</span><span class="rb-val ${tracking.checkCalls>=3?'good':tracking.checkCalls>=1?'ok':'poor'}">${tracking.checkCalls}</span></div>
+          <div class="rb-row"><span class="rb-label">Incidents Handled</span><span class="rb-val">${tracking.incidentsResolved}</span></div>
+          <div class="rb-row"><span class="rb-label">Load Delivery</span><span class="rb-val ${tracking.completed?'good':'ok'}">${tracking.completed?'✅ Delivered':'Not yet completed'}</span></div>
+        </div>
+      </div>
+      <div class="report-section">
+        <div class="report-section-title">XP Breakdown</div>
+        <div class="report-breakdown">
+          ${xpBreakdown.map(x=>`<div class="rb-row"><span class="rb-label">${x.label} <span style="font-size:11px;color:var(--text3)">(${x.note})</span></span><span class="rb-val ${x.val>0?'good':''}">+${x.val} XP</span></div>`).join('')}
+          <div class="rb-row" style="background:rgba(43,43,168,0.04)"><span class="rb-label" style="font-weight:800">TOTAL</span><span class="rb-val" style="font-size:18px">⚡ ${session.xp} XP</span></div>
+        </div>
+      </div>
+      <div class="report-section">
+        <div class="report-section-title">Instructor Note</div>
+        <div style="background:rgba(244,121,32,0.06);border-left:3px solid var(--orange);padding:14px 16px;border-radius:0 var(--r-sm) var(--r-sm) 0;font-size:13px;color:var(--text2);line-height:1.7">
+          <strong>Focus areas for next session:</strong><br/>
+          ${session.booked===0?'• Book at least 3 loads next session<br/>':''}
+          ${session.negoWins===0?'• Practice rate negotiation — aim to get above the offered rate<br/>':''}
+          ${tracking.checkCalls<3?'• Make more check-calls — minimum 1 call per hour of journey<br/>':''}
+          ${tracking.incidentsResolved===0?'• No incidents encountered — ask your instructor to trigger manual scenarios<br/>':''}
+          ${session.xp>=400?'• Excellent session! Challenge: can you beat your score tomorrow?':'• Review the negotiation techniques from Week 2 before next session'}
+        </div>
+      </div>
+    </div>
+    <div class="report-footer">
+      <button class="btn-report-print" onclick="window.print()">🖨️ Print Report</button>
+      <button class="btn-report-lb" onclick="closeReport();switchTab('leaderboard',document.querySelector('[onclick*=leaderboard]'))">🏆 Submit to Leaderboard</button>
+      <button class="btn-report-close" onclick="closeReport()">Close</button>
+    </div>`;
+
+  document.getElementById('report-overlay').classList.add('show');
+}
+
+function closeReport(){
+  document.getElementById('report-overlay').classList.remove('show');
+}
+
+// Init leaderboard on load
+renderLeaderboard();
+</script>
