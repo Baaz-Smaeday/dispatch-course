@@ -24,7 +24,7 @@
   --ease:cubic-bezier(.22,1,.36,1);
 }
 html{scroll-behavior:smooth}
-body{background:var(--ink);color:var(--white);font-family:var(--fb);font-size:15px;line-height:1.6;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:var(--fire) var(--ink2)}
+body{background:var(--ink);color: var(--text);font-family:var(--fb);font-size:15px;line-height:1.6;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:var(--fire) var(--ink2)}
 ::-webkit-scrollbar{width:4px}
 ::-webkit-scrollbar-track{background:var(--ink2)}
 ::-webkit-scrollbar-thumb{background:var(--fire);border-radius:2px}
@@ -139,7 +139,7 @@ body::before{content:'';position:fixed;inset:0;z-index:0;pointer-events:none;opa
 .prow-lbl{font-size:11px;font-weight:600}
 .prow-sub{font-family:var(--fm);font-size:9px;color:var(--ghost);margin-top:1px}
 .prow-bw{width:55px;flex-shrink:0}
-.prow-track{height:2px;background:rgba(255,255,255,0.06);border-radius:99px;overflow:hidden}
+.prow-track{height:2px;background: #f4f6fb;border-radius:99px;overflow:hidden}
 .prow-fill{height:100%;border-radius:99px;transition:width 1.2s var(--ease)}
 .prow-pct{font-family:var(--fm);font-size:9px;color:var(--ghost);text-align:right;margin-top:2px}
 .exam-cta{margin-top:12px;padding:10px 13px;background:rgba(232,184,75,0.08);border:1px solid rgba(232,184,75,0.18);border-radius:8px;display:flex;align-items:center;gap:9px;text-decoration:none;transition:all .18s}
@@ -394,28 +394,77 @@ a,button,[onclick]{cursor:pointer}
   .nav-inner{padding:0 18px}
 }
 </style>
-<style>
-  /* Eagle Academy Brand Stripe */
-  .site-header::after {
-    content: '';
-    position: absolute;
-    bottom: -2px; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent 0%, #F47920 30%, #2B2BA8 60%, #F47920 80%, transparent 100%);
-    opacity: 0.8;
-  }
-  /* Enhanced card borders with brand blue */
-  .card {
-    border-color: rgba(43,43,168,0.35) !important;
-  }
-  .card:hover {
-    border-color: rgba(244,121,32,0.5) !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(244,121,32,0.2) !important;
-  }
-  /* XP bar Eagle brand */
-  .xp-fill {
-    background: linear-gradient(90deg, #F47920, #2B2BA8) !important;
-  }
+<style id="ea-light-theme">
+/* ═══ EAGLE ACADEMY — CLASSROOM LIGHT THEME OVERRIDE ═══ */
+html, body { background: #f4f6fb !important; color: #1a1a5e !important; }
+.page-bg   { background: #f4f6fb !important; }
+
+/* All white-text headings in content → dark navy */
+h1,h2,h3,h4,h5,h6 { color: #1a1a5e; }
+
+/* Cards white with subtle shadow */
+.card, .topic-card, .tool-card, .quiz-wrap,
+.lesson-content, .lesson-section,
+.day-hero, .cc, .pdw { 
+  background: #ffffff !important;
+  border-color: rgba(43,43,168,0.14) !important;
+  color: #1a1a5e !important;
+  box-shadow: 0 2px 12px rgba(43,43,168,0.08) !important;
+}
+
+/* Madam JI popup → white */
+#mj-popup, #tools-popup {
+  background: #ffffff !important;
+  border: 1px solid rgba(43,43,168,0.18) !important;
+  color: #1a1a5e !important;
+  box-shadow: 0 8px 40px rgba(43,43,168,0.20) !important;
+}
+#mj-popup * { color: #1a1a5e; }
+#mj-popup .mj-msg.bot { background: #f4f6fb !important; color: #1a1a5e !important; }
+#mj-popup .mj-msg.user { background: #2B2BA8 !important; color: #ffffff !important; }
+#mj-popup input { background: #f4f6fb !important; color: #1a1a5e !important; border-color: rgba(43,43,168,0.20) !important; }
+#mj-popup input::placeholder { color: #8888aa !important; }
+
+/* MJ Header stays navy */
+#mj-popup .mj-hdr { background: linear-gradient(135deg, #2B2BA8, #1e1e8f) !important; color: #ffffff !important; }
+#mj-popup .mj-hdr * { color: #ffffff !important; }
+
+/* Tools popup header */
+#tools-popup .tools-hdr { background: linear-gradient(135deg, #F47920, #d4661a) !important; }
+
+/* Secondary text */
+.text-grey, [style*="color: #94a3b8"], [style*="color:#94a3b8"],
+[style*="color: rgba(255,255,255,0.6)"], [style*="color:rgba(255,255,255,0.6)"],
+[style*="color: rgba(255,255,255,.6)"] { color: #4a4a8a !important; }
+
+/* Section backgrounds */
+[style*="background: rgba(22,22,106"], [style*="background:rgba(22,22,106"] { background: #ffffff !important; }
+[style*="background: rgba(14,14,74"],  [style*="background:rgba(14,14,74"]  { background: #f4f6fb !important; }
+
+/* Progress track */
+.progress-track { background: rgba(43,43,168,0.12) !important; }
+
+/* Input fields */
+input[type="text"], textarea, select {
+  background: #f8f9ff !important;
+  color: #1a1a5e !important;
+  border-color: rgba(43,43,168,0.20) !important;
+}
+
+/* Day hero section */
+.day-hero {
+  background: #ffffff !important;
+  border: 1px solid rgba(43,43,168,0.12) !important;
+}
+
+/* Code blocks */
+.mono, code, pre { background: #f4f6fb !important; color: #1a1a5e !important; border: 1px solid rgba(43,43,168,0.12); border-radius: 6px; padding: 2px 6px; }
+
+/* Streak banner stays navy */
+.streak-banner { background: linear-gradient(135deg, #2B2BA8, #1e1e8f) !important; }
+
+/* FAB button tooltip text */
+.mj-tip, .tools-tip { color: #1a1a5e !important; background: #ffffff !important; border: 1px solid rgba(43,43,168,0.15) !important; }
 </style>
 </head>
 <body>
@@ -945,7 +994,7 @@ window.addEventListener('DOMContentLoaded',()=>{tick();setInterval(tick,1000);lo
 .mj-pop-key input { width: 100%; padding: 7px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(43,43,168,0.3); border-radius: 8px; color: white; font-family: monospace; font-size: 11px; outline: none; box-sizing: border-box; }
 .mj-pop-key input::placeholder { color: rgba(255,255,255,0.25); }
 .mj-pop-input { padding: 10px 12px; border-top: 1px solid rgba(43,43,168,0.15); display: flex; gap: 8px; flex-shrink: 0; }
-.mj-pop-input input { flex: 1; padding: 9px 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(43,43,168,0.25); border-radius: 10px; color: white; font-size: 13px; font-family: 'DM Sans',sans-serif; outline: none; }
+.mj-pop-input input { flex: 1; padding: 9px 12px; background: #f4f6fb; border: 1px solid rgba(43,43,168,0.25); border-radius: 10px; color: white; font-size: 13px; font-family: 'DM Sans',sans-serif; outline: none; }
 .mj-pop-input input:focus { border-color: rgba(43,43,168,0.6); }
 .mj-pop-input input::placeholder { color: rgba(255,255,255,0.2); }
 .mj-send { padding: 9px 14px; background: linear-gradient(135deg,#7c3aed,#4f46e5); border: none; border-radius: 10px; color: white; cursor: pointer; font-size: 15px; flex-shrink: 0; }
@@ -1098,7 +1147,7 @@ window.addEventListener('DOMContentLoaded',()=>{tick();setInterval(tick,1000);lo
     </div>
   </div>
   <div class="mj-pop-key" id="mj-key-row" style="display:none">
-    <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:6px;line-height:1.5;">
+    <div style="font-size:11px;color: #8888aa;margin-bottom:6px;line-height:1.5;">
       🔑 Get your free API key at <strong style="color:#c4b5fd">console.anthropic.com</strong> — costs ~£2/month for a class
     </div>
     <input id="mj-api-input" type="password" placeholder="sk-ant-… paste your API key here" oninput="mjSaveKey(this.value)" style="font-size:11px;"/>

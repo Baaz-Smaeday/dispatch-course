@@ -589,7 +589,7 @@ body { background: var(--navy-deep); }
 .sc-letter.used { opacity: 0.25; cursor: default; }
 .mg-btn-clear {
   padding: 8px 18px; border-radius: 999px;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  background: #f4f6fb; border: 1px solid rgba(255,255,255,0.12);
   color: var(--grey); font-size: 12px; font-weight: 600;
   cursor: pointer; font-family: var(--font-main); transition: all 0.12s;
 }
@@ -679,28 +679,77 @@ body { background: var(--navy-deep); }
 }
 .ds-btn:hover { filter: brightness(1.1); transform: translateY(-2px); }
 </style>
-<style>
-  /* Eagle Academy Brand Stripe */
-  .site-header::after {
-    content: '';
-    position: absolute;
-    bottom: -2px; left: 0; right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, transparent 0%, #F47920 30%, #2B2BA8 60%, #F47920 80%, transparent 100%);
-    opacity: 0.8;
-  }
-  /* Enhanced card borders with brand blue */
-  .card {
-    border-color: rgba(43,43,168,0.35) !important;
-  }
-  .card:hover {
-    border-color: rgba(244,121,32,0.5) !important;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.4), 0 0 0 1px rgba(244,121,32,0.2) !important;
-  }
-  /* XP bar Eagle brand */
-  .xp-fill {
-    background: linear-gradient(90deg, #F47920, #2B2BA8) !important;
-  }
+<style id="ea-light-theme">
+/* ═══ EAGLE ACADEMY — CLASSROOM LIGHT THEME OVERRIDE ═══ */
+html, body { background: #f4f6fb !important; color: #1a1a5e !important; }
+.page-bg   { background: #f4f6fb !important; }
+
+/* All white-text headings in content → dark navy */
+h1,h2,h3,h4,h5,h6 { color: #1a1a5e; }
+
+/* Cards white with subtle shadow */
+.card, .topic-card, .tool-card, .quiz-wrap,
+.lesson-content, .lesson-section,
+.day-hero, .cc, .pdw { 
+  background: #ffffff !important;
+  border-color: rgba(43,43,168,0.14) !important;
+  color: #1a1a5e !important;
+  box-shadow: 0 2px 12px rgba(43,43,168,0.08) !important;
+}
+
+/* Madam JI popup → white */
+#mj-popup, #tools-popup {
+  background: #ffffff !important;
+  border: 1px solid rgba(43,43,168,0.18) !important;
+  color: #1a1a5e !important;
+  box-shadow: 0 8px 40px rgba(43,43,168,0.20) !important;
+}
+#mj-popup * { color: #1a1a5e; }
+#mj-popup .mj-msg.bot { background: #f4f6fb !important; color: #1a1a5e !important; }
+#mj-popup .mj-msg.user { background: #2B2BA8 !important; color: #ffffff !important; }
+#mj-popup input { background: #f4f6fb !important; color: #1a1a5e !important; border-color: rgba(43,43,168,0.20) !important; }
+#mj-popup input::placeholder { color: #8888aa !important; }
+
+/* MJ Header stays navy */
+#mj-popup .mj-hdr { background: linear-gradient(135deg, #2B2BA8, #1e1e8f) !important; color: #ffffff !important; }
+#mj-popup .mj-hdr * { color: #ffffff !important; }
+
+/* Tools popup header */
+#tools-popup .tools-hdr { background: linear-gradient(135deg, #F47920, #d4661a) !important; }
+
+/* Secondary text */
+.text-grey, [style*="color: #94a3b8"], [style*="color:#94a3b8"],
+[style*="color: rgba(255,255,255,0.6)"], [style*="color:rgba(255,255,255,0.6)"],
+[style*="color: rgba(255,255,255,.6)"] { color: #4a4a8a !important; }
+
+/* Section backgrounds */
+[style*="background: rgba(22,22,106"], [style*="background:rgba(22,22,106"] { background: #ffffff !important; }
+[style*="background: rgba(14,14,74"],  [style*="background:rgba(14,14,74"]  { background: #f4f6fb !important; }
+
+/* Progress track */
+.progress-track { background: rgba(43,43,168,0.12) !important; }
+
+/* Input fields */
+input[type="text"], textarea, select {
+  background: #f8f9ff !important;
+  color: #1a1a5e !important;
+  border-color: rgba(43,43,168,0.20) !important;
+}
+
+/* Day hero section */
+.day-hero {
+  background: #ffffff !important;
+  border: 1px solid rgba(43,43,168,0.12) !important;
+}
+
+/* Code blocks */
+.mono, code, pre { background: #f4f6fb !important; color: #1a1a5e !important; border: 1px solid rgba(43,43,168,0.12); border-radius: 6px; padding: 2px 6px; }
+
+/* Streak banner stays navy */
+.streak-banner { background: linear-gradient(135deg, #2B2BA8, #1e1e8f) !important; }
+
+/* FAB button tooltip text */
+.mj-tip, .tools-tip { color: #1a1a5e !important; background: #ffffff !important; border: 1px solid rgba(43,43,168,0.15) !important; }
 </style>
 </head>
 <body>
@@ -2641,7 +2690,7 @@ function showNowPlaying(lang, textId) {
     bar.id = 'now-playing-bar';
     bar.style.cssText = `
       position:fixed; bottom:20px; left:50%; transform:translateX(-50%);
-      background:rgba(14,14,74,0.97); border:1px solid rgba(244,121,32,0.5);
+      background:#2B2BA8; border:1px solid rgba(244,121,32,0.5);
       border-radius:999px; padding:8px 20px; z-index:9999;
       display:flex; align-items:center; gap:10px;
       font-size:12px; font-weight:600; color:white;
@@ -3613,7 +3662,7 @@ function showQuizResult(quizBodyId) {
         </div>
         <div>
           <div style="font-size:22px;font-weight:900;color:${color}">${correct}<span style="font-size:14px;color:rgba(255,255,255,0.4);font-weight:400"> / ${total} correct</span></div>
-          <div style="font-size:13px;color:rgba(255,255,255,0.7);margin-top:4px">${label}</div>
+          <div style="font-size:13px;color: #4a4a8a;margin-top:4px">${label}</div>
         </div>
       </div>
     `;
@@ -3805,7 +3854,7 @@ document.addEventListener('DOMContentLoaded', () => {
 .mj-pop-key input { width: 100%; padding: 7px 10px; background: rgba(255,255,255,0.05); border: 1px solid rgba(43,43,168,0.3); border-radius: 8px; color: white; font-family: monospace; font-size: 11px; outline: none; box-sizing: border-box; }
 .mj-pop-key input::placeholder { color: rgba(255,255,255,0.25); }
 .mj-pop-input { padding: 10px 12px; border-top: 1px solid rgba(43,43,168,0.15); display: flex; gap: 8px; flex-shrink: 0; }
-.mj-pop-input input { flex: 1; padding: 9px 12px; background: rgba(255,255,255,0.06); border: 1px solid rgba(43,43,168,0.25); border-radius: 10px; color: white; font-size: 13px; font-family: 'DM Sans',sans-serif; outline: none; }
+.mj-pop-input input { flex: 1; padding: 9px 12px; background: #f4f6fb; border: 1px solid rgba(43,43,168,0.25); border-radius: 10px; color: white; font-size: 13px; font-family: 'DM Sans',sans-serif; outline: none; }
 .mj-pop-input input:focus { border-color: rgba(43,43,168,0.6); }
 .mj-pop-input input::placeholder { color: rgba(255,255,255,0.2); }
 .mj-send { padding: 9px 14px; background: linear-gradient(135deg,#7c3aed,#4f46e5); border: none; border-radius: 10px; color: white; cursor: pointer; font-size: 15px; flex-shrink: 0; }
@@ -3958,7 +4007,7 @@ document.addEventListener('DOMContentLoaded', () => {
     </div>
   </div>
   <div class="mj-pop-key" id="mj-key-row" style="display:none">
-    <div style="font-size:11px;color:rgba(255,255,255,0.5);margin-bottom:6px;line-height:1.5;">
+    <div style="font-size:11px;color: #8888aa;margin-bottom:6px;line-height:1.5;">
       🔑 Get your free API key at <strong style="color:#c4b5fd">console.anthropic.com</strong> — costs ~£2/month for a class
     </div>
     <input id="mj-api-input" type="password" placeholder="sk-ant-… paste your API key here" oninput="mjSaveKey(this.value)" style="font-size:11px;"/>
